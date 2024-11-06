@@ -38,6 +38,16 @@ test_to_upper = (
     pure()
 );
 
+test_byte_to_string: TestCase;
+test_byte_to_string = (
+    let testname = "test_byte_to_string";
+    make_test(testname) $ |_|
+    let _ = *assert_equal("from U8 literal", "A", 0x41_U8.byte_to_string);
+    let _ = *assert_equal("from char literal", "B", 'B'.byte_to_string);
+    let _ = *assert_equal("from NUL", "", 0x00_U8.byte_to_string);
+    pure()
+);
+
 test_find_byte_ok: (String, U8, Option I64) -> TestCase;
 test_find_byte_ok = |(str, byte, expected)| (
     let testname = "test_find_byte_ok (" + str + "," + byte.to_string + "," + expected.to_string + ")";
@@ -170,6 +180,7 @@ test_split_first = (
         test_split_first_ok $ ("abcde", "de", ("abc", "")),
         test_split_first_ok $ ("abcde", "ab", ("", "cde")),
         test_split_first_ok $ ("abcde", "abcde", ("", "")),
+        test_split_first_ok $ ("aaa/bbb/ccc", "bb", ("aaa/", "b/ccc")),
         TestCase::empty
     ].run_tests
 );
@@ -339,6 +350,7 @@ main = (
         test__unsafe_to_string,
         test_to_lower,
         test_to_upper,
+        test_byte_to_string,
         test_find_byte,
         test_find_last_byte,
         test_replace_all,

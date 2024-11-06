@@ -14,24 +14,50 @@ import Character;
 
 // Converts a byte array to a string. Specifically, it calls `String::_unsafe_to_string()`
 // after appending a null character to the end of the byte array.
+//
+// Example:
+// ```
+// [ 'a', 'b', 'c' ]._unsafe_to_string
+// ==> "abc"
+// [ 0x41_U8, 0x42_U8, 0x43_U8 ]._unsafe_to_string
+// ==> "ABC"
+// ```
 _unsafe_to_string: Array U8 -> String;
 _unsafe_to_string = |a| (
     String::_unsafe_from_c_str (a.push_back(0_U8))
 );
 
 // Converts the specified string to lowercase.
+//
+// Example:
+// ```
+// "ABCdef123".to_lower
+// ==> "abcdef123"
+// ```
 to_lower: String -> String;
 to_lower = |str| (
     str.get_bytes.pop_back.map(Character::to_lower)._unsafe_to_string
 );
 
 // Converts the specified string to uppercase.
+//
+// Example:
+// ```
+// "ABCdef123".to_upper
+// ==> "ABCDEF123"
+// ```
 to_upper: String -> String;
 to_upper = |str| (
     str.get_bytes.pop_back.map(Character::to_upper)._unsafe_to_string
 );
 
 // Converts a byte (a character) to a string of length 1.
+//
+// Example:
+// ```
+// 0x41_U8.byte_to_string
+// ==> "A"
+// ```
 byte_to_string: U8 -> String;
 byte_to_string = |c| (
     Array::empty(2).push_back(c)._unsafe_to_string
@@ -39,6 +65,14 @@ byte_to_string = |c| (
 
 // Searches for the specified byte from the beginning of a string.
 // If found, returns the index of that byte.
+//
+// Example:
+// ```
+// "aaa/bbb/ccc".find_byte('/')
+// ==> some(3)
+// "aaa".find_byte('/')
+// ==> none()
+// ```
 find_byte: U8 -> String -> Option I64;
 find_byte = |c, str| (
     let array = str.get_bytes;
@@ -57,6 +91,14 @@ find_byte = |c, str| (
 
 // Searches for the specified byte from the end of a string.
 // If found, returns the index of that byte.
+//
+// Example:
+// ```
+// "aaa/bbb/ccc".find_last_byte('/')
+// ==> some(7)
+// "aaa".find_last_byte('/')
+// ==> none()
+// ```
 find_last_byte: U8 -> String -> Option I64;
 find_last_byte = |c, str| (
     let array = str.get_bytes;
@@ -74,6 +116,17 @@ find_last_byte = |c, str| (
 );
 
 // `input.replace_all(from, to)` replaces all occurrences of `from` in the input string with `to`.
+// If `from` is empty, returns the input string unchanged.
+//
+// Example:
+// ```
+// "foo1:11,foo2:22,Foo3:33".replace_all("foo", "piyo")
+// ==> "piyo1:11,piyo2:22,Foo3:33"
+// "foo1:11,foo2:22,Foo3:33".replace_all("foo", "")
+// ==> "1:11,2:22,Foo3:33"
+// "foo1:11,foo2:22,Foo3:33".replace_all("", "piyo")
+// ==> "foo1:11,foo2:22,Foo3:33"
+// ```
 replace_all: String -> String -> String -> String;
 replace_all = |rep_from, rep_to, input| (
     if rep_from.get_size <= 0 {
@@ -97,6 +150,7 @@ replace_all = |rep_from, rep_to, input| (
     )
 );
 
+// (Internal function)
 _append_range: Array a -> I64 -> I64 -> Array a -> Array a;
 _append_range = |src_arr, src_begin, src_end, dest_arr| (
     if src_begin >= src_end { dest_arr };
@@ -106,10 +160,13 @@ _append_range = |src_arr, src_begin, src_end, dest_arr| (
 
 // `str.replace_suffix(from, to)` replaces `from` at the end of `str` with `to`.
 // if `str` does not end with `from`, an error occurs.
+//
 // Example:
 // ```
-// "test.txt".replace_suffix(".txt", ".tmp")  ==> ok("test.tmp")
-// "test.jpg".replace_suffix(".txt", ".tmp")  ==> err("suffix does not match: test.jpg")
+// "test.txt".replace_suffix(".txt", ".tmp")
+//  ==> ok("test.tmp")
+// "test.jpg".replace_suffix(".txt", ".tmp")
+//  ==> err("suffix does not match: test.jpg")
 // ```
 replace_suffix: String -> String -> String -> Result ErrMsg String;
 replace_suffix = |from, to, str| (
@@ -120,10 +177,20 @@ replace_suffix = |from, to, str| (
     ok $ str + to
 );
 
-// `str.split_first(delim)` splits the string `str` into two parts with the delimiter `delim`.
+// `str.split_first(delim)` splits the string `str` into two parts at the first occurence of the delimiter `delim`.
 // Returns `(left, right)` where `left` is the left part of the delimiter, and
 // `right` is the right part of the delimiter.
 // Returns `(str, "")` if the delimiter is not found.
+//
+// Example:
+// ```
+// "aaa/bbb/ccc".split_first("/")
+// ==> ("aaa", "bbb/ccc")
+// "aaa/bbb/ccc".split_first("bb")
+// ==> ("aaa/", "b/ccc")
+// "aaa/bbb/ccc".split_first("!")
+// ==> ("aaa/bbb/ccc", "")
+// ```
 split_first: String -> String -> (String, String);
 split_first = |delim, str| (
     let pos = str.find(delim, 0);
@@ -135,6 +202,14 @@ split_first = |delim, str| (
 );
 
 // Same as Std::String::split, except that `"foo".split_ex(",")` returns a singleton iterator of "foo".
+//
+// Example:
+// ```
+// "foo,bar,baz".split_ex(",").to_array
+// ==> ["foo", "bar", "baz"]
+// "foo".split_ex(",").to_array
+// ==> ["foo"]
+// ```
 split_ex: String -> String -> Iterator String;
 split_ex = |delim, str| (
     if delim == "" {
@@ -149,6 +224,12 @@ split_ex = |delim, str| (
 
 // Splits a string by a function that checks whether a character is a delimiter or not.
 // The result will not contain any empty string.
+//
+// Example:
+// ```
+// "  aa bb  12 ".split_by(Character::is_space).to_array
+// ==>  ["aa", "bb", "12"]
+// ```
 split_by: (U8 -> Bool) -> String -> Iterator String;
 split_by = |is_delim, str| (
     let output = Array::empty(str.get_size);
@@ -170,6 +251,16 @@ split_by = |is_delim, str| (
 
 // Returns a substring extracted from a specified range from a string.
 // If the specified range exceeds the string, it will be truncated to fit within the string.
+//
+// Example:
+// ```
+// "abcdef".substring(2, 3)
+// ==> "cde"
+// "abcdef".substring(0, 6)
+// ==> "abcdef"
+// "abcdef".substring(-1, 7)
+// ==> "abcdef"
+// ```
 substring: I64 -> I64 -> String -> String;
 substring = |s, e, str| (
     let size = str.get_size;
@@ -181,6 +272,16 @@ substring = |s, e, str| (
 
 // Returns a subarray extracted from a specified range from an array.
 // If the specified range exceeds the array, it will be truncated to fit within the array.
+//
+// Example:
+// ```
+// [10, 11, 12, 13, 14].subarray(1, 2)
+// ==> [11, 12]
+// [10, 11, 12, 13, 14].subarray(0, 5)
+// ==> [10, 11, 12, 13, 14]
+// [10, 11, 12, 13, 14].subarray(-1, 6)
+// ==> [10, 11, 12, 13, 14]
+// ```
 subarray: I64 -> I64 -> Array a -> Array a;
 subarray = |s, e, arr| (
     let size = arr.get_size;
@@ -191,12 +292,28 @@ subarray = |s, e, arr| (
 );
 
 // Checks if a string starts with the specified prefix.
+//
+// Example:
+// ```
+// "/foo/bar.txt".starts_with("/")
+// ==> true
+// "foo/bar.txt".starts_with("/")
+// ==> false
+// ```
 starts_with: String -> String -> Bool;
 starts_with = |prefix, str| (
     str.substring(0, prefix.get_size) == prefix
 );
 
 // Checks if a string ends with the specified suffix.
+//
+// Example:
+// ```
+// "/foo/bar.txt".ends_with(".txt")
+// ==> true
+// "foo/bar.txt".ends_with(".bin")
+// ==> false
+// ```
 ends_with: String -> String -> Bool;
 ends_with = |suffix, str| (
     str.substring(str.get_size - suffix.get_size, str.get_size) == suffix
@@ -209,6 +326,14 @@ ends_with = |suffix, str| (
 // `array.formatv(str)` replaces each occurence of `{}` in the format string `str`
 // with each element of `array`.
 // Currently only supports `{}`.
+//
+// Example:
+// ```
+// ["1", "2", "3"].formatv("foo={} bar={} baz={}")
+// ==> "foo=1 bar=2 baz=3"
+// ["1"].formatv("foo={} bar={} baz={}")
+// ==> "foo=1 bar={} baz={}"
+// ```
 formatv: String -> Array String -> String;
 formatv = |str, args| (
     let from = "{}";
@@ -236,6 +361,14 @@ namespace Array {
     // `array.format(str)` replaces each occurence of `{}` in the format string `str`
     // with each element of `array`.
     // Currently only supports `{}`.
+    //
+    // Example:
+    // ```
+    // [some(1), some(2), none()].format("foo={} bar={} baz={}")
+    // ==> "foo=some(1) bar=some(2) baz=none()"
+    // [some(1)].format("foo={} bar={} baz={}")
+    // ==> "foo=some(1) bar={} baz={}"
+    // ```
     format: [a: ToString] String -> Array a -> String;
     format = |str, arr| arr.map(to_string).formatv(str);
 }
@@ -243,6 +376,14 @@ namespace Array {
 namespace Tuple1 {
     // `(a, ).format(str)` replaces an occurence of `{}` in the format string `str`
     // with `a`.
+    //
+    // Example:
+    // ```
+    // (12.345, ).format("float={}")
+    // ==> "float=12.345000"
+    // ([1, 2, 3], ).format("arr={}")
+    // ==> "arr=[1, 2, 3]"
+    // ```
     format: [a: ToString] String -> (a,) -> String;
     format = |str, (a,)| [a.to_string].formatv(str);
 }
@@ -250,6 +391,12 @@ namespace Tuple1 {
 namespace Tuple2 {
     // `(a, b).format(str)` replaces each occurence of `{}` in the format string `str`
     // with `a`, `b`.
+    //
+    // Example:
+    // ```
+    // (12, "abc").format("int={} str={}")
+    // ==> "int=12 str=abc"
+    // ```
     format: [a: ToString, b: ToString] String -> (a,b) -> String;
     format = |str, (a,b)| [a.to_string, b.to_string].formatv(str);
 }
@@ -257,6 +404,12 @@ namespace Tuple2 {
 namespace Tuple3 {
     // `(a, b, c).format(str)` replaces each occurence of `{}` in the format string `str`
     // with `a`, `b`, `c`.
+    //
+    // Example:
+    // ```
+    // (12, 345.678, "abc").format("int={} float={} str={}")
+    // ==> "int=12 float=345.678000 str=abc"
+    // ```
     format: [a: ToString, b: ToString, c:ToString] String -> (a,b,c) -> String;
     format = |str, (a,b,c)| [a.to_string, b.to_string, c.to_string].formatv(str);
 }
@@ -264,6 +417,12 @@ namespace Tuple3 {
 namespace Tuple4 {
     // `(a, b, c, d).format(str)` replaces each occurence of `{}` in the format string `str`
     // with `a`, `b`, `c`, `d`.
+    //
+    // Example:
+    // ```
+    // (12, 345.678, "abc", some(1)).format("int={} float={} str={} option={}")
+    // ==> "int=12 float=345.678000 str=abc option=some(1)"
+    // ```
     format: [a: ToString, b: ToString, c:ToString, d:ToString] String -> (a,b,c,d) -> String;
     format = |str, (a,b,c,d)| [a.to_string, b.to_string, c.to_string, d.to_string].formatv(str);
 }
@@ -271,6 +430,12 @@ namespace Tuple4 {
 namespace Tuple5 {
     // `(a, b, c, d, e).format(str)` replaces each occurence of `{}` in the format string `str`
     // with `a`, `b`, `c`, `d`, `e`.
+    //
+    // Example:
+    // ```
+    // (12, 345.678, "abc", some(1), [1, 2, 3]).format("int={} float={} str={} option={} array={}")
+    // ==> "int=12 float=345.678000 str=abc option=some(1) array=[1, 2, 3]"
+    // ```
     format: [a: ToString, b: ToString, c:ToString, d:ToString, e:ToString] String -> (a,b,c,d,e) -> String;
     format = |str, (a,b,c,d,e)| [a.to_string, b.to_string, c.to_string, d.to_string, e.to_string].formatv(str);
 }

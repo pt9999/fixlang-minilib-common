@@ -7,8 +7,8 @@ import Time;
 // For details, see Linux manual page for [usleep()](https://man7.org/linux/man-pages/man3/usleep.3.html).
 usleep: U32 -> IOFail ();
 usleep = |usec| (
-    let _ = *pure();    // make it lazy
-    let res = FFI_CALL[I32 usleep(U32), usec];
+    pure();;    // make it lazy
+    let res = *FFI_CALL_IO[I32 usleep(U32), usec].lift;
     if res == -1_I32 {
         throw("usleep failed!: some error occurred in usleep.")
     };
@@ -22,7 +22,7 @@ usleep = |usec| (
 timeit: [a: ToString] String -> (() -> a) -> IO a;
 timeit = |label, f| (
     let io_a = do {
-        let _ = *pure();
+        pure();;    // make it lazy
         pure $ f()
     };
     timeit_io(label, io_a)
@@ -77,7 +77,6 @@ consumed_realtime_while_io = |io| (
     let start = *Time::get_now;
     let result = *io;
     let end = *Time::get_now;
-    let time = (end.@sec.to_F64 - start.@sec.to_F64) +
-               (end.@nanosec.to_F64 * 1.0e-9 - start.@nanosec.to_F64 * 1.0e-9);
+    let time = end.to_F64 - start.to_F64;
     pure $ (result, time)
 );

@@ -23,6 +23,7 @@ files = [
     "tests/common/common_test.fix",
     "tests/common/assert_test.fix",
     "tests/common/random_ex_test.fix",
+    "tests/common/time_ex_test.fix",
     "tests/monad/functor_m_test.fix",
     "tests/text/string_ex_test.fix",
 ]

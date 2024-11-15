@@ -1,0 +1,73 @@
+module TimeExTest;
+
+import Time;
+
+import Minilib.Common.TimeEx;
+import Minilib.Testing.UnitTest;
+
+test_usleep: TestCase;
+test_usleep = (
+    make_test("test_usleep") $ |_|
+    let usec = 100_U32;
+    let start = *Time::get_now.lift;
+    usleep(usec);;
+    let end = *Time::get_now.lift;
+    let time = end.to_F64 - start.to_F64;
+    assert_true("time", time >= usec.to_F64 * 1.0e-6)
+);
+
+test_timeit: TestCase;
+test_timeit = (
+    make_test("test_timeit") $ |_|
+    let n = 10000;
+    let ans = *timeit("sum(1.." + n.to_string + ")", |_|
+        Iterator::range(1, n + 1).fold(0, add)
+    ).lift;
+    assert_equal("eq", n * (n + 1) / 2, ans)
+);
+
+test_timeit_io: TestCase;
+test_timeit_io = (
+    make_test("test_timeit_io") $ |_|
+    let n = 10000;
+    let ans = *timeit_io("sum(1.." + n.to_string + ")", do {
+        pure();;
+        pure $ Iterator::range(1, n + 1).fold(0, add)
+    }).lift;
+    assert_equal("eq", n * (n + 1) / 2, ans)
+);
+
+test_notimeit: TestCase;
+test_notimeit = (
+    make_test("test_notimeit") $ |_|
+    let n = 10000;
+    let ans = *notimeit("sum(1.." + n.to_string + ")", |_|
+        Iterator::range(1, n + 1).fold(0, add)
+    ).lift;
+    assert_equal("eq", n * (n + 1) / 2, ans)
+);
+
+test_consumed_realtime_while_io: TestCase;
+test_consumed_realtime_while_io = (
+    make_test("test_consumed_realtime_while_io") $ |_|
+    let usec = 100_U32;
+    let (res, time) = *consumed_realtime_while_io(
+        usleep(usec).to_result
+    ).lift;
+    assert_true("res", res.is_ok);;
+    assert_true("time", time >= usec.to_F64 * 1.0e-6)
+);
+
+main: IO ();
+main = (
+    [
+        test_usleep,
+        test_timeit,
+        test_timeit_io,
+        test_notimeit,
+        test_consumed_realtime_while_io,
+    ]
+    .run_test_driver
+);
+
+

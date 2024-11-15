@@ -5,6 +5,7 @@ import Minilib.Testing.UnitTest;
 import CommonTest;
 import AssertTest;
 import RandomExTest;
+import TimeExTest;
 import FunctorMTest;
 import StringExTest;
 
@@ -13,6 +14,7 @@ testsuite = [
     ("CommonTest", CommonTest::main),
     ("AssertTest", AssertTest::main),
     ("RandomExTest", RandomExTest::main),
+    ("TimeExTest", TimeExTest::main),
     ("FunctorMTest", FunctorMTest::main),
     ("StringExTest", StringExTest::main),
 ];

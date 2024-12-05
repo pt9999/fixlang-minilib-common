@@ -3,20 +3,23 @@ module Minilib.Testing.UnitTest;
 
 import Time;
 
-// If _TEST_VERBOSE is false, only failed testcases will be reported.
+// If _TEST_VERBOSE is true, the results of all testcases will be printed.
+// If _TEST_VERBOSE is false, the results of only failed testcases will be printed.
+//
 // If the environment variable `TEST_VERBOSE` is set to non-empty string, _TEST_VERBOSE becomes true.
+// For example, running the `TEST_VERBOSE=1 fix test` command at a shell prompt will report all testcases.
 _TEST_VERBOSE: Bool;
-_TEST_VERBOSE = (
+_TEST_VERBOSE = do {
     let name = "TEST_VERBOSE";
-    let p_value = name.borrow_c_str(|p_name|
-        FFI_CALL[Ptr getenv(Ptr), p_name]
+    let p_value = *name.borrow_c_str_io(|p_name|
+        FFI_CALL_IO[Ptr getenv(Ptr), p_name]
     );
     let value = if p_value == nullptr { "" } else { String::_unsafe_from_c_str_ptr(p_value) };
     if value != "" {
-        true
+        pure $ true
     };
-    false
-);
+    pure $ false
+}.unsafe_perform;
 
 // TestCase is a type that counts the number of successful and failed tests.
 type TestCase = Lazy (IOFail (I64, I64));
@@ -41,33 +44,39 @@ namespace TestSuite {
     );
 }
 
-// Executes all test cases and prints the results (number of passes and number of failures).
-// Exit with exitcode=1 if any test failed or any error occured, exitcode=0 otherwise.
+// Executes all test cases. This function:
+// - Sets `stdout` and `stderr` to be unbuffered for immediate output.
+// - Runs all test cases.
+// - Prints a summary of the results, including the number of passed and failed tests.
+// - If any test case fails or an error occurs, prints the error message and aborts the program.
+// - If all test cases passed, returns `pure()`.
 run_test_driver: Array TestCase -> IO ();
 run_test_driver = |tests| (
     do {
         // make stdout & stderr unbuffered
-        eval FFI_CALL[() setbuf(Ptr, Ptr), IO::stdout._file_ptr, nullptr];
-        eval FFI_CALL[() setbuf(Ptr, Ptr), IO::stderr._file_ptr, nullptr];
+        FFI_CALL_IO[() setbuf(Ptr, Ptr), IO::stdout._file_ptr, nullptr].lift;;
+        FFI_CALL_IO[() setbuf(Ptr, Ptr), IO::stderr._file_ptr, nullptr].lift;;
 
-        let _ = *eprintln ("Starting Test Driver").lift;
+        eprintln ("Starting Test Driver").lift;;
         let start = *Time::get_now.lift;
         let test: TestCase = tests.run_tests;
         let (success, fail) = *(test());
         let end = *Time::get_now.lift;
         let time = (end.@sec.to_F64 - start.@sec.to_F64) +
                    (end.@nanosec.to_F64 * 1.0e-9 - start.@nanosec.to_F64 * 1.0e-9);
-        let _ = *eprintln("SUCCESS: " + success.to_string + " FAIL: " + fail.to_string +
-                          " TIME: " + time.to_string_precision(3_U8) + " sec").lift;
+        eprintln("SUCCESS: " + success.to_string + " FAIL: " + fail.to_string +
+                 " TIME: " + time.to_string_precision(3_U8) + " sec").lift;;
         pure $ if fail == 0 { 0 } else { 1 }
     }.try(|err|
-        let _ = *eprintln("FATAL ERROR: " + err);
+        eprintln("FATAL ERROR: " + err);;
         pure $ 1
     )
     .bind(|exitcode|
-        // workaround for IO::exit()
-        if exitcode != 0 { undefined("exitcode = " + exitcode.to_string) };
-        //IO::exit(exitcode)
+        // Aborts the program when exitcode != 0
+        if exitcode != 0 { 
+            undefined("exitcode = " + exitcode.to_string)
+        };
+        // All tests passed
         pure()
     )
 );

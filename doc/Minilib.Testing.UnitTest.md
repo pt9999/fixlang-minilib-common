@@ -22,8 +22,11 @@ TestCase is a type that counts the number of successful and failed tests.
 
 ### `_TEST_VERBOSE : Std::Bool`
 
-If _TEST_VERBOSE is false, only failed testcases will be reported.
+If _TEST_VERBOSE is true, the results of all testcases will be printed.
+If _TEST_VERBOSE is false, the results of only failed testcases will be printed.
+
 If the environment variable `TEST_VERBOSE` is set to non-empty string, _TEST_VERBOSE becomes true.
+For example, running the `TEST_VERBOSE=1 fix test` command at a shell prompt will report all testcases.
 
 ### `assert_equal : [a : Std::Eq, a : Std::ToString] Std::String -> a -> a -> Std::IO::IOFail ()`
 
@@ -47,8 +50,12 @@ Creates a named test case from a lazy `IOFail ()`.
 
 ### `run_test_driver : Std::Array (() -> Std::IO::IOFail (Std::I64, Std::I64)) -> Std::IO ()`
 
-Executes all test cases and prints the results (number of passes and number of failures).
-Exit with exitcode=1 if any test failed or any error occured, exitcode=0 otherwise.
+Executes all test cases. This function:
+- Sets `stdout` and `stderr` to be unbuffered for immediate output.
+- Runs all test cases.
+- Prints a summary of the results, including the number of passed and failed tests.
+- If any test case fails or an error occurs, prints the error message and aborts the program.
+- If all test cases passed, returns `pure()`.
 
 ### `run_tests : Std::Array (() -> Std::IO::IOFail (Std::I64, Std::I64)) -> () -> Std::IO::IOFail (Std::I64, Std::I64)`
 

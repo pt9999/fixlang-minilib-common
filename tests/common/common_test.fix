@@ -11,12 +11,35 @@ test_id = (
     pure()
 );
 
+test_const: TestCase;
+test_const = (
+    make_test("test_const") $ |_|
+    eval *assert_equal("eq", 1, const(1, "a"));
+    eval *assert_equal("eq", "a", const(id)(1, "a"));
+    pure()
+);
+
+test_swap: TestCase;
+test_swap = (
+    make_test("test_swap") $ |_|
+    eval *assert_equal("eq", ("a", 1), (1, "a").swap);
+    pure()
+);
+
 test_flip: TestCase;
 test_flip = (
     make_test("test_flip") $ |_|
-    let pair = |a, b| (a, b);
     eval *assert_equal("eq", (1, 2), pair(1, 2));
     eval *assert_equal("eq", (2, 1), (pair.flip)(1, 2));
+    pure()
+);
+
+test_compose2: TestCase;
+test_compose2 = (
+    make_test("test_compose2") $ |_|
+    let strpair = compose2(pair, to_string);
+    eval *assert_equal("eq", "(1, 2)", strpair(1, 2));
+    eval *assert_equal("eq", "(2, 1)", (strpair.flip)(1, 2));
     pure()
 );
 
@@ -28,12 +51,47 @@ test_apply = (
     pure()
 );
 
+test_pair: TestCase;
+test_pair = (
+    make_test("test_pair") $ |_|
+    eval *assert_equal("eq", (1,"a"), pair(1,"a"));
+    let f = pair $ 1;           // fix the first component of a pair
+    let g = pair.flip $ "a";    // fix the second component of a pair
+    eval *assert_equal("eq", (1,"b"), f("b"));
+    eval *assert_equal("eq", (2,"a"), g(2));
+    pure()
+);
+
+test_curry: TestCase;
+test_curry = (
+    make_test("test_curry") $ |_|
+    let f = |(a, b)| a + b;
+    eval *assert_equal("eq", 3, curry(f, 1, 2));
+    eval *assert_equal("eq", (1,2), curry(id, 1, 2));
+    pure()
+);
+
+test_uncurry: TestCase;
+test_uncurry = (
+    make_test("test_uncurry") $ |_|
+    eval *assert_equal("eq", 3, uncurry(add, (1,2)));
+    eval *assert_equal("eq", 1, uncurry(const, (1,2)));
+    eval *assert_equal("eq", 2, uncurry(const.flip, (1,2)));
+    pure()
+);
+
 main: IO ();
 main = (
     [
         test_id,
+        test_const,
+        test_swap,
         test_flip,
+        test_compose2,
         test_apply,
+        test_pair,
+        test_curry,
+        test_uncurry,
     ]
     .run_test_driver
 );

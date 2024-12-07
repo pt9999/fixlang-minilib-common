@@ -9,7 +9,6 @@ opt_level = "separated"
 files = [
     "lib/common/common.fix",
     "lib/common/assert.fix",
-    "lib/common/random_ex.fix",
     "lib/common/time_ex.fix",
     "lib/monad/functor_m.fix",
     "lib/testing/unit_test.fix",
@@ -22,7 +21,6 @@ files = [
     "tests/test.fix",
     "tests/common/common_test.fix",
     "tests/common/assert_test.fix",
-    "tests/common/random_ex_test.fix",
     "tests/common/time_ex_test.fix",
     "tests/monad/functor_m_test.fix",
     "tests/text/string_ex_test.fix",
@@ -38,8 +36,3 @@ git = { url = "https://github.com/tttmmmyyyy/fixlang-character.git" }
 name = "time"
 version = "*"
 git = { url = "https://github.com/tttmmmyyyy/fixlang-time.git" }
-
-[[dependencies]]
-name = "random"
-version = "*"
-git = { url = "https://github.com/tttmmmyyyy/fixlang-random.git" }

@@ -1,4 +1,4 @@
-proj_file_hash = "016d8751ee4262bb240e18e15e9ee2e1"
+proj_file_hash = "a034bbe225e230128dc3d6120da00ffa"
 
 [[dependencies]]
 name = "character"
@@ -17,12 +17,3 @@ path = ".fixlang/deps/time_1.0.0"
 [dependencies.git]
 repo = "https://github.com/tttmmmyyyy/fixlang-time.git"
 rev = "0df92cf1c3ffc148d658c1a554c94105aef13520"
-
-[[dependencies]]
-name = "random"
-version = "1.0.0"
-path = ".fixlang/deps/random_1.0.0"
-
-[dependencies.git]
-repo = "https://github.com/tttmmmyyyy/fixlang-random.git"
-rev = "b802af50726199a6dc815bef1cc64075cd4cbd2d"

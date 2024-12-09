@@ -137,6 +137,8 @@ Example:
 
 ### `split_ex : Std::String -> Std::String -> Std::Iterator Std::String`
 
+Deprecated: Please use `Std::String::split`.
+
 Same as Std::String::split, except that `"foo".split_ex(",")` returns a singleton iterator of "foo".
 
 Example:
@@ -178,6 +180,8 @@ Example:
 
 ### `subarray : Std::I64 -> Std::I64 -> Std::Array a -> Std::Array a`
 
+Deprecated: Please use `Std::Array::get_sub`.
+
 Returns a subarray extracted from a specified range from an array.
 If the specified range exceeds the array, it will be truncated to fit within the array.
 
@@ -192,6 +196,8 @@ Example:
 ```
 
 ### `substring : Std::I64 -> Std::I64 -> Std::String -> Std::String`
+
+Deprecated: Please use `Std::String::get_sub`.
 
 Returns a substring extracted from a specified range from a string.
 If the specified range exceeds the string, it will be truncated to fit within the string.

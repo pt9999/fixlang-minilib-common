@@ -10,9 +10,9 @@ files = [
     "lib/common/common.fix",
     "lib/common/assert.fix",
     "lib/common/time_ex.fix",
-    "lib/monad/functor_m.fix",
     "lib/testing/unit_test.fix",
     "lib/text/string_ex.fix",
+    "lib/trait/traversable.fix",
 ]
 
 [build.test]
@@ -22,8 +22,8 @@ files = [
     "tests/common/common_test.fix",
     "tests/common/assert_test.fix",
     "tests/common/time_ex_test.fix",
-    "tests/monad/functor_m_test.fix",
     "tests/text/string_ex_test.fix",
+    "tests/trait/traversable_test.fix",
 ]
 
 [[dependencies]]

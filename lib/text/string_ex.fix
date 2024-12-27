@@ -51,6 +51,8 @@ to_upper = |str| (
     str.get_bytes.pop_back.map(Character::to_upper)._unsafe_to_string
 );
 
+// Deprecated: Please use `Std::String::from_U8`.
+//
 // Converts a byte (a character) to a string of length 1.
 //
 // Example:

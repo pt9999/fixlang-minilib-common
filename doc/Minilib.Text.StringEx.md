@@ -36,6 +36,8 @@ Example:
 
 ### `byte_to_string : Std::U8 -> Std::String`
 
+Deprecated: Please use `Std::String::from_U8`.
+
 Converts a byte (a character) to a string of length 1.
 
 Example:

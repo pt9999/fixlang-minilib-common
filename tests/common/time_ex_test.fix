@@ -47,6 +47,29 @@ test_notimeit = (
     assert_equal("eq", n * (n + 1) / 2, ans)
 );
 
+test_measure_time: TestCase;
+test_measure_time = (
+    make_test("test_measure_time") $ |_|
+    let n = 10000;
+    let (time, ans) = *measure_time(0.1, |_|
+        Iterator::range(1, n + 1).fold(0, add)
+    ).lift;
+    //println("test_measure_time: time=" + time.to_string).lift;;
+    assert_equal("eq", n * (n + 1) / 2, ans)
+);
+
+test_measure_time_io: TestCase;
+test_measure_time_io = (
+    make_test("test_measure_time_io") $ |_|
+    let n = 10000;
+    let (time, ans) = *measure_time_io(0.1, do {
+        pure();;
+        pure $ Iterator::range(1, n + 1).fold(0, add)
+    }).lift;
+    //println("test_measure_time_io: time=" + time.to_string).lift;;
+    assert_equal("eq", n * (n + 1) / 2, ans)
+);
+
 test_consumed_realtime_while_io: TestCase;
 test_consumed_realtime_while_io = (
     make_test("test_consumed_realtime_while_io") $ |_|
@@ -65,6 +88,8 @@ main = (
         test_timeit,
         test_timeit_io,
         test_notimeit,
+        test_measure_time,
+        test_measure_time_io,
         test_consumed_realtime_while_io,
     ]
     .run_test_driver

@@ -18,6 +18,22 @@ Timing module, such as sleep for a while, and measuring execution time.
 
 Get wall-clock time elapsed while executing an I/O action.
 
+### `measure_time : Std::F64 -> (() -> a) -> Std::IO (Std::F64, a)`
+
+Measures wall-clock time per a function call.
+Specifically, It calls the function many times until the specified time limit (in second) passes
+and measures the total time.
+Returns the measured time per loop (in second) and the IO operation result.
+NOTE: The measured time per loop has a overhead about 0.1~1.0 usec.
+
+### `measure_time_io : Std::F64 -> Std::IO a -> Std::IO (Std::F64, a)`
+
+Measures wall-clock time per an IO operation.
+Specifically, It performs an IO operation many times until the specified time limit (in second) passes
+and measures the total time.
+Returns the measured time per loop (in second) and the IO operation result.
+NOTE: The measured time per loop has a overhead about 0.1~1.0 usec.
+
 ### `notimeit : [a : Std::ToString] Std::String -> (() -> a) -> Std::IO a`
 
 Same interface as `timeit()` but does not measure time.

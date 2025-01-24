@@ -113,7 +113,7 @@ Example:
 ==> "foo1:11,foo2:22,Foo3:33"
 ```
 
-### `replace_suffix : Std::String -> Std::String -> Std::String -> Std::Result Std::String Std::String`
+### `replace_suffix : Std::String -> Std::String -> Std::String -> Std::Result Std::ErrMsg Std::String`
 
 `str.replace_suffix(from, to)` replaces `from` at the end of `str` with `to`.
 if `str` does not end with `from`, an error occurs.

@@ -40,15 +40,15 @@ Verifies that two values are not equal. If the values are equal, the test will f
 
 Verifies that the boolean value is true. If the boolean value is false, the test will fail with the specified message.
 
-### `make_table_test : [a : Std::ToString] Std::String -> Std::Array a -> (a -> Std::IO::IOFail ()) -> () -> Std::IO::IOFail (Std::I64, Std::I64)`
+### `make_table_test : [a : Std::ToString] Std::String -> Std::Array a -> (a -> Std::IO::IOFail ()) -> Minilib.Testing.UnitTest::TestCase`
 
 Creates a set of test cases from parameters and a lazy `IOFail ()`.
 
-### `make_test : Std::String -> (() -> Std::IO::IOFail ()) -> () -> Std::IO::IOFail (Std::I64, Std::I64)`
+### `make_test : Std::String -> Std::Lazy (Std::IO::IOFail ()) -> Minilib.Testing.UnitTest::TestCase`
 
 Creates a named test case from a lazy `IOFail ()`.
 
-### `run_test_driver : Std::Array (() -> Std::IO::IOFail (Std::I64, Std::I64)) -> Std::IO ()`
+### `run_test_driver : Std::Array Minilib.Testing.UnitTest::TestCase -> Std::IO ()`
 
 Executes all test cases. This function:
 - Sets `stdout` and `stderr` to be unbuffered for immediate output.
@@ -57,17 +57,17 @@ Executes all test cases. This function:
 - If any test case fails or an error occurs, prints the error message and aborts the program.
 - If all test cases passed, returns `pure()`.
 
-### `run_tests : Std::Array (() -> Std::IO::IOFail (Std::I64, Std::I64)) -> () -> Std::IO::IOFail (Std::I64, Std::I64)`
+### `run_tests : Std::Array Minilib.Testing.UnitTest::TestCase -> Minilib.Testing.UnitTest::TestCase`
 
 Executes all test cases and treat the results as one test case.
 
 ## `namespace Minilib.Testing.UnitTest::TestCase`
 
-### `empty : () -> Std::IO::IOFail (Std::I64, Std::I64)`
+### `empty : Minilib.Testing.UnitTest::TestCase`
 
 A test case where the number of successes and number of failures are both equal to 0.
 Can be used as a placeholder at the end of an array of test cases.
 
 ## `namespace Minilib.Testing.UnitTest::TestSuite`
 
-### `run : Std::Array (Std::String, Std::IO ()) -> Std::IO ()`
+### `run : Minilib.Testing.UnitTest::TestSuite -> Std::IO ()`

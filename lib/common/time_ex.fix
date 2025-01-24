@@ -98,7 +98,7 @@ measure_time_io = |time_limit, io_a| (
 // Get wall-clock time elapsed while executing an I/O action.
 consumed_realtime_while_io : IO a -> IO (a, F64);
 consumed_realtime_while_io = |io| (
-    let _ = *pure();
+    pure();;    // make it lazy
     let start = *Time::get_now;
     let result = *io;
     let end = *Time::get_now;

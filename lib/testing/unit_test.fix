@@ -38,7 +38,7 @@ namespace TestSuite {
     run = |testsuite| (
         testsuite.to_iter.fold_m(
             (), |_, (name, io)|
-            eval *println("=== " + name + " ===");
+            println("=== " + name + " ===");;
             io
         )
     );
@@ -60,7 +60,7 @@ run_test_driver = |tests| (
         eprintln ("Starting Test Driver").lift;;
         let start = *Time::get_now.lift;
         let test: TestCase = tests.run_tests;
-        let (success, fail) = *(test());
+        let (success, fail) = *test();
         let end = *Time::get_now.lift;
         let time = (end.@sec.to_F64 - start.@sec.to_F64) +
                    (end.@nanosec.to_F64 * 1.0e-9 - start.@nanosec.to_F64 * 1.0e-9);
@@ -94,17 +94,14 @@ run_tests = |tests, _| (
 // Creates a named test case from a lazy `IOFail ()`.
 make_test: String -> Lazy (IOFail ()) -> TestCase;
 make_test = |test_name, body, _| (
-    let verbose = |io| (
-        if _TEST_VERBOSE { io } else { pure() }
-    );
-    eval *(lift $ verbose $ eprintln("=== " + test_name + " ==="));
+    when(_TEST_VERBOSE, eprintln("=== " + test_name + " ===").lift);;
     do {
-        let _ = *(body());
-        let _ = *(lift $ verbose $ eprintln("[SUCCESS] " + test_name));
+        body();;
+        when(_TEST_VERBOSE, eprintln("[SUCCESS] " + test_name).lift);;
         pure $ (1, 0)
     }.try(|err|
-        eval *(eprintln("error: " + err));
-        eval *(eprintln("[FAIL] " + test_name));
+        eprintln("error: " + err);;
+        eprintln("[FAIL] " + test_name);;
         pure $ (0, 1)
     ).lift
 );
@@ -148,4 +145,3 @@ assert_not_equal = |msg, lhs, rhs| (
     };
     pure()
 );
-

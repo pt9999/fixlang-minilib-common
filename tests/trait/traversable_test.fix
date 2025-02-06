@@ -57,17 +57,17 @@ test_array_foreach_m = (
 test_iterator_sequence: TestCase;
 test_iterator_sequence = (
     make_test("test_iterator_sequence") $ |_|
-    let iter: Iterator (Result ErrMsg I64) = [ok(1),ok(2),ok(3)].to_iter;
-    let res: Result ErrMsg (Iterator I64) = iter.sequence;
+    let iter: DynIterator (Result ErrMsg I64) = [ok(1),ok(2),ok(3)].to_iter.to_dyn;
+    let res: Result ErrMsg (DynIterator I64) = iter.sequence;
     assert_equal("eq", ok $ [1, 2, 3], res.map(to_array));;
-    let iter: Iterator (Result ErrMsg I64) = [ok(1),err("err"),ok(3)].to_iter;
-    let res: Result ErrMsg (Iterator I64) = iter.sequence;
+    let iter: DynIterator (Result ErrMsg I64) = [ok(1),err("err"),ok(3)].to_iter.to_dyn;
+    let res: Result ErrMsg (DynIterator I64) = iter.sequence;
     assert_equal("eq", err("err"), res.map(to_array));;
-    let iter: Iterator (IOFail I64) = [pure(1),pure(2),pure(3)].to_iter;
-    let res: Result ErrMsg (Iterator I64) = *iter.sequence.to_result.lift;
+    let iter: DynIterator (IOFail I64) = [pure(1),pure(2),pure(3)].to_iter.to_dyn;
+    let res: Result ErrMsg (DynIterator I64) = *iter.sequence.to_result.lift;
     assert_equal("eq", ok $ [1, 2, 3], res.map(to_array));;
-    let iter: Iterator (IOFail I64) = [pure(1),throw("err"),pure(3)].to_iter;
-    let res: Result ErrMsg (Iterator I64) = *iter.sequence.to_result.lift;
+    let iter: DynIterator (IOFail I64) = [pure(1),throw("err"),pure(3)].to_iter.to_dyn;
+    let res: Result ErrMsg (DynIterator I64) = *iter.sequence.to_result.lift;
     assert_equal("eq", err("err"), res.map(to_array));;
     pure()
 );

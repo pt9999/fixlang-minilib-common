@@ -37,7 +37,7 @@ namespace TestSuite {
     run: TestSuite -> IO ();
     run = |testsuite| (
         testsuite.to_iter.fold_m(
-            (), |_, (name, io)|
+            (), |(name, io), _|
             println("=== " + name + " ===");;
             io
         )
@@ -85,7 +85,7 @@ run_test_driver = |tests| (
 run_tests: Array (TestCase) -> TestCase;
 run_tests = |tests, _| (
     tests.to_iter.fold_m(
-        (0, 0), |(success_total, fail_total), test|
+        (0, 0), |test, (success_total, fail_total)|
         let (success, fail) = *(test());
         pure $ (success_total + success, fail_total + fail)
     )

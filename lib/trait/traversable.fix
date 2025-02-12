@@ -55,6 +55,16 @@ impl DynIterator: Traversable {
     );
 }
 
+impl ArrayIterator: Traversable {
+    sequence = |iter| (
+        let output = *iter.fold_m(
+            [], |ma, output|
+            pure $ output.push_back(*ma)
+        );
+        pure $ output.to_iter
+    );
+}
+
 impl Option: Traversable {
     sequence = |opt| (
         match opt {

@@ -39,19 +39,19 @@ foreach_m = |f, ta| ta.map_m(f).bind(|_| pure());
 impl Array: Traversable {
     sequence = |array| (
         array.to_iter.fold_m(
-            Array::empty(array.get_size), |output, ma|
+            Array::empty(array.get_size), |ma, output|
             pure $ output.push_back(*ma)
         )
     );
 }
 
-impl Iterator: Traversable {
+impl DynIterator: Traversable {
     sequence = |iter| (
         let output = *iter.fold_m(
-            [], |output, ma|
+            [], |ma, output|
             pure $ output.push_back(*ma)
         );
-        pure $ output.to_iter
+        pure $ output.to_iter.to_dyn
     );
 }
 

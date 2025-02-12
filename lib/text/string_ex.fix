@@ -214,16 +214,16 @@ split_first = |delim, str| (
 // "foo".split_ex(",").to_array
 // ==> ["foo"]
 // ```
-split_ex: String -> String -> Iterator String;
+split_ex: String -> String -> DynIterator String;
 split_ex = |delim, str| (
     if delim == "" {
-        Iterator::empty.push_front(str)
+        Iterator::empty.push_front(str).to_dyn
     };
     let pos = str.find(delim, 0);
     if pos.is_none {
-        Iterator::empty.push_front(str)
+        Iterator::empty.push_front(str).to_dyn
     };
-    str.split(delim)
+    str.split(delim).to_dyn
 );
 
 // Splits a string by a function that checks whether a character is a delimiter or not.
@@ -234,7 +234,7 @@ split_ex = |delim, str| (
 // "  aa bb  12 ".split_by(Character::is_space).to_array
 // ==>  ["aa", "bb", "12"]
 // ```
-split_by: (U8 -> Bool) -> String -> Iterator String;
+split_by: (U8 -> Bool) -> String -> DynIterator String;
 split_by = |is_delim, str| (
     let output = Array::empty(str.get_size);
     let output = loop(
@@ -250,7 +250,7 @@ split_by = |is_delim, str| (
         let output = if start < i { output.push_back(str.substring(start, i)) } else { output };
         continue $ (output, i + 1, i + 1)
     );
-    output.to_iter
+    output.to_iter.to_dyn
 );
 
 // Deprecated: Please use `Std::String::get_sub`.
@@ -347,7 +347,7 @@ formatv = |str, args| (
     let from = "{}";
     let output = Array::empty(args.get_size * 2);
     let (output, tail) = args.to_iter.loop_iter(
-        (output, 0), |(output, find_start), to|
+        (output, 0), |to, (output, find_start)|
         let pos = str.find(from, find_start);
         if pos.is_none {
             break $ (output, find_start)

@@ -126,7 +126,7 @@ Example:
  ==> err("suffix does not match: test.jpg")
 ```
 
-### `split_by : (Std::U8 -> Std::Bool) -> Std::String -> Std::Iterator Std::String`
+### `split_by : (Std::U8 -> Std::Bool) -> Std::String -> Std::Iterator::DynIterator Std::String`
 
 Splits a string by a function that checks whether a character is a delimiter or not.
 The result will not contain any empty string.
@@ -137,7 +137,7 @@ Example:
 ==>  ["aa", "bb", "12"]
 ```
 
-### `split_ex : Std::String -> Std::String -> Std::Iterator Std::String`
+### `split_ex : Std::String -> Std::String -> Std::Iterator::DynIterator Std::String`
 
 Deprecated: Please use `Std::String::split`.
 

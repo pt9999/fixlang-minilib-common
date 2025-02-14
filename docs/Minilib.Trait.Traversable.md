@@ -19,7 +19,9 @@ Similar to Haskell's `sequence` function.
 
 ### `impl Std::Array : Minilib.Trait.Traversable::Traversable`
 
-### `impl Std::Iterator : Minilib.Trait.Traversable::Traversable`
+### `impl Std::Iterator::ArrayIterator : Minilib.Trait.Traversable::Traversable`
+
+### `impl Std::Iterator::DynIterator : Minilib.Trait.Traversable::Traversable`
 
 ### `impl Std::Option : Minilib.Trait.Traversable::Traversable`
 

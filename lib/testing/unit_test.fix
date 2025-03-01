@@ -3,6 +3,8 @@ module Minilib.Testing.UnitTest;
 
 import Time;
 
+import Minilib.Common.IOEx;
+
 // If _TEST_VERBOSE is true, the results of all testcases will be printed.
 // If _TEST_VERBOSE is false, the results of only failed testcases will be printed.
 //
@@ -54,8 +56,8 @@ run_test_driver: Array TestCase -> IO ();
 run_test_driver = |tests| (
     do {
         // make stdout & stderr unbuffered
-        FFI_CALL_IO[() setbuf(Ptr, Ptr), IO::stdout._file_ptr, nullptr].lift;;
-        FFI_CALL_IO[() setbuf(Ptr, Ptr), IO::stderr._file_ptr, nullptr].lift;;
+        set_unbuffered_mode(IO::stdout).lift;;
+        set_unbuffered_mode(IO::stderr).lift;;
 
         eprintln ("Starting Test Driver").lift;;
         let start = *Time::get_now.lift;

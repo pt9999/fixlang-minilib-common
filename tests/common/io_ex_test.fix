@@ -1,0 +1,51 @@
+module IOExTest;
+
+import Time;
+
+import Minilib.Common.IOEx;
+import Minilib.Testing.UnitTest;
+
+test_fflush: TestCase;
+test_fflush = (
+    make_test("test_fflush") $ |_|
+    let filepath = ".fixlang/test_fflush.tmp";
+    let text = "Hello";
+    with_file(filepath, "w") $ |output|
+    write_string(output, text);;
+    with_file(filepath, "r", |input|
+        let str = *read_string(input);
+        assert_equal("eq", "", str)
+    );;
+    fflush(output);;
+    with_file(filepath, "r", |input|
+        let str = *read_string(input);
+        assert_equal("eq", text, str)
+    );;
+    pure()
+);
+
+test_set_unbuffered_mode: TestCase;
+test_set_unbuffered_mode = (
+    make_test("test_set_unbuffered_mode") $ |_|
+    let filepath = ".fixlang/test_set_unbuffered_mode.tmp";
+    let text = "Hello";
+    with_file(filepath, "w") $ |output|
+    set_unbuffered_mode(output).lift;;
+    write_string(output, text);;
+    with_file(filepath, "r", |input|
+        let str = *read_string(input);
+        assert_equal("eq", text, str)
+    );;
+    pure()
+);
+
+main: IO ();
+main = (
+    [
+        test_fflush,
+        test_set_unbuffered_mode,
+        TestCase::empty
+    ]
+    .run_test_driver
+);
+

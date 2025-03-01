@@ -1,4 +1,6 @@
-# `module Minilib.Text.StringEx`
+# Minilib.Text.StringEx
+
+Defined in minilib-common@0.5.2
 
 String utility functions.
 
@@ -7,21 +9,19 @@ Features:
 - Search, replace, split, comparison of String
 - Format
 
-# Types and aliases
+## Values
 
-# Traits and aliases
+### namespace Minilib.Text.StringEx
 
-# Trait implementations
+#### _append_range
 
-# Values
-
-## `namespace Minilib.Text.StringEx`
-
-### `_append_range : Std::Array a -> Std::I64 -> Std::I64 -> Std::Array a -> Std::Array a`
+Type: `Std::Array a -> Std::I64 -> Std::I64 -> Std::Array a -> Std::Array a`
 
 (Internal function)
 
-### `_unsafe_to_string : Std::Array Std::U8 -> Std::String`
+#### _unsafe_to_string
+
+Type: `Std::Array Std::U8 -> Std::String`
 
 Converts a byte array to a string. Specifically, it calls `String::_unsafe_to_string()`
 after appending a null character to the end of the byte array.
@@ -34,7 +34,9 @@ Example:
 ==> "ABC"
 ```
 
-### `byte_to_string : Std::U8 -> Std::String`
+#### byte_to_string
+
+Type: `Std::U8 -> Std::String`
 
 Deprecated: Please use `Std::String::from_U8`.
 
@@ -46,7 +48,9 @@ Example:
 ==> "A"
 ```
 
-### `ends_with : Std::String -> Std::String -> Std::Bool`
+#### ends_with
+
+Type: `Std::String -> Std::String -> Std::Bool`
 
 Checks if a string ends with the specified suffix.
 
@@ -58,7 +62,9 @@ Example:
 ==> false
 ```
 
-### `find_byte : Std::U8 -> Std::String -> Std::Option Std::I64`
+#### find_byte
+
+Type: `Std::U8 -> Std::String -> Std::Option Std::I64`
 
 Searches for the specified byte from the beginning of a string.
 If found, returns the index of that byte.
@@ -71,7 +77,9 @@ Example:
 ==> none()
 ```
 
-### `find_last_byte : Std::U8 -> Std::String -> Std::Option Std::I64`
+#### find_last_byte
+
+Type: `Std::U8 -> Std::String -> Std::Option Std::I64`
 
 Searches for the specified byte from the end of a string.
 If found, returns the index of that byte.
@@ -84,7 +92,9 @@ Example:
 ==> none()
 ```
 
-### `formatv : Std::String -> Std::Array Std::String -> Std::String`
+#### formatv
+
+Type: `Std::String -> Std::Array Std::String -> Std::String`
 
 `array.formatv(str)` replaces each occurence of `{}` in the format string `str`
 with each element of `array`.
@@ -98,7 +108,9 @@ Example:
 ==> "foo=1 bar={} baz={}"
 ```
 
-### `replace_all : Std::String -> Std::String -> Std::String -> Std::String`
+#### replace_all
+
+Type: `Std::String -> Std::String -> Std::String -> Std::String`
 
 `input.replace_all(from, to)` replaces all occurrences of `from` in the input string with `to`.
 If `from` is empty, returns the input string unchanged.
@@ -113,7 +125,9 @@ Example:
 ==> "foo1:11,foo2:22,Foo3:33"
 ```
 
-### `replace_suffix : Std::String -> Std::String -> Std::String -> Std::Result Std::ErrMsg Std::String`
+#### replace_suffix
+
+Type: `Std::String -> Std::String -> Std::String -> Std::Result Std::ErrMsg Std::String`
 
 `str.replace_suffix(from, to)` replaces `from` at the end of `str` with `to`.
 if `str` does not end with `from`, an error occurs.
@@ -126,7 +140,9 @@ Example:
  ==> err("suffix does not match: test.jpg")
 ```
 
-### `split_by : (Std::U8 -> Std::Bool) -> Std::String -> Std::Iterator::DynIterator Std::String`
+#### split_by
+
+Type: `(Std::U8 -> Std::Bool) -> Std::String -> Std::Iterator::DynIterator Std::String`
 
 Splits a string by a function that checks whether a character is a delimiter or not.
 The result will not contain any empty string.
@@ -137,7 +153,9 @@ Example:
 ==>  ["aa", "bb", "12"]
 ```
 
-### `split_ex : Std::String -> Std::String -> Std::Iterator::DynIterator Std::String`
+#### split_ex
+
+Type: `Std::String -> Std::String -> Std::Iterator::DynIterator Std::String`
 
 Deprecated: Please use `Std::String::split`.
 
@@ -151,7 +169,9 @@ Example:
 ==> ["foo"]
 ```
 
-### `split_first : Std::String -> Std::String -> (Std::String, Std::String)`
+#### split_first
+
+Type: `Std::String -> Std::String -> (Std::String, Std::String)`
 
 `str.split_first(delim)` splits the string `str` into two parts at the first occurence of the delimiter `delim`.
 Returns `(left, right)` where `left` is the left part of the delimiter, and
@@ -168,7 +188,9 @@ Example:
 ==> ("aaa/bbb/ccc", "")
 ```
 
-### `starts_with : Std::String -> Std::String -> Std::Bool`
+#### starts_with
+
+Type: `Std::String -> Std::String -> Std::Bool`
 
 Checks if a string starts with the specified prefix.
 
@@ -180,7 +202,9 @@ Example:
 ==> false
 ```
 
-### `subarray : Std::I64 -> Std::I64 -> Std::Array a -> Std::Array a`
+#### subarray
+
+Type: `Std::I64 -> Std::I64 -> Std::Array a -> Std::Array a`
 
 Deprecated: Please use `Std::Array::get_sub`.
 
@@ -197,7 +221,9 @@ Example:
 ==> [10, 11, 12, 13, 14]
 ```
 
-### `substring : Std::I64 -> Std::I64 -> Std::String -> Std::String`
+#### substring
+
+Type: `Std::I64 -> Std::I64 -> Std::String -> Std::String`
 
 Deprecated: Please use `Std::String::get_sub`.
 
@@ -214,7 +240,9 @@ Example:
 ==> "abcdef"
 ```
 
-### `to_lower : Std::String -> Std::String`
+#### to_lower
+
+Type: `Std::String -> Std::String`
 
 Converts the specified string to lowercase.
 
@@ -224,7 +252,9 @@ Example:
 ==> "abcdef123"
 ```
 
-### `to_upper : Std::String -> Std::String`
+#### to_upper
+
+Type: `Std::String -> Std::String`
 
 Converts the specified string to uppercase.
 
@@ -234,9 +264,11 @@ Example:
 ==> "ABCDEF123"
 ```
 
-## `namespace Minilib.Text.StringEx::Array`
+### namespace Minilib.Text.StringEx::Array
 
-### `format : [a : Std::ToString] Std::String -> Std::Array a -> Std::String`
+#### format
+
+Type: `[a : Std::ToString] Std::String -> Std::Array a -> Std::String`
 
 `array.format(str)` replaces each occurence of `{}` in the format string `str`
 with each element of `array`.
@@ -250,9 +282,11 @@ Example:
 ==> "foo=some(1) bar={} baz={}"
 ```
 
-## `namespace Minilib.Text.StringEx::Tuple1`
+### namespace Minilib.Text.StringEx::Tuple1
 
-### `format : [a : Std::ToString] Std::String -> (a,) -> Std::String`
+#### format
+
+Type: `[a : Std::ToString] Std::String -> (a,) -> Std::String`
 
 `(a, ).format(str)` replaces an occurence of `{}` in the format string `str`
 with `a`.
@@ -265,9 +299,11 @@ Example:
 ==> "arr=[1, 2, 3]"
 ```
 
-## `namespace Minilib.Text.StringEx::Tuple2`
+### namespace Minilib.Text.StringEx::Tuple2
 
-### `format : [a : Std::ToString, b : Std::ToString] Std::String -> (a, b) -> Std::String`
+#### format
+
+Type: `[a : Std::ToString, b : Std::ToString] Std::String -> (a, b) -> Std::String`
 
 `(a, b).format(str)` replaces each occurence of `{}` in the format string `str`
 with `a`, `b`.
@@ -278,9 +314,11 @@ Example:
 ==> "int=12 str=abc"
 ```
 
-## `namespace Minilib.Text.StringEx::Tuple3`
+### namespace Minilib.Text.StringEx::Tuple3
 
-### `format : [a : Std::ToString, b : Std::ToString, c : Std::ToString] Std::String -> (a, b, c) -> Std::String`
+#### format
+
+Type: `[a : Std::ToString, b : Std::ToString, c : Std::ToString] Std::String -> (a, b, c) -> Std::String`
 
 `(a, b, c).format(str)` replaces each occurence of `{}` in the format string `str`
 with `a`, `b`, `c`.
@@ -291,9 +329,11 @@ Example:
 ==> "int=12 float=345.678000 str=abc"
 ```
 
-## `namespace Minilib.Text.StringEx::Tuple4`
+### namespace Minilib.Text.StringEx::Tuple4
 
-### `format : [a : Std::ToString, b : Std::ToString, c : Std::ToString, d : Std::ToString] Std::String -> (a, b, c, d) -> Std::String`
+#### format
+
+Type: `[a : Std::ToString, b : Std::ToString, c : Std::ToString, d : Std::ToString] Std::String -> (a, b, c, d) -> Std::String`
 
 `(a, b, c, d).format(str)` replaces each occurence of `{}` in the format string `str`
 with `a`, `b`, `c`, `d`.
@@ -304,9 +344,11 @@ Example:
 ==> "int=12 float=345.678000 str=abc option=some(1)"
 ```
 
-## `namespace Minilib.Text.StringEx::Tuple5`
+### namespace Minilib.Text.StringEx::Tuple5
 
-### `format : [a : Std::ToString, b : Std::ToString, c : Std::ToString, d : Std::ToString, e : Std::ToString] Std::String -> (a, b, c, d, e) -> Std::String`
+#### format
+
+Type: `[a : Std::ToString, b : Std::ToString, c : Std::ToString, d : Std::ToString, e : Std::ToString] Std::String -> (a, b, c, d, e) -> Std::String`
 
 `(a, b, c, d, e).format(str)` replaces each occurence of `{}` in the format string `str`
 with `a`, `b`, `c`, `d`, `e`.
@@ -316,3 +358,9 @@ Example:
 (12, 345.678, "abc", some(1), [1, 2, 3]).format("int={} float={} str={} option={} array={}")
 ==> "int=12 float=345.678000 str=abc option=some(1) array=[1, 2, 3]"
 ```
+
+## Types and aliases
+
+## Traits and aliases
+
+## Trait implementations

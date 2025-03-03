@@ -2,18 +2,18 @@ proj_file_hash = "a034bbe225e230128dc3d6120da00ffa"
 
 [[dependencies]]
 name = "character"
-version = "1.0.0"
-path = ".fixlang/deps/character_1.0.0"
+version = "1.0.1"
+path = ".fixlang/deps/character_1.0.1"
 
 [dependencies.git]
 repo = "https://github.com/tttmmmyyyy/fixlang-character.git"
-rev = "13e128d2b87a729c4e73d986994a5cedcf3e8f49"
+rev = "fd75a6634ec0c919f2d1703112d25da9a3c2346e"
 
 [[dependencies]]
 name = "time"
-version = "1.0.0"
-path = ".fixlang/deps/time_1.0.0"
+version = "1.0.1"
+path = ".fixlang/deps/time_1.0.1"
 
 [dependencies.git]
 repo = "https://github.com/tttmmmyyyy/fixlang-time.git"
-rev = "0df92cf1c3ffc148d658c1a554c94105aef13520"
+rev = "53b35d9adc0de54ad87fe6b06c4baa6afa38a2b4"

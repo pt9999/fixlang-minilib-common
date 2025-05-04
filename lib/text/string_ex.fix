@@ -15,6 +15,9 @@ import Character;
 // Converts a byte array to a string. Specifically, it calls `String::_unsafe_to_string()`
 // after appending a null character to the end of the byte array.
 //
+// # Parameters
+// * `bytes` - a byte array
+//
 // Example:
 // ```
 // [ 'a', 'b', 'c' ]._unsafe_to_string
@@ -23,11 +26,14 @@ import Character;
 // ==> "ABC"
 // ```
 _unsafe_to_string: Array U8 -> String;
-_unsafe_to_string = |a| (
-    String::_unsafe_from_c_str (a.push_back(0_U8))
+_unsafe_to_string = |bytes| (
+    String::_unsafe_from_c_str (bytes.push_back(0_U8))
 );
 
 // Converts the specified string to lowercase.
+//
+// # Parameters
+// * `str` - a string
 //
 // Example:
 // ```
@@ -40,6 +46,9 @@ to_lower = |str| (
 );
 
 // Converts the specified string to uppercase.
+//
+// # Parameters
+// * `str` - a string
 //
 // Example:
 // ```
@@ -68,6 +77,10 @@ byte_to_string = |c| (
 // Searches for the specified byte from the beginning of a string.
 // If found, returns the index of that byte.
 //
+// # Parameters
+// * `c` - a byte (a character)
+// * `str` - a string
+//
 // Example:
 // ```
 // "aaa/bbb/ccc".find_byte('/')
@@ -94,6 +107,10 @@ find_byte = |c, str| (
 // Searches for the specified byte from the end of a string.
 // If found, returns the index of that byte.
 //
+// # Parameters
+// * `c` - a byte (a character)
+// * `str` - a string
+//
 // Example:
 // ```
 // "aaa/bbb/ccc".find_last_byte('/')
@@ -119,6 +136,17 @@ find_last_byte = |c, str| (
 
 // `input.replace_all(from, to)` replaces all occurrences of `from` in the input string with `to`.
 // If `from` is empty, returns the input string unchanged.
+//
+// # Parameters
+// * `from` - a string to be searched
+// * `to` - a string to replace with
+// * `input` - a string to be replaced
+//
+// Returns the modified string.
+// If `from` is empty, returns the input string unchanged.
+// If `from` is not found, returns the input string unchanged.
+// If `to` is empty, removes all occurrences of `from` from the input string.
+// If `input` is empty, returns an empty string.
 //
 // Example:
 // ```
@@ -163,6 +191,14 @@ _append_range = |src_arr, src_begin, src_end, dest_arr| (
 // `str.replace_suffix(from, to)` replaces `from` at the end of `str` with `to`.
 // if `str` does not end with `from`, an error occurs.
 //
+// # Parameters
+// * `from` - a string to be searched
+// * `to` - a string to replace with
+// * `str` - a string to be replaced
+//
+// Returns `ok(str)` if the replacement is successful.
+// Returns `err("suffix does not match: str")` if the replacement fails.
+//
 // Example:
 // ```
 // "test.txt".replace_suffix(".txt", ".tmp")
@@ -183,6 +219,15 @@ replace_suffix = |from, to, str| (
 // Returns `(left, right)` where `left` is the left part of the delimiter, and
 // `right` is the right part of the delimiter.
 // Returns `(str, "")` if the delimiter is not found.
+//
+// # Parameters
+// * `delim` - a string to be searched
+// * `str` - a string to be split
+//
+// Returns a tuple of two strings.
+// If `delim` is empty, returns `(str, "")`.
+// If `delim` is not found, returns `(str, "")`.
+// If `str` is empty, returns `("", "")`.
 //
 // Example:
 // ```
@@ -228,6 +273,12 @@ split_ex = |delim, str| (
 
 // Splits a string by a function that checks whether a character is a delimiter or not.
 // The result will not contain any empty string.
+//
+// # Parameters
+// * `is_delim` - a function that checks whether a character is a delimiter or not
+// * `str` - a string to be split
+//
+// Returns a dynamic iterator of strings.
 //
 // Example:
 // ```
@@ -301,6 +352,13 @@ subarray = |s, e, arr| (
 
 // Checks if a string starts with the specified prefix.
 //
+// # Parameters
+// * `prefix` - a string to be searched
+// * `str` - a string to be checked
+//
+// Returns `true` if `str` starts with `prefix`, otherwise returns `false`.
+// If `prefix` is empty, returns `true`.
+//
 // Example:
 // ```
 // "/foo/bar.txt".starts_with("/")
@@ -314,6 +372,13 @@ starts_with = |prefix, str| (
 );
 
 // Checks if a string ends with the specified suffix.
+//
+// # Parameters
+// * `suffix` - a string to be searched
+// * `str` - a string to be checked
+//
+// Returns `true` if `str` ends with `suffix`, otherwise returns `false`.
+// If `suffix` is empty, returns `true`.
 //
 // Example:
 // ```
@@ -334,6 +399,12 @@ ends_with = |suffix, str| (
 // `array.formatv(str)` replaces each occurence of `{}` in the format string `str`
 // with each element of `array`.
 // Currently only supports `{}`.
+//
+// # Parameters
+// * `str` - a format string
+// * `array` - an array of strings
+//
+// Returns a formatted string.
 //
 // Example:
 // ```

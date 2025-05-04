@@ -33,9 +33,15 @@ namespace TestCase {
     empty = |_| pure $ (0, 0);
 }
 
+// A test suite is an array of test cases. Each test case is a tuple of a name and an IO action.
+
 type TestSuite = Array (String, IO ()); 
 
 namespace TestSuite {
+    // Run a test suite.
+    //
+    // # Parameters
+    // - `testsuite`: a test suite.
     run: TestSuite -> IO ();
     run = |testsuite| (
         testsuite.to_iter.fold_m(
@@ -84,6 +90,12 @@ run_test_driver = |tests| (
 );
 
 // Executes all test cases and treat the results as one test case.
+// It is used to run all test cases in a single test case.
+//
+// # Parameters
+// - `tests`: an array of test cases.
+//
+// Returns a test case that will execute all test cases.
 run_tests: Array (TestCase) -> TestCase;
 run_tests = |tests, _| (
     tests.to_iter.fold_m(
@@ -94,6 +106,13 @@ run_tests = |tests, _| (
 );
 
 // Creates a named test case from a lazy `IOFail ()`.
+//
+// # Parameters
+// - `test_name`: the name of the test case.
+// - `body`: a lazy `IOFail ()` that will be executed when the test case is run.
+//
+// Returns a test case that will execute the `body` when run.
+// The test case will print the name of the test case and the result (success or failure) to `stderr`.
 make_test: String -> Lazy (IOFail ()) -> TestCase;
 make_test = |test_name, body, _| (
     when(_TEST_VERBOSE, eprintln("=== " + test_name + " ===").lift);;
@@ -109,6 +128,13 @@ make_test = |test_name, body, _| (
 );
 
 // Creates a set of test cases from parameters and a lazy `IOFail ()`.
+//
+// # Parameters
+// - `test_name`: the name of the test case.
+// - `params`: an array of parameters to be passed to the test case.
+// - `body`: a lazy `IOFail ()` that will be executed when the test case is run.
+//
+// Returns an aggregated test case.
 make_table_test: [a: ToString] String -> Array a -> (a -> IOFail ()) -> TestCase;
 make_table_test = |test_name, params, body| (
     params.map(|param|

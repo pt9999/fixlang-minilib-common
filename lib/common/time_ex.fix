@@ -19,6 +19,12 @@ usleep = |usec| (
 // Specifically, It calls the function many times and measures the total time.
 // It then prints the function result and measured time per loop.
 // NOTE: The measured time per loop has a overhead about 0.1~1.0 usec.
+// It is useful for measuring the performance of a function.
+// # Parameters
+// - `label`: a label for the function.
+// - `f`: a function to be measured.
+// # Returns
+// - The result of the function.
 timeit: [a: ToString] String -> (() -> a) -> IO a;
 timeit = |label, f| (
     let io_a = do {

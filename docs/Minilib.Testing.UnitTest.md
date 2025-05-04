@@ -8,16 +8,6 @@ Unit Test Framework
 
 ### namespace Minilib.Testing.UnitTest
 
-#### _TEST_VERBOSE
-
-Type: `Std::Bool`
-
-If _TEST_VERBOSE is true, the results of all testcases will be printed.
-If _TEST_VERBOSE is false, the results of only failed testcases will be printed.
-
-If the environment variable `TEST_VERBOSE` is set to non-empty string, _TEST_VERBOSE becomes true.
-For example, running the `TEST_VERBOSE=1 fix test` command at a shell prompt will report all testcases.
-
 #### assert_equal
 
 Type: `[a : Std::Eq, a : Std::ToString] Std::String -> a -> a -> Std::IO::IOFail ()`
@@ -42,11 +32,27 @@ Type: `[a : Std::ToString] Std::String -> Std::Array a -> (a -> Std::IO::IOFail 
 
 Creates a set of test cases from parameters and a lazy `IOFail ()`.
 
+##### Parameters
+
+- `test_name`: the name of the test case.
+- `params`: an array of parameters to be passed to the test case.
+- `body`: a lazy `IOFail ()` that will be executed when the test case is run.
+
+Returns an aggregated test case.
+
 #### make_test
 
 Type: `Std::String -> Std::Lazy (Std::IO::IOFail ()) -> Minilib.Testing.UnitTest::TestCase`
 
 Creates a named test case from a lazy `IOFail ()`.
+
+##### Parameters
+
+- `test_name`: the name of the test case.
+- `body`: a lazy `IOFail ()` that will be executed when the test case is run.
+
+Returns a test case that will execute the `body` when run.
+The test case will print the name of the test case and the result (success or failure) to `stderr`.
 
 #### run_test_driver
 
@@ -64,6 +70,13 @@ Executes all test cases. This function:
 Type: `Std::Array Minilib.Testing.UnitTest::TestCase -> Minilib.Testing.UnitTest::TestCase`
 
 Executes all test cases and treat the results as one test case.
+It is used to run all test cases in a single test case.
+
+##### Parameters
+
+- `tests`: an array of test cases.
+
+Returns a test case that will execute all test cases.
 
 ### namespace Minilib.Testing.UnitTest::TestCase
 
@@ -79,6 +92,12 @@ Can be used as a placeholder at the end of an array of test cases.
 #### run
 
 Type: `Minilib.Testing.UnitTest::TestSuite -> Std::IO ()`
+
+Run a test suite.
+
+##### Parameters
+
+- `testsuite`: a test suite.
 
 ## Types and aliases
 

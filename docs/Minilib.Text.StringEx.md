@@ -13,27 +13,6 @@ Features:
 
 ### namespace Minilib.Text.StringEx
 
-#### _append_range
-
-Type: `Std::Array a -> Std::I64 -> Std::I64 -> Std::Array a -> Std::Array a`
-
-(Internal function)
-
-#### _unsafe_to_string
-
-Type: `Std::Array Std::U8 -> Std::String`
-
-Converts a byte array to a string. Specifically, it calls `String::_unsafe_to_string()`
-after appending a null character to the end of the byte array.
-
-Example:
-```
-[ 'a', 'b', 'c' ]._unsafe_to_string
-==> "abc"
-[ 0x41_U8, 0x42_U8, 0x43_U8 ]._unsafe_to_string
-==> "ABC"
-```
-
 #### byte_to_string
 
 Type: `Std::U8 -> Std::String`
@@ -54,6 +33,14 @@ Type: `Std::String -> Std::String -> Std::Bool`
 
 Checks if a string ends with the specified suffix.
 
+##### Parameters
+
+* `suffix` - a string to be searched
+* `str` - a string to be checked
+
+Returns `true` if `str` ends with `suffix`, otherwise returns `false`.
+If `suffix` is empty, returns `true`.
+
 Example:
 ```
 "/foo/bar.txt".ends_with(".txt")
@@ -69,6 +56,11 @@ Type: `Std::U8 -> Std::String -> Std::Option Std::I64`
 Searches for the specified byte from the beginning of a string.
 If found, returns the index of that byte.
 
+##### Parameters
+
+* `c` - a byte (a character)
+* `str` - a string
+
 Example:
 ```
 "aaa/bbb/ccc".find_byte('/')
@@ -83,6 +75,11 @@ Type: `Std::U8 -> Std::String -> Std::Option Std::I64`
 
 Searches for the specified byte from the end of a string.
 If found, returns the index of that byte.
+
+##### Parameters
+
+* `c` - a byte (a character)
+* `str` - a string
 
 Example:
 ```
@@ -100,6 +97,13 @@ Type: `Std::String -> Std::Array Std::String -> Std::String`
 with each element of `array`.
 Currently only supports `{}`.
 
+##### Parameters
+
+* `str` - a format string
+* `array` - an array of strings
+
+Returns a formatted string.
+
 Example:
 ```
 ["1", "2", "3"].formatv("foo={} bar={} baz={}")
@@ -114,6 +118,18 @@ Type: `Std::String -> Std::String -> Std::String -> Std::String`
 
 `input.replace_all(from, to)` replaces all occurrences of `from` in the input string with `to`.
 If `from` is empty, returns the input string unchanged.
+
+##### Parameters
+
+* `from` - a string to be searched
+* `to` - a string to replace with
+* `input` - a string to be replaced
+
+Returns the modified string.
+If `from` is empty, returns the input string unchanged.
+If `from` is not found, returns the input string unchanged.
+If `to` is empty, removes all occurrences of `from` from the input string.
+If `input` is empty, returns an empty string.
 
 Example:
 ```
@@ -132,6 +148,15 @@ Type: `Std::String -> Std::String -> Std::String -> Std::Result Std::ErrMsg Std:
 `str.replace_suffix(from, to)` replaces `from` at the end of `str` with `to`.
 if `str` does not end with `from`, an error occurs.
 
+##### Parameters
+
+* `from` - a string to be searched
+* `to` - a string to replace with
+* `str` - a string to be replaced
+
+Returns `ok(str)` if the replacement is successful.
+Returns `err("suffix does not match: str")` if the replacement fails.
+
 Example:
 ```
 "test.txt".replace_suffix(".txt", ".tmp")
@@ -146,6 +171,13 @@ Type: `(Std::U8 -> Std::Bool) -> Std::String -> Std::Iterator::DynIterator Std::
 
 Splits a string by a function that checks whether a character is a delimiter or not.
 The result will not contain any empty string.
+
+##### Parameters
+
+* `is_delim` - a function that checks whether a character is a delimiter or not
+* `str` - a string to be split
+
+Returns a dynamic iterator of strings.
 
 Example:
 ```
@@ -178,6 +210,16 @@ Returns `(left, right)` where `left` is the left part of the delimiter, and
 `right` is the right part of the delimiter.
 Returns `(str, "")` if the delimiter is not found.
 
+##### Parameters
+
+* `delim` - a string to be searched
+* `str` - a string to be split
+
+Returns a tuple of two strings.
+If `delim` is empty, returns `(str, "")`.
+If `delim` is not found, returns `(str, "")`.
+If `str` is empty, returns `("", "")`.
+
 Example:
 ```
 "aaa/bbb/ccc".split_first("/")
@@ -193,6 +235,14 @@ Example:
 Type: `Std::String -> Std::String -> Std::Bool`
 
 Checks if a string starts with the specified prefix.
+
+##### Parameters
+
+* `prefix` - a string to be searched
+* `str` - a string to be checked
+
+Returns `true` if `str` starts with `prefix`, otherwise returns `false`.
+If `prefix` is empty, returns `true`.
 
 Example:
 ```
@@ -246,6 +296,10 @@ Type: `Std::String -> Std::String`
 
 Converts the specified string to lowercase.
 
+##### Parameters
+
+* `str` - a string
+
 Example:
 ```
 "ABCdef123".to_lower
@@ -257,6 +311,10 @@ Example:
 Type: `Std::String -> Std::String`
 
 Converts the specified string to uppercase.
+
+##### Parameters
+
+* `str` - a string
 
 Example:
 ```

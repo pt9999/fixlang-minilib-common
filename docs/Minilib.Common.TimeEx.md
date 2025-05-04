@@ -8,10 +8,6 @@ Timing module, such as sleep for a while, and measuring execution time.
 
 ### namespace Minilib.Common.TimeEx
 
-#### _repeat_io
-
-Type: `Std::IO a -> Std::I64 -> Std::IO a`
-
 #### consumed_realtime_while_io
 
 Type: `Std::IO a -> Std::IO (a, Std::F64)`
@@ -52,6 +48,16 @@ Measures wall-clock time per a function call.
 Specifically, It calls the function many times and measures the total time.
 It then prints the function result and measured time per loop.
 NOTE: The measured time per loop has a overhead about 0.1~1.0 usec.
+It is useful for measuring the performance of a function.
+
+##### Parameters
+
+- `label`: a label for the function.
+- `f`: a function to be measured.
+
+##### Returns
+
+- The result of the function.
 
 #### timeit_io
 

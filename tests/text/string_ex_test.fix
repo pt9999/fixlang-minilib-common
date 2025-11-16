@@ -12,7 +12,7 @@ test__unsafe_to_string = (
     let array = [ 'a', 'b', 'c' ];
     let expected = "abc";
     let actual = array._unsafe_to_string;
-    let _ = *(assert_equal("eq", expected, actual));
+    assert_equal("eq", expected, actual);;
     pure()
 );
 
@@ -20,10 +20,10 @@ test_to_lower: TestCase;
 test_to_lower = (
     let testname = "test_to_lower";
     make_test(testname) $ |_|
-    let _ = *(assert_equal("eq", "", "".to_lower));
-    let _ = *(assert_equal("eq", " !0aa", " !0Aa".to_lower));
+    assert_equal("eq", "", "".to_lower);;
+    assert_equal("eq", " !0aa", " !0Aa".to_lower);;
     // a fraky test since the result varies by locale
-    //let _ = *(assert_equal("eq", " !0aaààππあア", " !0AaÀàΠπあア".to_lower));
+    //assert_equal("eq", " !0aaààππあア", " !0AaÀàΠπあア".to_lower);;
     pure()
 );
 
@@ -31,10 +31,10 @@ test_to_upper: TestCase;
 test_to_upper = (
     let testname = "test_to_upper";
     make_test(testname) $ |_|
-    let _ = *(assert_equal("eq", "", "".to_lower));
-    let _ = *(assert_equal("eq", " !0AA", " !0Aa".to_upper));
+    assert_equal("eq", "", "".to_lower);;
+    assert_equal("eq", " !0AA", " !0Aa".to_upper);;
     // a fraky test since the result varies by locale
-    //let _ = *(assert_equal("eq", " !0AAÀÀΠΠあア", " !0AaÀàΠπあア".to_upper));
+    //assert_equal("eq", " !0AAÀÀΠΠあア", " !0AaÀàΠπあア".to_upper);;
     pure()
 );
 
@@ -42,9 +42,9 @@ test_byte_to_string: TestCase;
 test_byte_to_string = (
     let testname = "test_byte_to_string";
     make_test(testname) $ |_|
-    let _ = *assert_equal("from U8 literal", "A", 0x41_U8.byte_to_string);
-    let _ = *assert_equal("from char literal", "B", 'B'.byte_to_string);
-    let _ = *assert_equal("from NUL", "", 0x00_U8.byte_to_string);
+    assert_equal("from U8 literal", "A", 0x41_U8.byte_to_string);;
+    assert_equal("from char literal", "B", 'B'.byte_to_string);;
+    assert_equal("from NUL", "", 0x00_U8.byte_to_string);;
     pure()
 );
 
@@ -53,7 +53,7 @@ test_find_byte_ok = |(str, byte, expected)| (
     let testname = "test_find_byte_ok (" + str + "," + byte.to_string + "," + expected.to_string + ")";
     make_test(testname) $ |_|
     let actual = str.find_byte(byte);
-    let _ = *(assert_equal("eq", expected, actual));
+    assert_equal("eq", expected, actual);;
     pure()
 );
 
@@ -75,7 +75,7 @@ test_find_last_byte_ok = |(str, byte, expected)| (
     let testname = "test_find_last_byte_ok (" + str + "," + byte.to_string + "," + expected.to_string + ")";
     make_test(testname) $ |_|
     let actual = str.find_last_byte(byte);
-    let _ = *(assert_equal("eq", expected, actual));
+    assert_equal("eq", expected, actual);;
     pure()
 );
 
@@ -97,7 +97,7 @@ test_replace_all_ok = |(str, from, to, expected)| (
     let testname = "test_replace_all_ok (" + str + "," + from + "," + to + "," + expected + ")";
     make_test(testname) $ |_|
     let actual = str.replace_all(from, to);
-    let _ = *(assert_equal("eq", expected, actual));
+    assert_equal("eq", expected, actual);;
     pure()
 );
 
@@ -130,11 +130,11 @@ test_replace_suffix_ok = |(str, from, to, expected)| (
     let testname = "test_replace_suffix_ok (" + str + "," + from + "," + to + "," + expected.to_string + ")";
     make_test(testname) $ |_|
     let actual = str.replace_suffix(from, to);
-    let _ = *if expected.is_ok {
-        let _ = *(assert_true("ok", actual.is_ok));
+    eval *if expected.is_ok {
+        assert_true("ok", actual.is_ok);;
         assert_equal("eq", expected.as_ok, actual.as_ok)
     } else {
-        let _ = *(assert_true("ok", actual.is_err));
+        assert_true("ok", actual.is_err);;
         assert_equal("eq", expected.as_err, actual.as_err)
     };
     pure()
@@ -163,7 +163,7 @@ test_split_first_ok = |(str,delim,expected)| (
     let testname = "test_split_first_ok (" + str + "," + delim + "," + expected.to_string + ")";
     make_test(testname) $ |_|
     let actual = str.split_first(delim);
-    let _ = *(assert_equal("eq", expected, actual));
+    assert_equal("eq", expected, actual);;
     pure()
 );
 
@@ -190,7 +190,7 @@ test_split_ex_ok = |(str,delim,expected)| (
     let testname = "test_split_ex_ok (" + str + "," + delim + "," + expected.to_string + ")";
     make_test(testname) $ |_|
     let actual = str.split_ex(delim).to_array;
-    let _ = *(assert_equal("eq", expected, actual));
+    assert_equal("eq", expected, actual);;
     pure()
 );
 
@@ -216,7 +216,7 @@ test_split_by_ok = |(str,is_delim,expected)| (
     let testname = "test_split_by_ok (" + str + "," + expected.to_string + ")";
     make_test(testname) $ |_|
     let actual = str.split_by(is_delim).to_array;
-    let _ = *(assert_equal("eq", expected, actual));
+    assert_equal("eq", expected, actual);;
     pure()
 );
 
@@ -239,7 +239,7 @@ test_substring_ok = |(str,s,e,expected)| (
     let testname = "test_substring_ok (" + str + "," + s.to_string + "," + e.to_string + "," + expected.to_string + ")";
     make_test(testname) $ |_|
     let actual = str.substring(s,e);
-    let _ = *(assert_equal("eq", expected, actual));
+    assert_equal("eq", expected, actual);;
     pure()
 );
 
@@ -266,7 +266,7 @@ test_starts_with_ok = |(str, prefix, expected)| (
     let testname = "test_starts_with_ok (" + str + "," + prefix + "," + expected.to_string + ")";
     make_test(testname) $ |_|
     let actual = str.starts_with(prefix);
-    let _ = *(assert_equal("eq", expected, actual));
+    assert_equal("eq", expected, actual);;
     pure()
 );
 
@@ -297,7 +297,7 @@ test_ends_with_ok = |(str, prefix, expected)| (
     let testname = "test_ends_with_ok (" + str + "," + prefix + "," + expected.to_string + ")";
     make_test(testname) $ |_|
     let actual = str.ends_with(prefix);
-    let _ = *(assert_equal("eq", expected, actual));
+    assert_equal("eq", expected, actual);;
     pure()
 );
 
@@ -328,19 +328,19 @@ test_ends_with = (
 test_format: TestCase;
 test_format = (
     make_test("test_format") $ |_|
-    //let _ = *assert_equal("no args", [].format(""), "");      // cannot determine array type
-    let _ = *assert_equal("one arg", ["abc"].format("{}"), "abc");
-    let _ = *assert_equal("two args",["abc", "def"].format("{}{}"), "abcdef");
-    let _ = *assert_equal("too many args", ["abc", "def", "ghi"].format("{}{}"), "abcdef");
-    let _ = *assert_equal("too few args", ["abc"].format("{}{}"), "abc{}");
-    let _ = *assert_equal("tuple1", (2.1_F32,).format("num={}"), "num=2.100000");
-    let _ = *assert_equal("tuple2", (2.1, "hello").format("num={} str={}"), "num=2.100000 str=hello");
-    let _ = *assert_equal("tuple3", (some(1_U16), [2,3,4], ()).format("option={} array={} unit={}"), "option=some(1) array=[2, 3, 4] unit=()");
-    let _ = *assert_equal("tuple4", ('A', ['B', 'C'], [[1, 2]], ('D', "E")).format("u8={} array_u8={} array_array_i64={} tuple2={}"),
+    //assert_equal("no args", [].format(""), "");;      // cannot determine array type
+    assert_equal("one arg", ["abc"].format("{}"), "abc");;
+    assert_equal("two args",["abc", "def"].format("{}{}"), "abcdef");;
+    assert_equal("too many args", ["abc", "def", "ghi"].format("{}{}"), "abcdef");;
+    assert_equal("too few args", ["abc"].format("{}{}"), "abc{}");;
+    assert_equal("tuple1", (2.1_F32,).format("num={}"), "num=2.100000");;
+    assert_equal("tuple2", (2.1, "hello").format("num={} str={}"), "num=2.100000 str=hello");;
+    assert_equal("tuple3", (some(1_U16), [2,3,4], ()).format("option={} array={} unit={}"), "option=some(1) array=[2, 3, 4] unit=()");;
+    eval *assert_equal("tuple4", ('A', ['B', 'C'], [[1, 2]], ('D', "E")).format("u8={} array_u8={} array_array_i64={} tuple2={}"),
                                     "u8=65 array_u8=[66, 67] array_array_i64=[[1, 2]] tuple2=(68, E)");
-    let _ = *assert_equal("tuple5", (1, 2.2, none(): Option I64, []: Array I64, (4,)).format("i64={} f64={} option={} array={} tuple1={}"),
+    eval *assert_equal("tuple5", (1, 2.2, none(): Option I64, []: Array I64, (4,)).format("i64={} f64={} option={} array={} tuple1={}"),
                                     "i64=1 f64=2.200000 option=none() array=[] tuple1=(4,)");
-    let _ = *assert_equal("cannot inject placeholder", ["dummy={}", "abc"].format("{}={}"), "dummy={}=abc");
+    assert_equal("cannot inject placeholder", ["dummy={}", "abc"].format("{}={}"), "dummy={}=abc");;
     pure()
 );
 

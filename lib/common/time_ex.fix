@@ -45,8 +45,8 @@ timeit_io = |label, io_a| (
     let (time, unit) = if time >= 1.0 { (time, "sec") }
     else if time >= 1.0e-3 { (time * 1.0e3, "msec") }
     else                   { (time * 1.0e6, "usec") };
-    let _ = *eprintln(label + "=" + result.to_string +
-                      " time/loop=" + time.to_string_precision(3_U8) + " " + unit);
+    eprintln(label + "=" + result.to_string +
+                      " time/loop=" + time.to_string_precision(3_U8) + " " + unit);;
     pure $ result
 );
 
@@ -54,7 +54,7 @@ timeit_io = |label, io_a| (
 notimeit: [a: ToString] String -> (() -> a) -> IO a;
 notimeit = |label, f| (
     let result = f();
-    let _ = *eprintln(label + "=" + result.to_string);
+    eprintln(label + "=" + result.to_string);;
     pure $ result
 );
 

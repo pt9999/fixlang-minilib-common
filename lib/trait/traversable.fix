@@ -25,16 +25,19 @@ traverse = map_m;
 map_m: [m: Monad, t: Traversable, t: Functor] (a -> m b) -> t a -> m (t b);
 map_m = |f, ta| ta.map(f).sequence;
 
-// `ta.foreach_m(f)` maps each element with `f`, then performs all elements sequentially and forgets the results.
-// Similar to Haskell's `mapM` function, but the results are discarded.
+// `iter.foreach_m(f)` maps each element with `f`, then performs all elements sequentially and forgets the results.
+//
+// Breaking change in 0.7.0: Now `foreach_m` is not a method of `Traversable` but of `Iterator`.
 //
 // Example:
 // ```
-// ["hello", "world"].foreach_m(println);;
+// ["hello", "world"].to_iter.foreach_m(println);;
 // ==> ("hello\nworld\n" is printed)
 // ```
-foreach_m: [m: Monad, t: Traversable, t: Functor] (a -> m ()) -> t a -> m ();
-foreach_m = |f, ta| ta.map_m(f).bind(|_| pure());
+foreach_m: [m: Monad, i: Iterator, Item i = a] (a -> m ()) -> i -> m ();
+foreach_m = |f, iter| (
+    iter.fold_m((), |a, _| f(a))
+);
 
 impl Array: Traversable {
     sequence = |array| (

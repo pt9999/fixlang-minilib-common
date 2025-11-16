@@ -1,6 +1,6 @@
 # Minilib.Common.Assert
 
-Defined in minilib-common@0.6.0
+Defined in minilib-common@0.6.2
 
 Assert functions.
 
@@ -16,7 +16,7 @@ Type: `[a : Std::Eq] Std::Lazy Std::String -> a -> a -> Std::Lazy b -> b`
 If the assertion failed, prints a message to the stderr and aborts the program.
 If the assertion succeeded, calls a lazy function.
 For example, instead of
-`eval *assert_eq(|_| "error", a, b); ...` in an IO monad, you can write
+`assert_eq(|_| "error", a, b);; ...` in an IO monad, you can write
 `assert_eq_lazy(|_| "error", a, b) $ |_| ...`.
 
 #### assert_lazy
@@ -28,7 +28,7 @@ If the assertion failed, prints a message to the stderr and aborts the program.
 If the assertion succeeded, calls a lazy function.
 
 For example, instead of
-`eval *assert(|_| "error", a == b); ...` in an IO monad, you can write
+`assert(|_| "error", a == b);; ...` in an IO monad, you can write
 `assert_lazy(|_| "error", a == b) $ |_| ...`.
 
 ## Types and aliases

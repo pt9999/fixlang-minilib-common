@@ -1,6 +1,6 @@
 # Minilib.Trait.Traversable
 
-Defined in minilib-common@0.6.2
+Defined in minilib-common@0.7.0
 
 ## Values
 
@@ -8,14 +8,15 @@ Defined in minilib-common@0.6.2
 
 #### foreach_m
 
-Type: `[m : Std::Monad, t : Minilib.Trait.Traversable::Traversable, t : Std::Functor] (a -> m ()) -> t a -> m ()`
+Type: `[m : Std::Monad, i : Std::Iterator, Std::Iterator::Item i = a] (a -> m ()) -> i -> m ()`
 
-`ta.foreach_m(f)` maps each element with `f`, then performs all elements sequentially and forgets the results.
-Similar to Haskell's `mapM` function, but the results are discarded.
+`iter.foreach_m(f)` maps each element with `f`, then performs all elements sequentially and forgets the results.
+
+Breaking change in 0.7.0: Now `foreach_m` is not a method of `Traversable` but of `Iterator`.
 
 Example:
 ```
-["hello", "world"].foreach_m(println);;
+["hello", "world"].to_iter.foreach_m(println);;
 ==> ("hello\nworld\n" is printed)
 ```
 

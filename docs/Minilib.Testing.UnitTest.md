@@ -1,6 +1,6 @@
 # Minilib.Testing.UnitTest
 
-Defined in minilib-common@0.7.0
+Defined in minilib-common@0.7.1
 
 Unit Test Framework
 

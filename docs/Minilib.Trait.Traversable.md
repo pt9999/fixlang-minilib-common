@@ -1,6 +1,6 @@
 # Minilib.Trait.Traversable
 
-Defined in minilib-common@0.7.0
+Defined in minilib-common@0.7.1
 
 ## Values
 
@@ -8,7 +8,7 @@ Defined in minilib-common@0.7.0
 
 #### foreach_m
 
-Type: `[m : Std::Monad, i : Std::Iterator, Std::Iterator::Item i = a] (a -> m ()) -> i -> m ()`
+Type: `[i : Std::Iterator, m : Std::Monad, Std::Iterator::Item i = a] (a -> m ()) -> i -> m ()`
 
 `iter.foreach_m(f)` maps each element with `f`, then performs all elements sequentially and forgets the results.
 
@@ -46,7 +46,7 @@ Type: `[m : Std::Monad, t : Minilib.Trait.Traversable::Traversable, t : Std::Fun
 
 #### sequence
 
-Type: `[t : Minilib.Trait.Traversable::Traversable, m : Std::Monad] t (m a) -> m (t a)`
+Type: `[m : Std::Monad, t : Minilib.Trait.Traversable::Traversable] t (m a) -> m (t a)`
 
 `ta.sequence` performs all elements sequentially and collects the results.
 Similar to Haskell's `sequence` function.
@@ -71,6 +71,10 @@ Similar to Haskell's `sequence` function.
 ## Trait implementations
 
 ### impl `Std::Array : Minilib.Trait.Traversable::Traversable`
+
+### impl `Std::Const a : Minilib.Trait.Traversable::Traversable`
+
+### impl `Std::Identity : Minilib.Trait.Traversable::Traversable`
 
 ### impl `Std::Iterator::ArrayIterator : Minilib.Trait.Traversable::Traversable`
 

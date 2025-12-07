@@ -119,6 +119,27 @@ test_result_sequence = (
     assert_equal("eq", some $ err $ "err", opt);;
     pure()
 );
+
+test_identity_sequence_map_m: TestCase;
+test_identity_sequence_map_m = (
+    make_test("test_identity_sequence_map_m") $ |_|
+    let iden: Identity (Option I64) = Identity { data: some(1) };
+    let opt: Option (Identity I64) = iden.sequence;
+    assert_equal("eq", some(1), opt.map(@data));;
+    let opt: Option (Identity String) = iden.map_m(to_string);
+    assert_equal("eq", some("1"), opt.map(@data))
+);
+
+test_const_sequence_map_m: TestCase;
+test_const_sequence_map_m = (
+    make_test("test_const_sequence_map_m") $ |_|
+    let c: Const String (Option I64) = Const { data: "a" };
+    let opt: Option (Const String I64) = c.sequence;
+    assert_equal("eq", some("a"), opt.map(@data));;
+    let opt: Option (Const String U64) = c.map_m(I64::to_U64);
+    assert_equal("eq", some("a"), opt.map(@data))
+);
+
 // TODO: add tests
 
 main: IO ();
@@ -132,6 +153,8 @@ main = (
         test_array_iterator_sequence,
         test_option_sequence,
         test_result_sequence,
+        test_identity_sequence_map_m,
+        test_const_sequence_map_m,
     ]
     .run_test_driver
 );

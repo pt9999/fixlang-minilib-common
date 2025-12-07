@@ -91,3 +91,15 @@ impl Tuple2 e: Traversable {
         pure $ (e, *ma)
     );
 }
+
+impl Identity: Traversable {
+    sequence = |i| (
+        pure $ Identity { data: *i.@data }
+    );
+}
+
+impl Const a: Traversable {
+    sequence = |c| (
+        pure $ Const { data: c.@data }
+    );
+}

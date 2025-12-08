@@ -4,6 +4,33 @@ module TraversableTest;
 import Minilib.Trait.Traversable;
 import Minilib.Testing.UnitTest;
 
+// --------------------------------------------------------
+// StringWriter
+
+type StringWriter a = unbox struct {
+    data: (String, a)
+};
+
+impl StringWriter: Functor {
+    map = |f, wma| StringWriter { data: wma.@data.map(f) };
+}
+
+impl StringWriter: Monad {
+    pure = |a| StringWriter { data: ("", a) };
+    bind = |f, wma| StringWriter { data: (
+        let (e1, a) = wma.@data;
+        let wmb = f(a);
+        let (e2, b) = wmb.@data;
+        let e = e1 + e2;
+        (e, b)
+    )};
+}
+
+write: String -> StringWriter ();
+write = |str| StringWriter { data: (str, ()) };
+
+// --------------------------------------------------------
+
 test_array_sequence: TestCase;
 test_array_sequence = (
     make_test("test_array_sequence") $ |_|
@@ -44,10 +71,9 @@ test_array_map_m = (
     pure()
 );
 
-
-test_iterator_sequence: TestCase;
-test_iterator_sequence = (
-    make_test("test_iterator_sequence") $ |_|
+test_dyn_iterator_sequence: TestCase;
+test_dyn_iterator_sequence = (
+    make_test("test_dyn_iterator_sequence") $ |_|
     let iter: DynIterator (Result ErrMsg I64) = [ok(1),ok(2),ok(3)].to_iter.to_dyn;
     let res: Result ErrMsg (DynIterator I64) = iter.sequence;
     assert_equal("eq", ok $ [1, 2, 3], res.map(to_array));;
@@ -63,13 +89,27 @@ test_iterator_sequence = (
     pure()
 );
 
+test_dyn_iterator_map_m: TestCase;
+test_dyn_iterator_map_m = (
+    make_test("test_dyn_iterator_map_m") $ |_|
+    let iter: DynIterator I64 = [1,2,3].to_iter.to_dyn;
+    let wm: StringWriter (DynIterator I64) = iter.map_m(|i| write(i.to_string);; pure(i*2));
+    let expected = ("123", [2,4,6]);
+    let actual = wm.map(to_array).@data;
+    assert_equal("eq", expected, actual)
+);
+
 test_iterator_foreach_m: TestCase;
 test_iterator_foreach_m = (
     make_test("test_iterator_foreach_m") $ |_|
-    range(0,6).filter(|i| i % 2 == 1).foreach_m(|i|
-        println(i.to_string).lift
-    );;
-    pure()
+    let wm: StringWriter () = do {
+        range(0,6).filter(|i| i % 2 == 1).foreach_m(|i|
+            write(i.to_string + " ")
+        )
+    };
+    let expected = "1 3 5 ";
+    let actual = wm.@data.@0;
+    assert_equal("eq", expected, actual)
 );
 
 test_array_iterator_sequence: TestCase;
@@ -90,6 +130,8 @@ test_array_iterator_sequence = (
     pure()
 );
 
+// NOTE: ArrayIterator is not a Functor, so `map_m` cannot be used. 
+
 test_option_sequence: TestCase;
 test_option_sequence = (
     make_test("test_option_sequence") $ |_|
@@ -102,6 +144,18 @@ test_option_sequence = (
     let opt: Option (Result ErrMsg I64) = none();
     let res: Result ErrMsg (Option I64) = opt.sequence;
     assert_equal("eq", ok $ none(), res);;
+    pure()
+);
+
+test_option_map_m: TestCase;
+test_option_map_m = (
+    make_test("test_option_map_m") $ |_|
+    let opt: Option I64 = some $ 1;
+    let wm: StringWriter (Option U64) = opt.map_m(|i| write(i.to_string);; pure $ i.to_U64);
+    assert_equal("eq", ("1", some $ 1_U64), wm.@data);;
+    let opt: Option I64 = none();
+    let wm: StringWriter (Option U64) = opt.map_m(|i| write(i.to_string);; pure $ i.to_U64);
+    assert_equal("eq", ("", none()), wm.@data);;
     pure()
 );
 
@@ -120,29 +174,76 @@ test_result_sequence = (
     pure()
 );
 
-test_identity_sequence_map_m: TestCase;
-test_identity_sequence_map_m = (
-    make_test("test_identity_sequence_map_m") $ |_|
+test_result_map_m: TestCase;
+test_result_map_m = (
+    make_test("test_result_map_m") $ |_|
+    let res: Result ErrMsg I64 = ok $ 1;
+    let opt: Option (Result ErrMsg U64) = res.map_m(|i| if i % 2 == 0 { none() } else { some $ i.to_U64 });
+    assert_equal("eq", some $ ok $ 1_U64, opt);;
+    let res: Result ErrMsg I64 = ok $ 2;
+    let opt: Option (Result ErrMsg U64) = res.map_m(|i| if i % 2 == 0 { none() } else { some $ i.to_U64 });
+    assert_equal("eq", none(), opt);;
+    let res: Result ErrMsg I64 = err $ "err";
+    let opt: Option (Result ErrMsg U64) = res.map_m(|i| if i % 2 == 0 { none() } else { some $ i.to_U64 });
+    assert_equal("eq", some $ err $ "err", opt);;
+    pure()
+);
+
+test_tuple2_sequence: TestCase;
+test_tuple2_sequence = (
+    make_test("test_tuple2_sequence") $ |_|
+    let tup: (String, (Option I64)) = ("a", some $ 1);
+    let opt: Option (String, I64) = tup.sequence;
+    assert_equal("eq", some $ ("a", 1), opt);;
+    let tup: (String, (Option I64)) = ("a", none());
+    let opt: Option (String, I64) = tup.sequence;
+    assert_equal("eq", none(), opt);;
+    pure()
+);
+
+test_tuple2_map_m: TestCase;
+test_tuple2_map_m = (
+    make_test("test_tuple2_map_m") $ |_|
+    let tup: (String, I64) = ("a", 1);
+    let opt: Option (String, I64) = tup.map_m(|i| if i % 2 == 0 { none() } else { some $ i * 10 });
+    assert_equal("eq", some $ ("a", 10), opt);;
+    let tup: (String, I64) = ("a", 2);
+    let opt: Option (String, I64) = tup.map_m(|i| if i % 2 == 0 { none() } else { some $ i * 10 });
+    assert_equal("eq", none(), opt);;
+    pure()
+);
+
+test_identity_sequence: TestCase;
+test_identity_sequence = (
+    make_test("test_identity_sequence") $ |_|
     let iden: Identity (Option I64) = Identity { data: some(1) };
     let opt: Option (Identity I64) = iden.sequence;
-    assert_equal("eq", some(1), opt.map(@data));;
+    assert_equal("eq", some(1), opt.map(@data))
+);
+
+test_identity_map_m: TestCase;
+test_identity_map_m = (
+    make_test("test_identity_map_m") $ |_|
     let iden: Identity I64 = Identity { data: 1 };
     let opt: Option (Identity String) = iden.map_m(to_string >> some);
     assert_equal("eq", some("1"), opt.map(@data))
 );
 
-test_const_sequence_map_m: TestCase;
-test_const_sequence_map_m = (
-    make_test("test_const_sequence_map_m") $ |_|
+test_const_sequence: TestCase;
+test_const_sequence = (
+    make_test("test_const_sequence") $ |_|
     let c: Const String (Option I64) = Const { data: "a" };
     let opt: Option (Const String I64) = c.sequence;
-    assert_equal("eq", some("a"), opt.map(@data));;
+    assert_equal("eq", some("a"), opt.map(@data))
+);
+
+test_const_map_m: TestCase;
+test_const_map_m = (
+    make_test("test_const_map_m") $ |_|
     let c: Const String I64 = Const { data: "a" };
     let opt: Option (Const String U64) = c.map_m(I64::to_U64 >> some);
     assert_equal("eq", some("a"), opt.map(@data))
 );
-
-// TODO: add tests
 
 main: IO ();
 main = (
@@ -150,13 +251,20 @@ main = (
         test_array_sequence,
         test_array_traverse,
         test_array_map_m,
-        test_iterator_sequence,
+        test_dyn_iterator_sequence,
+        test_dyn_iterator_map_m,
         test_iterator_foreach_m,
         test_array_iterator_sequence,
         test_option_sequence,
+        test_option_map_m,
         test_result_sequence,
-        test_identity_sequence_map_m,
-        test_const_sequence_map_m,
+        test_result_map_m,
+        test_tuple2_sequence,
+        test_tuple2_map_m,
+        test_identity_sequence,
+        test_identity_map_m,
+        test_const_sequence,
+        test_const_map_m,
     ]
     .run_test_driver
 );

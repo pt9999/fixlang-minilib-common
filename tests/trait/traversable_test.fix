@@ -126,7 +126,8 @@ test_identity_sequence_map_m = (
     let iden: Identity (Option I64) = Identity { data: some(1) };
     let opt: Option (Identity I64) = iden.sequence;
     assert_equal("eq", some(1), opt.map(@data));;
-    let opt: Option (Identity String) = iden.map_m(to_string);
+    let iden: Identity I64 = Identity { data: 1 };
+    let opt: Option (Identity String) = iden.map_m(to_string >> some);
     assert_equal("eq", some("1"), opt.map(@data))
 );
 
@@ -136,7 +137,8 @@ test_const_sequence_map_m = (
     let c: Const String (Option I64) = Const { data: "a" };
     let opt: Option (Const String I64) = c.sequence;
     assert_equal("eq", some("a"), opt.map(@data));;
-    let opt: Option (Const String U64) = c.map_m(I64::to_U64);
+    let c: Const String I64 = Const { data: "a" };
+    let opt: Option (Const String U64) = c.map_m(I64::to_U64 >> some);
     assert_equal("eq", some("a"), opt.map(@data))
 );
 

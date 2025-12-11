@@ -17,7 +17,7 @@ _TEST_VERBOSE = do {
     let p_value = *name.borrow_c_str_io(|p_name|
         FFI_CALL_IO[Ptr getenv(Ptr), p_name]
     );
-    let value = if p_value == nullptr { "" } else { String::_unsafe_from_c_str_ptr(p_value) };
+    let value = if p_value == nullptr { "" } else { String::unsafe_from_c_str_ptr(p_value) };
     if value != "" {
         pure $ true
     };

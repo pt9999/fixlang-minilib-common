@@ -1,3 +1,7 @@
+## 0.x.x
+### Changed
+- Minilib.Text.StringEx: `format` is now a method of the new `Format` trait. `formatv` is now obsolete and has been removed.
+
 ## 0.7.1
 ### Added
 - Minilib.Trait.Traversable: `Identity` and `Const` are now `Traversable`.

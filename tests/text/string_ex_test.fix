@@ -328,7 +328,7 @@ test_ends_with = (
 test_format: TestCase;
 test_format = (
     make_test("test_format") $ |_|
-    //assert_equal("no args", [].format(""), "");;      // cannot determine array type
+    assert_equal("no args", ([]: Array String).format(""), "");;
     assert_equal("one arg", ["abc"].format("{}"), "abc");;
     assert_equal("two args",["abc", "def"].format("{}{}"), "abcdef");;
     assert_equal("too many args", ["abc", "def", "ghi"].format("{}{}"), "abcdef");;

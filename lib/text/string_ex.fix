@@ -396,13 +396,17 @@ ends_with = |suffix, str| (
 // Format
 //---------------------------------
 
-// `array.formatv(str)` replaces each occurence of `{}` in the format string `str`
-// with each element of `array`.
+// Obsolete: please use `format`.
+//formatv: String -> Array String -> String;
+//formatv = format;
+
+// `args.formatv(str)` replaces each occurence of `{}` in the format string `str`
+// with each element of `args`.
 // Currently only supports `{}`.
 //
 // # Parameters
 // * `str` - a format string
-// * `array` - an array of strings
+// * `args` - a collection of elements
 //
 // Returns a formatted string.
 //
@@ -413,109 +417,104 @@ ends_with = |suffix, str| (
 // ["1"].formatv("foo={} bar={} baz={}")
 // ==> "foo=1 bar={} baz={}"
 // ```
-formatv: String -> Array String -> String;
-formatv = |str, args| (
-    let from = "{}";
-    let output = Array::empty(args.get_size * 2);
-    let (output, tail) = args.to_iter.loop_iter(
-        (output, 0), |to, (output, find_start)|
-        let pos = str.find(from, find_start);
-        if pos.is_none {
-            break $ (output, find_start)
-        };
-        let pos = pos.as_some;
+trait a: Format {
+    format: String -> a -> String;
+}
+
+// `array.format(str)` replaces each occurence of `{}` in the format string `str`
+// with each element of `array`.
+// Currently only supports `{}`.
+//
+// Example:
+// ```
+// [some(1), some(2), none()].format("foo={} bar={} baz={}")
+// ==> "foo=some(1) bar=some(2) baz=none()"
+// [some(1)].format("foo={} bar={} baz={}")
+// ==> "foo=some(1) bar={} baz={}"
+// ```
+impl [a: ToString] Array a: Format {
+    format = |str, args| (
+        let from = "{}";
+        let output = Array::empty(args.get_size * 2);
+        let (output, tail) = args.to_iter.loop_iter(
+            (output, 0), |arg, (output, find_start)|
+            let pos = str.find(from, find_start);
+            if pos.is_none {
+                break $ (output, find_start)
+            };
+            let pos = pos.as_some;
+            let output = output
+                .push_back(str.substring(find_start, pos))
+                .push_back(arg.to_string)
+            ;
+            let find_start = pos + from.get_size;
+            continue $ (output, find_start)
+        );
         let output = output
-            .push_back(str.substring(find_start, pos))
-            .push_back(to)
-        ;
-        let find_start = pos + from.get_size;
-        continue $ (output, find_start)
+            .push_back(str.substring(tail, str.get_size));
+        output.to_iter.concat_iter
     );
-    let output = output
-        .push_back(str.substring(tail, str.get_size));
-    output.to_iter.concat_iter
-);
-
-namespace Array {
-    // `array.format(str)` replaces each occurence of `{}` in the format string `str`
-    // with each element of `array`.
-    // Currently only supports `{}`.
-    //
-    // Example:
-    // ```
-    // [some(1), some(2), none()].format("foo={} bar={} baz={}")
-    // ==> "foo=some(1) bar=some(2) baz=none()"
-    // [some(1)].format("foo={} bar={} baz={}")
-    // ==> "foo=some(1) bar={} baz={}"
-    // ```
-    format: [a: ToString] String -> Array a -> String;
-    format = |str, arr| arr.map(to_string).formatv(str);
 }
 
-namespace Tuple1 {
-    // `(a, ).format(str)` replaces an occurence of `{}` in the format string `str`
-    // with `a`.
-    //
-    // Example:
-    // ```
-    // (12.345, ).format("float={}")
-    // ==> "float=12.345000"
-    // ([1, 2, 3], ).format("arr={}")
-    // ==> "arr=[1, 2, 3]"
-    // ```
-    format: [a: ToString] String -> (a,) -> String;
-    format = |str, (a,)| [a.to_string].formatv(str);
+// `(a, ).format(str)` replaces an occurence of `{}` in the format string `str`
+// with `a`.
+//
+// Example:
+// ```
+// (12.345, ).format("float={}")
+// ==> "float=12.345000"
+// ([1, 2, 3], ).format("arr={}")
+// ==> "arr=[1, 2, 3]"
+// ```
+impl [a: ToString] (a, ): Format {
+    format = |str, (a,)| [a.to_string].format(str);
 }
 
-namespace Tuple2 {
-    // `(a, b).format(str)` replaces each occurence of `{}` in the format string `str`
-    // with `a`, `b`.
-    //
-    // Example:
-    // ```
-    // (12, "abc").format("int={} str={}")
-    // ==> "int=12 str=abc"
-    // ```
-    format: [a: ToString, b: ToString] String -> (a,b) -> String;
-    format = |str, (a,b)| [a.to_string, b.to_string].formatv(str);
+// `(a, b).format(str)` replaces each occurence of `{}` in the format string `str`
+// with `a`, `b`.
+//
+// Example:
+// ```
+// (12, "abc").format("int={} str={}")
+// ==> "int=12 str=abc"
+// ```
+impl [a: ToString, b: ToString] (a,b): Format {
+    format = |str, (a,b)| [a.to_string, b.to_string].format(str);
 }
 
-namespace Tuple3 {
-    // `(a, b, c).format(str)` replaces each occurence of `{}` in the format string `str`
-    // with `a`, `b`, `c`.
-    //
-    // Example:
-    // ```
-    // (12, 345.678, "abc").format("int={} float={} str={}")
-    // ==> "int=12 float=345.678000 str=abc"
-    // ```
-    format: [a: ToString, b: ToString, c:ToString] String -> (a,b,c) -> String;
-    format = |str, (a,b,c)| [a.to_string, b.to_string, c.to_string].formatv(str);
+// `(a, b, c).format(str)` replaces each occurence of `{}` in the format string `str`
+// with `a`, `b`, `c`.
+//
+// Example:
+// ```
+// (12, 345.678, "abc").format("int={} float={} str={}")
+// ==> "int=12 float=345.678000 str=abc"
+// ```
+impl [a: ToString, b: ToString, c:ToString] (a,b,c): Format {
+    format = |str, (a,b,c)| [a.to_string, b.to_string, c.to_string].format(str);
 }
 
-namespace Tuple4 {
-    // `(a, b, c, d).format(str)` replaces each occurence of `{}` in the format string `str`
-    // with `a`, `b`, `c`, `d`.
-    //
-    // Example:
-    // ```
-    // (12, 345.678, "abc", some(1)).format("int={} float={} str={} option={}")
-    // ==> "int=12 float=345.678000 str=abc option=some(1)"
-    // ```
-    format: [a: ToString, b: ToString, c:ToString, d:ToString] String -> (a,b,c,d) -> String;
-    format = |str, (a,b,c,d)| [a.to_string, b.to_string, c.to_string, d.to_string].formatv(str);
+// `(a, b, c, d).format(str)` replaces each occurence of `{}` in the format string `str`
+// with `a`, `b`, `c`, `d`.
+//
+// Example:
+// ```
+// (12, 345.678, "abc", some(1)).format("int={} float={} str={} option={}")
+// ==> "int=12 float=345.678000 str=abc option=some(1)"
+// ```
+impl [a: ToString, b: ToString, c:ToString, d:ToString] (a,b,c,d): Format {
+    format = |str, (a,b,c,d)| [a.to_string, b.to_string, c.to_string, d.to_string].format(str);
 }
 
-namespace Tuple5 {
-    // `(a, b, c, d, e).format(str)` replaces each occurence of `{}` in the format string `str`
-    // with `a`, `b`, `c`, `d`, `e`.
-    //
-    // Example:
-    // ```
-    // (12, 345.678, "abc", some(1), [1, 2, 3]).format("int={} float={} str={} option={} array={}")
-    // ==> "int=12 float=345.678000 str=abc option=some(1) array=[1, 2, 3]"
-    // ```
-    format: [a: ToString, b: ToString, c:ToString, d:ToString, e:ToString] String -> (a,b,c,d,e) -> String;
-    format = |str, (a,b,c,d,e)| [a.to_string, b.to_string, c.to_string, d.to_string, e.to_string].formatv(str);
+// `(a, b, c, d, e).format(str)` replaces each occurence of `{}` in the format string `str`
+// with `a`, `b`, `c`, `d`, `e`.
+//
+// Example:
+// ```
+// (12, 345.678, "abc", some(1), [1, 2, 3]).format("int={} float={} str={} option={} array={}")
+// ==> "int=12 float=345.678000 str=abc option=some(1) array=[1, 2, 3]"
+// ```
+impl [a: ToString, b: ToString, c:ToString, d:ToString, e:ToString] (a,b,c,d,e): Format {
+    format = |str, (a,b,c,d,e)| [a.to_string, b.to_string, c.to_string, d.to_string, e.to_string].format(str);
 }
 

@@ -8,12 +8,23 @@ import Minilib.Testing.UnitTest;
 test_usleep: TestCase;
 test_usleep = (
     make_test("test_usleep") $ |_|
-    let usec = 100_U32;
+    let usec = 1e5_U32;
     let start = *Time::get_now.lift;
     usleep(usec);;
     let end = *Time::get_now.lift;
     let time = end.to_F64 - start.to_F64;
     assert_true("time", time >= usec.to_F64 * 1.0e-6)
+);
+
+test_sleep: TestCase;
+test_sleep = (
+    make_test("test_sleep") $ |_|
+    let sec = 0.1;
+    let start = *Time::get_now.lift;
+    sleep(sec);;
+    let end = *Time::get_now.lift;
+    let time = end.to_F64 - start.to_F64;
+    assert_true("time", time >= sec)
 );
 
 test_timeit: TestCase;
@@ -85,6 +96,7 @@ main: IO ();
 main = (
     [
         test_usleep,
+        test_sleep,
         test_timeit,
         test_timeit_io,
         test_notimeit,

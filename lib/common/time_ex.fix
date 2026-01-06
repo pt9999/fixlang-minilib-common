@@ -15,6 +15,23 @@ usleep = |usec| (
     pure()
 );
 
+// Sleeps for specified seconds.
+sleep: F64 -> IOFail ();
+sleep = |seconds| (
+    // TODO: use nanosleep()
+    let seconds = max(0.0, min(U32::maximum.to_F64, seconds));
+    let seconds_u32 = seconds.to_U32;
+    loop_m(
+        seconds_u32, |remaining|
+        if remaining == 0_U32 { break_m $ () };
+        let remaining = *FFI_CALL_IO[U32 sleep(U32), remaining].lift;
+        continue_m $ remaining
+    );;
+    let usec = (seconds - seconds_u32.to_F64) * 1.0e6;
+    let usec = usec.to_U32;
+    usleep(usec)
+);
+
 // Measures wall-clock time per a function call.
 // Specifically, It calls the function many times and measures the total time.
 // It then prints the function result and measured time per loop.

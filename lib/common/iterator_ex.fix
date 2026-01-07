@@ -17,5 +17,8 @@ drop = |n, iter| (
 );
 
 // Create an iterator that generates the same element infinitely.
+//
+// # Parameters
+// * `a` - A value of type `a`.
 repeat: a -> MapIterator CountUpIterator I64 a;
 repeat = |a| count_up(0).map(|_| a);

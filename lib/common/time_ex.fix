@@ -5,6 +5,9 @@ import Time;
 
 // Sleeps for specified micro-seconds.
 // For details, see Linux manual page for [usleep()](https://man7.org/linux/man-pages/man3/usleep.3.html).
+//
+// # Parameters
+// - `usec`: the time to sleep in micro-seconds.
 usleep: U32 -> IOFail ();
 usleep = |usec| (
     pure();;    // make it lazy
@@ -16,6 +19,9 @@ usleep = |usec| (
 );
 
 // Sleeps for specified seconds.
+//
+// # Parameters
+// - `seconds`: the time to sleep in seconds.
 sleep: F64 -> IOFail ();
 sleep = |seconds| (
     // TODO: use nanosleep()
@@ -37,9 +43,11 @@ sleep = |seconds| (
 // It then prints the function result and measured time per loop.
 // NOTE: The measured time per loop has a overhead about 0.1~1.0 usec.
 // It is useful for measuring the performance of a function.
+//
 // # Parameters
 // - `label`: a label for the function.
 // - `f`: a function to be measured.
+//
 // # Returns
 // - The result of the function.
 timeit: [a: ToString] String -> (() -> a) -> IO a;
@@ -55,6 +63,13 @@ timeit = |label, f| (
 // Specifically, It performs an IO operation many times and measures the total time.
 // It then prints the IO operation result and measured time per loop.
 // NOTE: The measured time per loop has a overhead about 0.1~1.0 usec.
+//
+// # Parameters
+// - `label`: a label for the function.
+// - `io_a`: an IO monad which returns a value of type `a`.
+//
+// # Returns
+// - The result of the `io_a`.
 timeit_io: [a: ToString] String -> IO a -> IO a;
 timeit_io = |label, io_a| (
     let time_limit = 0.1;  // 100 msec
@@ -89,6 +104,13 @@ _repeat_io = |io_a, n| (
 // NOTE: The measured time per loop has a overhead about 0.1~1.0 usec.
 //
 // Breaking change in 0.8.0: The order of the return value is now swapped.
+//
+// # Parameters
+// - `time_limit`: the specified time limit in seconds.
+// - `f`: a function to be measured.
+//
+// # Returns
+// - The result of the function, and the measured time.
 measure_time: F64 -> (() -> a) -> IO (a, F64);
 measure_time = |time_limit, f| (
     let io_a = do {
@@ -105,6 +127,13 @@ measure_time = |time_limit, f| (
 // NOTE: The measured time per loop has a overhead about 0.1~1.0 usec.
 //
 // Breaking change in 0.8.0: The order of the return value is now swapped.
+//
+// # Parameters
+// - `time_limit`: the specified time limit in seconds.
+// - `io_a`: an IO monad which returns a value of type `a`.
+//
+// # Returns
+// - The result of the `io_a`, and the measured time.
 measure_time_io: F64 -> IO a -> IO (a, F64);
 measure_time_io = |time_limit, io_a| (
     let (result, total_time) = *consumed_realtime_while_io(_repeat_io(io_a, 1));
@@ -123,11 +152,17 @@ measure_time_io = |time_limit, io_a| (
 );
 
 // Get wall-clock time elapsed while executing an I/O action.
+//
+// # Parameters
+// - `io_a`: an IO monad which returns a value of type `a`.
+//
+// # Returns
+// - The result of the `io_a`, and the measured time.
 consumed_realtime_while_io : IO a -> IO (a, F64);
-consumed_realtime_while_io = |io| (
+consumed_realtime_while_io = |io_a| (
     pure();;    // make it lazy
     let start = *Time::get_now;
-    let result = *io;
+    let result = *io_a;
     let end = *Time::get_now;
     let time = end.to_F64 - start.to_F64;
     pure $ (result, time)

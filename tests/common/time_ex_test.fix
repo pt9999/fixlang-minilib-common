@@ -62,7 +62,7 @@ test_measure_time: TestCase;
 test_measure_time = (
     make_test("test_measure_time") $ |_|
     let n = 10000;
-    let (time, ans) = *measure_time(0.1, |_|
+    let (ans, time) = *measure_time(0.1, |_|
         Iterator::range(1, n + 1).fold(0, add)
     ).lift;
     //println("test_measure_time: time=" + time.to_string).lift;;
@@ -73,7 +73,7 @@ test_measure_time_io: TestCase;
 test_measure_time_io = (
     make_test("test_measure_time_io") $ |_|
     let n = 10000;
-    let (time, ans) = *measure_time_io(0.1, do {
+    let (ans, time) = *measure_time_io(0.1, do {
         pure();;
         pure $ Iterator::range(1, n + 1).fold(0, add)
     }).lift;

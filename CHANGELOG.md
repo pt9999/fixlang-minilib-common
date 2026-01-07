@@ -5,6 +5,7 @@
 - Minilib.Common.TimeEx: Added `sleep`.
 ### Changed
 - Minilib.Text.StringEx: `format` is now a method of the new `Format` trait. `formatv` is now obsolete and has been removed.
+- Minilib.Common.TimeEx: `measure_time`, `measure_time_io`: The order of the return value is now swapped.
 
 ## 0.7.1
 ### Added

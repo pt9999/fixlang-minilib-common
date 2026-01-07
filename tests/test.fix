@@ -4,8 +4,10 @@ import Minilib.Testing.UnitTest;
 
 import CommonTest;
 import AssertTest;
+import IteratorExTest;
 import IOExTest;
 import IORefTest;
+import IteratorExTest;
 import TimeExTest;
 import StringExTest;
 import TraversableTest;
@@ -14,8 +16,10 @@ testsuite: TestSuite;
 testsuite = [
     ("CommonTest", CommonTest::main),
     ("AssertTest", AssertTest::main),
+    ("IteratorExTest", IteratorExTest::main),
     ("IOExTest", IOExTest::main),
     ("IORefTest", IORefTest::main),
+    ("IteratorExTest", IteratorExTest::main),
     ("TimeExTest", TimeExTest::main),
     ("StringExTest", StringExTest::main),
     ("TraversableTest", TraversableTest::main),

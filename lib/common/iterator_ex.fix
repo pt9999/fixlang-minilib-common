@@ -1,0 +1,21 @@
+// Extensions for `Std::Iterator`.
+module Minilib.Common.IteratorEx;
+
+// Drop the first `n` elements of an iterator.
+//
+// # Parameters
+//
+// * `n` - The number of elements to be dropped.
+// * `iter` - The iterator to be taken from.
+drop : [i: Iterator] I64 -> i -> i;
+drop = |n, iter| (
+    if n <= 0 { iter };
+    match iter.advance {
+        none() => iter,
+        some((next, a)) => next.drop(n-1)
+    }
+);
+
+// Create an iterator that generates the same element infinitely.
+repeat: a -> MapIterator CountUpIterator I64 a;
+repeat = |a| count_up(0).map(|_| a);

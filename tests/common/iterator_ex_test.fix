@@ -1,0 +1,34 @@
+module IteratorExTest;
+
+import Minilib.Common.IteratorEx;
+import Minilib.Testing.UnitTest;
+
+test_drop: TestCase;
+test_drop = (
+    make_test("test_drop") $ |_|
+    let iter = range(0, 100);
+    let iter = iter.drop(97);
+    let expected = [97, 98, 99];
+    let actual = iter.to_array;
+    assert_equal("eq", expected, actual)
+);
+
+test_repeat: TestCase;
+test_repeat = (
+    make_test("test_repeat") $ |_|
+    let iter = repeat("a");
+    let iter = iter.drop(1000).take(3);
+    let expected = ["a", "a", "a"];
+    let actual = iter.to_array;
+    assert_equal("eq", expected, actual)
+);
+
+main: IO ();
+main = (
+    [
+        test_drop,
+        test_repeat,
+    ]
+    .run_test_driver
+);
+

@@ -1,6 +1,7 @@
 ## 0.x.x
 ### Added
 - Added Minilib.Common.IORef. `IORef` is a mutable reference whose value can be changed using the IO monad.
+- Added Minilib.Common.IteratorEx. It is an extension module for `Std::Iterator`.
 - Minilib.Common.TimeEx: Added `sleep`.
 ### Changed
 - Minilib.Text.StringEx: `format` is now a method of the new `Format` trait. `formatv` is now obsolete and has been removed.

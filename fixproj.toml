@@ -6,7 +6,7 @@ authors = ["pt9999"]
 license = "MIT"
 
 [build]
-opt_level = "max"
+opt_level = "basic"
 files = [
     "lib/common/common.fix",
     "lib/common/assert.fix",
@@ -22,7 +22,7 @@ objects = ["lib.o"]
 preliminary_commands = [["make", "lib.o", "CFLAGS=-Wall"]]
 
 [build.test]
-opt_level = "max"
+opt_level = "basic"
 files = [
     "tests/test.fix",
     "tests/common/common_test.fix",

@@ -1,6 +1,6 @@
 # Minilib.Text.StringEx
 
-Defined in minilib-common@0.7.3
+Defined in minilib-common@0.8.0
 
 String utility functions.
 
@@ -87,29 +87,6 @@ Example:
 ==> some(7)
 "aaa".find_last_byte('/')
 ==> none()
-```
-
-#### formatv
-
-Type: `Std::String -> Std::Array Std::String -> Std::String`
-
-`array.formatv(str)` replaces each occurence of `{}` in the format string `str`
-with each element of `array`.
-Currently only supports `{}`.
-
-##### Parameters
-
-* `str` - a format string
-* `array` - an array of strings
-
-Returns a formatted string.
-
-Example:
-```
-["1", "2", "3"].formatv("foo={} bar={} baz={}")
-==> "foo=1 bar=2 baz=3"
-["1"].formatv("foo={} bar={} baz={}")
-==> "foo=1 bar={} baz={}"
 ```
 
 #### replace_all
@@ -322,29 +299,90 @@ Example:
 ==> "ABCDEF123"
 ```
 
-### namespace Minilib.Text.StringEx::Array
+### namespace Minilib.Text.StringEx::Format
 
 #### format
 
-Type: `[a : Std::ToString] Std::String -> Std::Array a -> Std::String`
+Type: `[a : Minilib.Text.StringEx::Format] Std::String -> a -> Std::String`
 
-`array.format(str)` replaces each occurence of `{}` in the format string `str`
-with each element of `array`.
+## Types and aliases
+
+## Traits and aliases
+
+### namespace Minilib.Text.StringEx
+
+#### trait `a : Format`
+
+`args.formatv(str)` replaces each occurence of `{}` in the format string `str`
+with each element of `args`.
 Currently only supports `{}`.
+
+##### Parameters
+
+* `str` - a format string
+* `args` - a collection of elements
+
+Returns a formatted string.
 
 Example:
 ```
-[some(1), some(2), none()].format("foo={} bar={} baz={}")
-==> "foo=some(1) bar=some(2) baz=none()"
-[some(1)].format("foo={} bar={} baz={}")
-==> "foo=some(1) bar={} baz={}"
+["1", "2", "3"].formatv("foo={} bar={} baz={}")
+==> "foo=1 bar=2 baz=3"
+["1"].formatv("foo={} bar={} baz={}")
+==> "foo=1 bar={} baz={}"
 ```
 
-### namespace Minilib.Text.StringEx::Tuple1
+##### method `format`
 
-#### format
+Type: `Std::String -> a -> Std::String`
 
-Type: `[a : Std::ToString] Std::String -> (a,) -> Std::String`
+## Trait implementations
+
+### impl `[a : Std::ToString, b : Std::ToString] (a, b) : Minilib.Text.StringEx::Format`
+
+`(a, b).format(str)` replaces each occurence of `{}` in the format string `str`
+with `a`, `b`.
+
+Example:
+```
+(12, "abc").format("int={} str={}")
+==> "int=12 str=abc"
+```
+
+### impl `[a : Std::ToString, b : Std::ToString, c : Std::ToString] (a, b, c) : Minilib.Text.StringEx::Format`
+
+`(a, b, c).format(str)` replaces each occurence of `{}` in the format string `str`
+with `a`, `b`, `c`.
+
+Example:
+```
+(12, 345.678, "abc").format("int={} float={} str={}")
+==> "int=12 float=345.678000 str=abc"
+```
+
+### impl `[a : Std::ToString, b : Std::ToString, c : Std::ToString, d : Std::ToString] (a, b, c, d) : Minilib.Text.StringEx::Format`
+
+`(a, b, c, d).format(str)` replaces each occurence of `{}` in the format string `str`
+with `a`, `b`, `c`, `d`.
+
+Example:
+```
+(12, 345.678, "abc", some(1)).format("int={} float={} str={} option={}")
+==> "int=12 float=345.678000 str=abc option=some(1)"
+```
+
+### impl `[a : Std::ToString, b : Std::ToString, c : Std::ToString, d : Std::ToString, e : Std::ToString] (a, b, c, d, e) : Minilib.Text.StringEx::Format`
+
+`(a, b, c, d, e).format(str)` replaces each occurence of `{}` in the format string `str`
+with `a`, `b`, `c`, `d`, `e`.
+
+Example:
+```
+(12, 345.678, "abc", some(1), [1, 2, 3]).format("int={} float={} str={} option={} array={}")
+==> "int=12 float=345.678000 str=abc option=some(1) array=[1, 2, 3]"
+```
+
+### impl `[a : Std::ToString] (a,) : Minilib.Text.StringEx::Format`
 
 `(a, ).format(str)` replaces an occurence of `{}` in the format string `str`
 with `a`.
@@ -357,68 +395,16 @@ Example:
 ==> "arr=[1, 2, 3]"
 ```
 
-### namespace Minilib.Text.StringEx::Tuple2
+### impl `[a : Std::ToString] Std::Array a : Minilib.Text.StringEx::Format`
 
-#### format
-
-Type: `[a : Std::ToString, b : Std::ToString] Std::String -> (a, b) -> Std::String`
-
-`(a, b).format(str)` replaces each occurence of `{}` in the format string `str`
-with `a`, `b`.
+`array.format(str)` replaces each occurence of `{}` in the format string `str`
+with each element of `array`.
+Currently only supports `{}`.
 
 Example:
 ```
-(12, "abc").format("int={} str={}")
-==> "int=12 str=abc"
+[some(1), some(2), none()].format("foo={} bar={} baz={}")
+==> "foo=some(1) bar=some(2) baz=none()"
+[some(1)].format("foo={} bar={} baz={}")
+==> "foo=some(1) bar={} baz={}"
 ```
-
-### namespace Minilib.Text.StringEx::Tuple3
-
-#### format
-
-Type: `[a : Std::ToString, b : Std::ToString, c : Std::ToString] Std::String -> (a, b, c) -> Std::String`
-
-`(a, b, c).format(str)` replaces each occurence of `{}` in the format string `str`
-with `a`, `b`, `c`.
-
-Example:
-```
-(12, 345.678, "abc").format("int={} float={} str={}")
-==> "int=12 float=345.678000 str=abc"
-```
-
-### namespace Minilib.Text.StringEx::Tuple4
-
-#### format
-
-Type: `[a : Std::ToString, b : Std::ToString, c : Std::ToString, d : Std::ToString] Std::String -> (a, b, c, d) -> Std::String`
-
-`(a, b, c, d).format(str)` replaces each occurence of `{}` in the format string `str`
-with `a`, `b`, `c`, `d`.
-
-Example:
-```
-(12, 345.678, "abc", some(1)).format("int={} float={} str={} option={}")
-==> "int=12 float=345.678000 str=abc option=some(1)"
-```
-
-### namespace Minilib.Text.StringEx::Tuple5
-
-#### format
-
-Type: `[a : Std::ToString, b : Std::ToString, c : Std::ToString, d : Std::ToString, e : Std::ToString] Std::String -> (a, b, c, d, e) -> Std::String`
-
-`(a, b, c, d, e).format(str)` replaces each occurence of `{}` in the format string `str`
-with `a`, `b`, `c`, `d`, `e`.
-
-Example:
-```
-(12, 345.678, "abc", some(1), [1, 2, 3]).format("int={} float={} str={} option={} array={}")
-==> "int=12 float=345.678000 str=abc option=some(1) array=[1, 2, 3]"
-```
-
-## Types and aliases
-
-## Traits and aliases
-
-## Trait implementations

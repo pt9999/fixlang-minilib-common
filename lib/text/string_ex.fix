@@ -400,7 +400,7 @@ ends_with = |suffix, str| (
 //formatv: String -> Array String -> String;
 //formatv = format;
 
-// `args.formatv(str)` replaces each occurence of `{}` in the format string `str`
+// `args.format(str)` replaces each occurence of `{}` in the format string `str`
 // with each element of `args`.
 // Currently only supports `{}`.
 //
@@ -412,9 +412,9 @@ ends_with = |suffix, str| (
 //
 // Example:
 // ```
-// ["1", "2", "3"].formatv("foo={} bar={} baz={}")
+// ["1", "2", "3"].format("foo={} bar={} baz={}")
 // ==> "foo=1 bar=2 baz=3"
-// ["1"].formatv("foo={} bar={} baz={}")
+// ["1"].format("foo={} bar={} baz={}")
 // ==> "foo=1 bar={} baz={}"
 // ```
 trait a: Format {

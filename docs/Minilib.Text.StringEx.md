@@ -1,6 +1,6 @@
 # Minilib.Text.StringEx
 
-Defined in minilib-common@0.8.0
+Defined in minilib-common@0.8.1
 
 String utility functions.
 
@@ -313,7 +313,7 @@ Type: `[a : Minilib.Text.StringEx::Format] Std::String -> a -> Std::String`
 
 #### trait `a : Format`
 
-`args.formatv(str)` replaces each occurence of `{}` in the format string `str`
+`args.format(str)` replaces each occurence of `{}` in the format string `str`
 with each element of `args`.
 Currently only supports `{}`.
 
@@ -326,9 +326,9 @@ Returns a formatted string.
 
 Example:
 ```
-["1", "2", "3"].formatv("foo={} bar={} baz={}")
+["1", "2", "3"].format("foo={} bar={} baz={}")
 ==> "foo=1 bar=2 baz=3"
-["1"].formatv("foo={} bar={} baz={}")
+["1"].format("foo={} bar={} baz={}")
 ==> "foo=1 bar={} baz={}"
 ```
 

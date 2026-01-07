@@ -5,6 +5,7 @@ import Minilib.Testing.UnitTest;
 import CommonTest;
 import AssertTest;
 import IOExTest;
+import IORefTest;
 import TimeExTest;
 import StringExTest;
 import TraversableTest;
@@ -14,6 +15,7 @@ testsuite = [
     ("CommonTest", CommonTest::main),
     ("AssertTest", AssertTest::main),
     ("IOExTest", IOExTest::main),
+    ("IORefTest", IORefTest::main),
     ("TimeExTest", TimeExTest::main),
     ("StringExTest", StringExTest::main),
     ("TraversableTest", TraversableTest::main),

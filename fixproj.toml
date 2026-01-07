@@ -1,28 +1,33 @@
 [general]
 name = "minilib-common"
 version = "0.7.3"
+fix_version = "1.2.0"
 authors = ["pt9999"]
 license = "MIT"
 
 [build]
-opt_level = "basic"
+opt_level = "max"
 files = [
     "lib/common/common.fix",
     "lib/common/assert.fix",
     "lib/common/io_ex.fix",
+    "lib/common/ioref.fix",
     "lib/common/time_ex.fix",
     "lib/testing/unit_test.fix",
     "lib/text/string_ex.fix",
     "lib/trait/traversable.fix",
 ]
+objects = ["lib.o"]
+preliminary_commands = [["make", "lib.o", "CFLAGS=-Wall"]]
 
 [build.test]
-opt_level = "basic"
+opt_level = "max"
 files = [
     "tests/test.fix",
     "tests/common/common_test.fix",
     "tests/common/assert_test.fix",
     "tests/common/io_ex_test.fix",
+    "tests/common/ioref_test.fix",
     "tests/common/time_ex_test.fix",
     "tests/text/string_ex_test.fix",
     "tests/trait/traversable_test.fix",

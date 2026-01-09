@@ -1,6 +1,6 @@
 # Minilib.Common.IORef
 
-Defined in minilib-common@0.8.1
+Defined in minilib-common@0.8.2
 
 A mutable reference whose value can be changed using the IO monad.
 

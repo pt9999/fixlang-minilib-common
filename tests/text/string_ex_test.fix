@@ -265,7 +265,7 @@ test_starts_with_ok: (String, String, Bool) -> TestCase;
 test_starts_with_ok = |(str, prefix, expected)| (
     let testname = "test_starts_with_ok (" + str + "," + prefix + "," + expected.to_string + ")";
     make_test(testname) $ |_|
-    let actual = str.starts_with(prefix);
+    let actual = str.StringEx::starts_with(prefix);
     assert_equal("eq", expected, actual);;
     pure()
 );
@@ -296,7 +296,7 @@ test_ends_with_ok: (String, String, Bool) -> TestCase;
 test_ends_with_ok = |(str, prefix, expected)| (
     let testname = "test_ends_with_ok (" + str + "," + prefix + "," + expected.to_string + ")";
     make_test(testname) $ |_|
-    let actual = str.ends_with(prefix);
+    let actual = str.StringEx::ends_with(prefix);
     assert_equal("eq", expected, actual);;
     pure()
 );

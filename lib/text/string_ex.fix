@@ -208,7 +208,7 @@ _append_range = |src_arr, src_begin, src_end, dest_arr| (
 // ```
 replace_suffix: String -> String -> String -> Result ErrMsg String;
 replace_suffix = |from, to, str| (
-    if !str.ends_with(from) {
+    if !str.StringEx::ends_with(from) {
         err $ "suffix does not match: " + str
     };
     let str = str.substring(0, str.get_size - from.get_size);

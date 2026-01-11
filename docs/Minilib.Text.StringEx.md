@@ -1,6 +1,6 @@
 # Minilib.Text.StringEx
 
-Defined in minilib-common@0.8.2
+Defined in minilib-common@0.9.0
 
 String utility functions.
 
@@ -25,28 +25,6 @@ Example:
 ```
 0x41_U8.byte_to_string
 ==> "A"
-```
-
-#### ends_with
-
-Type: `Std::String -> Std::String -> Std::Bool`
-
-Checks if a string ends with the specified suffix.
-
-##### Parameters
-
-* `suffix` - a string to be searched
-* `str` - a string to be checked
-
-Returns `true` if `str` ends with `suffix`, otherwise returns `false`.
-If `suffix` is empty, returns `true`.
-
-Example:
-```
-"/foo/bar.txt".ends_with(".txt")
-==> true
-"foo/bar.txt".ends_with(".bin")
-==> false
 ```
 
 #### find_byte
@@ -205,28 +183,6 @@ Example:
 ==> ("aaa/", "b/ccc")
 "aaa/bbb/ccc".split_first("!")
 ==> ("aaa/bbb/ccc", "")
-```
-
-#### starts_with
-
-Type: `Std::String -> Std::String -> Std::Bool`
-
-Checks if a string starts with the specified prefix.
-
-##### Parameters
-
-* `prefix` - a string to be searched
-* `str` - a string to be checked
-
-Returns `true` if `str` starts with `prefix`, otherwise returns `false`.
-If `prefix` is empty, returns `true`.
-
-Example:
-```
-"/foo/bar.txt".starts_with("/")
-==> true
-"foo/bar.txt".starts_with("/")
-==> false
 ```
 
 #### subarray

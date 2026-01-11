@@ -350,6 +350,9 @@ subarray = |s, e, arr| (
     arr.get_sub(s, e)
 );
 
+/*
+// Obsolete: Use Std::String::starts_with, Std::String::ends_with.
+
 // Checks if a string starts with the specified prefix.
 //
 // # Parameters
@@ -391,6 +394,7 @@ ends_with: String -> String -> Bool;
 ends_with = |suffix, str| (
     str.substring(str.get_size - suffix.get_size, str.get_size) == suffix
 );
+*/
 
 //---------------------------------
 // Format

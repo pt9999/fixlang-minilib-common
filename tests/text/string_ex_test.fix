@@ -261,6 +261,7 @@ test_substring = (
     ].run_tests
 );
 
+/*
 test_starts_with_ok: (String, String, Bool) -> TestCase;
 test_starts_with_ok = |(str, prefix, expected)| (
     let testname = "test_starts_with_ok (" + str + "," + prefix + "," + expected.to_string + ")";
@@ -322,6 +323,7 @@ test_ends_with = (
         TestCase::empty
     ].run_tests
 );
+*/
 
 // `format()` has many overloads that cannot be resolved with type variables.
 // So I simply used `assert_equal()`.
@@ -359,8 +361,10 @@ main = (
         test_split_ex,
         test_split_by,
         test_substring,
+        /*
         test_starts_with,
         test_ends_with,
+        */
         test_format,
         TestCase::empty
     ]

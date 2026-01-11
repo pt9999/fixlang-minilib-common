@@ -1,3 +1,8 @@
+
+## 0.9.0
+## Changed
+- Minilib.Text.StringEx: `starts_with` and `ends_with` are now obsolete. Use `Std::String::starts_with`, `Std::String::ends_with`.
+
 ## 0.8.0
 ### Added
 - Added Minilib.Common.IORef. `IORef` is a mutable reference whose value can be changed using the IO monad.

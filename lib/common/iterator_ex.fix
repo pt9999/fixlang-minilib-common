@@ -16,9 +16,119 @@ drop = |n, iter| (
     }
 );
 
+// Drop elements from an iterator while a predicate holds.
+//
+// # Parameters
+//
+// * `predicate` - The predicate function to be applied to each element of the iterator.
+// * `iter` - The iterator to be taken from.
+drop_while : [i : Iterator, Item i = a] (a -> Bool) -> i -> i;
+drop_while = |pred, iter| (
+    match iter.advance {
+        none() => iter,
+        some((next, a)) => (
+            if !pred(a) { iter };
+            next.drop_while(pred)
+        )
+    }
+);
+
 // Create an iterator that generates the same element infinitely.
 //
 // # Parameters
 // * `a` - A value of type `a`.
 repeat: a -> MapIterator CountUpIterator I64 a;
 repeat = |a| count_up(0).map(|_| a);
+
+type ScanIterator i s a = unbox struct { state: s, op: a -> s -> s, iter: i };
+
+impl [i : Iterator, Item i = a] ScanIterator i s a : Iterator {
+    type Item (ScanIterator i s a) = s;
+    advance = |ScanIterator { state: state, op: op, iter: iter }| (
+        match iter.advance {
+            none() => none(),
+            some((iter, a)) => (
+                let state = op(a, state);
+                some $ (ScanIterator { state: state, op: op, iter: iter }, state)
+            )
+        }
+    );
+}
+
+// Create an iterator that generates the inclusive scan of an iterator.
+//
+// Conceptually, `[a0, a1, a2, ...].to_iter.scan(s, op) = [s1, s2, ...].to_iter` such that
+// `s0 = s, s1 = op(a0,s0), s2 = op(a1,s1), ...`.
+//
+// # Parameters
+//
+// * `state` - The initial state.
+// * `op` - The function to be called on the pair of an element and the current state.
+// * `iter` - The iterator to be scaned.
+scan : [i : Iterator, Item i = a] s -> (a -> s -> s) -> i -> ScanIterator i s a;
+scan = |state, op, iter| ScanIterator { state: state, op: op, iter: iter };
+
+// Create an iterator that generates the exclusive scan of an iterator.
+//
+// Conceptually, `[a0, a1, a2, ...].to_iter.scan_ex(s, op) = [s0, s1, s2, ...].to_iter` such that
+// `s0 = s, s1 = op(a0,s0), s2 = op(a1,s1), ...`.
+//
+// # Parameters
+//
+// * `state` - The initial state.
+// * `op` - The function to be called on the pair of an element and the current state.
+// * `iter` - The iterator to be scaned.
+scan_ex : [i : Iterator, Item i = a] s -> (a -> s -> s) -> i -> ConsIterator (ScanIterator i s a) s;
+scan_ex = |state, op, iter| iter.scan(state, op).push_front(state);
+
+type TailsIterator i = unbox struct { opt_iter: Option i };
+
+impl [i: Iterator] TailsIterator i : Iterator {
+    type Item (TailsIterator i) = i;
+    advance = |TailsIterator { opt_iter: opt_iter }| (
+        match opt_iter {
+            none() => none(),
+            some(iter) => match iter.advance {
+                none() => some((TailsIterator {opt_iter: none()}, iter)),
+                some((next, a)) => some((TailsIterator {opt_iter: some(next)}, iter))
+            }
+        }
+    );
+}
+
+// Creates an iterator that yields a tail starting from each element.
+//
+// Conceptually, `[a1, a2, ..., an].to_iter.tails = [t1, t2, ..., tn, nil].to_iter` such that
+// `t1 = [a1, a2, ..., an].to_iter, t2 = [a2, a3, ..., an].to_iter, ..., tn = [an].to_iter, nil = [].to_iter`.
+//
+// # Parameters
+//
+// * `iter` - An iterator.
+tails: [i: Iterator] i -> TailsIterator i;
+tails = |i| TailsIterator { opt_iter: some(i) };
+
+type TransposeIterator i = unbox struct { iters : Array i };
+
+impl [i : Iterator] TransposeIterator i : Iterator {
+    type Item (TransposeIterator i) = ArrayIterator (Item i);
+    advance = |TransposeIterator { iters : iters }| (
+        if iters.is_empty { none() };
+        let advanced = iters.map(advance);
+        if advanced.to_iter.check_any(is_none) { none() };
+        let iters = advanced.map(as_some >> Tuple2::@0);
+        let arr = advanced.map(as_some >> Tuple2::@1);
+        some $ (TransposeIterator { iters : iters }, arr.to_iter)
+    );
+}
+
+// Transposes an iterator of iterators.
+//
+// Conceptually, `[a1, a2, ..., an].to_iter.transpose = [b1, b2, ..., bm].to_iter` where
+// `a1 = [a11, a12, ..., a1m].to_iter, ..., an = [an1, an2, ..., anm].to_iter` then
+// `b1 = [a11, a21, ..., an1].to_iter, ..., bm = [a1m, a2m, ..., anm].to_iter`.
+//
+// # Parameters
+//
+// * `iter_iter` - An iterator of iterators. It must be a finite iterator.
+transpose : [i2 : Iterator, i : Iterator, Item i2 = i] i2 -> TransposeIterator i;
+transpose = |iter_iter| TransposeIterator { iters: iter_iter.to_array };

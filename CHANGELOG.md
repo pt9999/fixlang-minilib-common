@@ -1,3 +1,6 @@
+## 0.9.1
+### Added
+- Minilib.Common.IteratorEx: Added `drop_while`, `scan`, `scan_ex`, `tails`, `transpose`.
 
 ## 0.9.0
 ## Changed

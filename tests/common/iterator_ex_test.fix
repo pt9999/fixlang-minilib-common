@@ -5,12 +5,34 @@ import Minilib.Testing.UnitTest;
 
 test_drop: TestCase;
 test_drop = (
-    make_test("test_drop") $ |_|
-    let iter = range(0, 100);
-    let iter = iter.drop(97);
-    let expected = [97, 98, 99];
-    let actual = iter.to_array;
-    assert_equal("eq", expected, actual)
+    make_table_test("test_drop",
+        [
+            (100, 97, [97, 98, 99]),
+            (5, 0, [0, 1, 2, 3, 4]),
+            (5, -1, [0, 1, 2, 3, 4]),
+            (0, 0, []),
+        ],
+        |(n, count, expected)|
+        let iter = range(0, n).drop(count);
+        let actual = iter.to_array;
+        assert_equal("eq", expected, actual)
+    )
+);
+
+test_drop_while: TestCase;
+test_drop_while = (
+    make_table_test("test_drop_while",
+        [
+            (100, 97, [97, 98, 99]),
+            (5, 0, [0, 1, 2, 3, 4]),
+            (5, -1, [0, 1, 2, 3, 4]),
+            (0, 0, []),
+        ],
+        |(n, limit, expected)|
+        let iter = range(0, n).drop_while(|x| x < limit);
+        let actual = iter.to_array;
+        assert_equal("eq", expected, actual)
+    )
 );
 
 test_repeat: TestCase;
@@ -23,11 +45,71 @@ test_repeat = (
     assert_equal("eq", expected, actual)
 );
 
+test_scan: TestCase;
+test_scan = (
+    make_test("test_scan") $ |_|
+    let iter = count_up(1);
+    let iter = iter.scan(0, add);
+    let iter = iter.take(5);
+    let expected = [1, 3, 6, 10, 15];
+    let actual = iter.to_array;
+    assert_equal("eq", expected, actual)
+);
+
+test_scan_ex: TestCase;
+test_scan_ex = (
+    make_test("test_scan_ex") $ |_|
+    let iter = count_up(1);
+    let iter = iter.scan_ex(0, add);
+    let iter = iter.take(5);
+    let expected = [0, 1, 3, 6, 10];
+    let actual = iter.to_array;
+    assert_equal("eq", expected, actual)
+);
+
+test_tails: TestCase;
+test_tails = (
+    make_table_test("test_tails",
+        [
+            ([1, 2, 3, 4, 5], [[1, 2, 3, 4, 5], [2, 3, 4, 5], [3, 4, 5], [4, 5], [5], []]),
+            ([1], [[1], []]),
+            ([], [[]]),
+        ],
+        |(arr, expected)|
+        let actual = arr.to_iter.tails.map(to_array).to_array;
+        assert_equal("eq", expected, actual)
+    )
+);
+
+test_transpose: TestCase;
+test_transpose = (
+    make_table_test("test_transpose",
+        [
+            ([[0, 1, 2],[3, 4, 5],[6, 7, 8]], [[0, 3, 6],[1, 4, 7],[2, 5, 8]]),
+            ([[0, 1, 2],[3, 4, 5]], [[0, 3],[1, 4],[2, 5]]),
+            ([[0, 1, 2],[3, 4],[6]], [[0, 3, 6]]),
+            ([[],[],[]], []),
+            ([[]], []),
+            ([], []),
+        ],
+        |(arr, expected)|
+        let iter_iter = arr.to_iter.map(to_iter);
+        let iter_iter = iter_iter.transpose;
+        let actual = iter_iter.map(to_array).to_array;
+        assert_equal("eq", expected, actual)
+    )
+);
+
 main: IO ();
 main = (
     [
         test_drop,
+        test_drop_while,
         test_repeat,
+        test_scan,
+        test_scan_ex,
+        test_tails,
+        test_transpose,
     ]
     .run_test_driver
 );

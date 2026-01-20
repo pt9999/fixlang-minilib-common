@@ -64,18 +64,18 @@ run_test_driver: [m: MonadIO] Array TestCase -> m ();
 run_test_driver = |tests| lift_io $ do {
     do {
         // make stdout & stderr unbuffered
-        set_unbuffered_mode(IO::stdout).lift;;
-        set_unbuffered_mode(IO::stderr).lift;;
+        set_unbuffered_mode(IO::stdout);;
+        set_unbuffered_mode(IO::stderr);;
 
-        eprintln ("Starting Test Driver").lift;;
+        emprintln ("Starting Test Driver");;
         let start = *Time::get_now.lift;
         let test: TestCase = tests.run_tests;
         let (success, fail) = *test();
         let end = *Time::get_now.lift;
         let time = (end.@sec.to_F64 - start.@sec.to_F64) +
                    (end.@nanosec.to_F64 * 1.0e-9 - start.@nanosec.to_F64 * 1.0e-9);
-        eprintln("SUCCESS: " + success.to_string + " FAIL: " + fail.to_string +
-                 " TIME: " + time.to_string_precision(3_U8) + " sec").lift;;
+        emprintln("SUCCESS: " + success.to_string + " FAIL: " + fail.to_string +
+                  " TIME: " + time.to_string_precision(3_U8) + " sec");;
         pure $ if fail == 0 { 0 } else { 1 }
     }.try(|err|
         eprintln("FATAL ERROR: " + err);;
@@ -117,10 +117,10 @@ run_tests = |tests, _| (
 // The test case will print the name of the test case and the result (success or failure) to `stderr`.
 make_test: String -> Lazy (IOFail ()) -> TestCase;
 make_test = |test_name, body, _| (
-    when(_TEST_VERBOSE, eprintln("=== " + test_name + " ===").lift);;
+    when(_TEST_VERBOSE, emprintln("=== " + test_name + " ==="));;
     do {
         body();;
-        when(_TEST_VERBOSE, eprintln("[SUCCESS] " + test_name).lift);;
+        when(_TEST_VERBOSE, emprintln("[SUCCESS] " + test_name));;
         pure $ (1, 0)
     }.try(|err|
         eprintln("error: " + err);;

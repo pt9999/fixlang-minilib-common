@@ -33,7 +33,7 @@ test_timeit = (
     let n = 10000;
     let ans = *timeit("sum(1.." + n.to_string + ")", |_|
         Iterator::range(1, n + 1).fold(0, add)
-    ).lift;
+    );
     assert_equal("eq", n * (n + 1) / 2, ans)
 );
 
@@ -44,7 +44,7 @@ test_timeit_io = (
     let ans = *timeit_io("sum(1.." + n.to_string + ")", do {
         pure();;
         pure $ Iterator::range(1, n + 1).fold(0, add)
-    }).lift;
+    });
     assert_equal("eq", n * (n + 1) / 2, ans)
 );
 
@@ -54,7 +54,7 @@ test_notimeit = (
     let n = 10000;
     let ans = *notimeit("sum(1.." + n.to_string + ")", |_|
         Iterator::range(1, n + 1).fold(0, add)
-    ).lift;
+    );
     assert_equal("eq", n * (n + 1) / 2, ans)
 );
 
@@ -64,7 +64,7 @@ test_measure_time = (
     let n = 10000;
     let (ans, time) = *measure_time(0.1, |_|
         Iterator::range(1, n + 1).fold(0, add)
-    ).lift;
+    );
     //println("test_measure_time: time=" + time.to_string).lift;;
     assert_equal("eq", n * (n + 1) / 2, ans)
 );
@@ -76,7 +76,7 @@ test_measure_time_io = (
     let (ans, time) = *measure_time_io(0.1, do {
         pure();;
         pure $ Iterator::range(1, n + 1).fold(0, add)
-    }).lift;
+    });
     //println("test_measure_time_io: time=" + time.to_string).lift;;
     assert_equal("eq", n * (n + 1) / 2, ans)
 );
@@ -87,7 +87,7 @@ test_consumed_realtime_while_io = (
     let usec = 100_U32;
     let (res, time) = *consumed_realtime_while_io(
         usleep(usec).to_result
-    ).lift;
+    );
     assert_true("res", res.is_ok);;
     assert_true("time", time >= usec.to_F64 * 1.0e-6)
 );

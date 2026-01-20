@@ -1,6 +1,6 @@
 [general]
 name = "minilib-common"
-version = "0.9.1"
+version = "0.10.0-alpha"
 fix_version = "1.2.0"
 authors = ["pt9999"]
 license = "MIT"
@@ -14,6 +14,8 @@ files = [
     "lib/common/ioref.fix",
     "lib/common/iterator_ex.fix",
     "lib/common/time_ex.fix",
+    "lib/monad/error.fix",
+    "lib/monad/io.fix",
     "lib/testing/unit_test.fix",
     "lib/text/string_ex.fix",
     "lib/trait/traversable.fix",
@@ -31,6 +33,8 @@ files = [
     "tests/common/ioref_test.fix",
     "tests/common/iterator_ex_test.fix",
     "tests/common/time_ex_test.fix",
+    "tests/monad/error_test.fix",
+    "tests/monad/io_test.fix",
     "tests/text/string_ex_test.fix",
     "tests/trait/traversable_test.fix",
 ]

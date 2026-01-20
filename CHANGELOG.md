@@ -1,3 +1,7 @@
+## 0.10.0
+### Added
+- Moved Minilib.Monad.Error, Minilib.Monad.IO from minilib-monad.
+
 ## 0.9.1
 ### Added
 - Minilib.Common.IteratorEx: Added `drop_while`, `scan`, `scan_ex`, `tails`, `transpose`.

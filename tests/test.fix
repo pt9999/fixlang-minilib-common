@@ -9,6 +9,8 @@ import IOExTest;
 import IORefTest;
 import IteratorExTest;
 import TimeExTest;
+import ErrorTest;
+import IoTest;
 import StringExTest;
 import TraversableTest;
 
@@ -21,6 +23,8 @@ testsuite = [
     ("IORefTest", IORefTest::main),
     ("IteratorExTest", IteratorExTest::main),
     ("TimeExTest", TimeExTest::main),
+    ("ErrorTest", ErrorTest::main),
+    ("IoTest", IoTest::main),
     ("StringExTest", StringExTest::main),
     ("TraversableTest", TraversableTest::main),
 ];

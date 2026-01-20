@@ -28,3 +28,11 @@ impl IOFail: MonadIOIF {
 impl IOFail: MonadIOFailIF {
     lift_iofail = |iofail| iofail;
 }
+
+// Same as `println`, except that it can be automatically lifted into monads that implement MonadIO.
+mprintln: [m: MonadIO] String -> m ();
+mprintln = println >> lift_io;
+
+// Same as `eprintln`, except that it can be automatically lifted into monads that implement MonadIO.
+emprintln: [m: MonadIO] String -> m ();
+emprintln = eprintln >> lift_io;

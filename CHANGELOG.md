@@ -1,6 +1,7 @@
 ## 0.10.0
 ### Added
 - Moved Minilib.Monad.Error, Minilib.Monad.IO from minilib-monad.
+- Minilib.Monad.IO: Added `mprintln`, `emprintln`.
 ### Changed
 - Some functions that return IO/IOFail monads now use MonadIO/MonadIOFail/MonadError.
 

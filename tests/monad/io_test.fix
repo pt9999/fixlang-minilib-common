@@ -32,11 +32,20 @@ test_iofail = (
     assert_equal("eq", expected, actual)
 );
 
+test_mprintln_emprintln: TestCase;
+test_mprintln_emprintln = (
+    make_test("test_mprintln_emprintln") $ |_|
+    mprintln("mprintln test");;
+    emprintln("emprintln test");;
+    pure()
+);
+
 main: IO ();
 main = (
     [
         test_io,
         test_iofail,
+        test_mprintln_emprintln,
     ]
     .run_test_driver
 );

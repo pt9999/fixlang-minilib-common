@@ -1,6 +1,6 @@
 # Minilib.Common.IORef
 
-Defined in minilib-common@0.9.1
+Defined in minilib-common@0.10.0
 
 A mutable reference whose value can be changed using the IO monad.
 
@@ -22,7 +22,7 @@ println(str);;  // "world"
 
 #### get
 
-Type: `Minilib.Common.IORef::IORef a -> Std::IO a`
+Type: `[m : Minilib.Monad.IO::MonadIO] Minilib.Common.IORef::IORef a -> m a`
 
 Gets the value of a mutable reference.
 
@@ -32,7 +32,7 @@ Gets the value of a mutable reference.
 
 #### make
 
-Type: `a -> Std::IO (Minilib.Common.IORef::IORef a)`
+Type: `[m : Minilib.Monad.IO::MonadIO] a -> m (Minilib.Common.IORef::IORef a)`
 
 Creates a mutable reference with the specified initial value.
 
@@ -42,7 +42,7 @@ Creates a mutable reference with the specified initial value.
 
 #### mod
 
-Type: `(a -> a) -> Minilib.Common.IORef::IORef a -> Std::IO ()`
+Type: `[m : Minilib.Monad.IO::MonadIO] (a -> a) -> Minilib.Common.IORef::IORef a -> m ()`
 
 Modifies the value of a mutable reference.
 
@@ -53,13 +53,13 @@ Modifies the value of a mutable reference.
 
 #### put
 
-Type: `a -> Minilib.Common.IORef::IORef a -> Std::IO ()`
+Type: `[m : Minilib.Monad.IO::MonadIO] a -> Minilib.Common.IORef::IORef a -> m ()`
 
 `put` is a synonym of `set`.
 
 #### set
 
-Type: `a -> Minilib.Common.IORef::IORef a -> Std::IO ()`
+Type: `[m : Minilib.Monad.IO::MonadIO] a -> Minilib.Common.IORef::IORef a -> m ()`
 
 Sets the value of a mutable reference.
 

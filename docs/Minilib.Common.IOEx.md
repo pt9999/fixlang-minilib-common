@@ -1,6 +1,6 @@
 # Minilib.Common.IOEx
 
-Defined in minilib-common@0.9.1
+Defined in minilib-common@0.10.0
 
 Extensions for `Std::IO`.
 
@@ -10,7 +10,7 @@ Extensions for `Std::IO`.
 
 #### fflush
 
-Type: `Std::IO::IOHandle -> Std::IO::IOFail ()`
+Type: `[m : Minilib.Monad.IO::MonadIOFail] Std::IO::IOHandle -> m ()`
 
 Flushes a file stream.
 For details, see Linux manual page for [fflush()](https://man7.org/linux/man-pages/man3/fflush.3.html).
@@ -19,7 +19,7 @@ NOTE: `Std::IO::flush` may be a better choice.
 
 #### set_unbuffered_mode
 
-Type: `Std::IO::IOHandle -> Std::IO ()`
+Type: `[m : Minilib.Monad.IO::MonadIO] Std::IO::IOHandle -> m ()`
 
 Sets IOHandle to unbuffered mode.
 For detials, see Linux manual page for [setbuf()](https://man7.org/linux/man-pages/man3/setbuf.3.html).

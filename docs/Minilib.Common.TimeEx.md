@@ -1,6 +1,6 @@
 # Minilib.Common.TimeEx
 
-Defined in minilib-common@0.9.1
+Defined in minilib-common@0.10.0
 
 Timing module, such as sleep for a while, and measuring execution time.
 
@@ -10,7 +10,7 @@ Timing module, such as sleep for a while, and measuring execution time.
 
 #### consumed_realtime_while_io
 
-Type: `Std::IO a -> Std::IO (a, Std::F64)`
+Type: `[m : Minilib.Monad.IO::MonadIO] Std::IO a -> m (a, Std::F64)`
 
 Get wall-clock time elapsed while executing an I/O action.
 
@@ -24,7 +24,7 @@ Get wall-clock time elapsed while executing an I/O action.
 
 #### measure_time
 
-Type: `Std::F64 -> (() -> a) -> Std::IO (a, Std::F64)`
+Type: `[m : Minilib.Monad.IO::MonadIO] Std::F64 -> (() -> a) -> m (a, Std::F64)`
 
 Measures wall-clock time per a function call.
 Specifically, It calls the function many times until the specified time limit (in second) passes
@@ -45,7 +45,7 @@ Breaking change in 0.8.0: The order of the return value is now swapped.
 
 #### measure_time_io
 
-Type: `Std::F64 -> Std::IO a -> Std::IO (a, Std::F64)`
+Type: `[m : Minilib.Monad.IO::MonadIO] Std::F64 -> Std::IO a -> m (a, Std::F64)`
 
 Measures wall-clock time per an IO operation.
 Specifically, It performs an IO operation many times until the specified time limit (in second) passes
@@ -66,13 +66,13 @@ Breaking change in 0.8.0: The order of the return value is now swapped.
 
 #### notimeit
 
-Type: `[a : Std::ToString] Std::String -> (() -> a) -> Std::IO a`
+Type: `[a : Std::ToString, m : Minilib.Monad.IO::MonadIO] Std::String -> (() -> a) -> m a`
 
 Same interface as `timeit()` but does not measure time.
 
 #### sleep
 
-Type: `Std::F64 -> Std::IO::IOFail ()`
+Type: `[m : Minilib.Monad.IO::MonadIOFail] Std::F64 -> m ()`
 
 Sleeps for specified seconds.
 
@@ -82,7 +82,7 @@ Sleeps for specified seconds.
 
 #### timeit
 
-Type: `[a : Std::ToString] Std::String -> (() -> a) -> Std::IO a`
+Type: `[a : Std::ToString, m : Minilib.Monad.IO::MonadIO] Std::String -> (() -> a) -> m a`
 
 Measures wall-clock time per a function call.
 Specifically, It calls the function many times and measures the total time.
@@ -101,7 +101,7 @@ It is useful for measuring the performance of a function.
 
 #### timeit_io
 
-Type: `[a : Std::ToString] Std::String -> Std::IO a -> Std::IO a`
+Type: `[a : Std::ToString, m : Minilib.Monad.IO::MonadIO] Std::String -> Std::IO a -> m a`
 
 Measures wall-clock time per an IO operation.
 Specifically, It performs an IO operation many times and measures the total time.
@@ -119,7 +119,7 @@ NOTE: The measured time per loop has a overhead about 0.1~1.0 usec.
 
 #### usleep
 
-Type: `Std::U32 -> Std::IO::IOFail ()`
+Type: `[m : Minilib.Monad.IO::MonadIOFail] Std::U32 -> m ()`
 
 Sleeps for specified micro-seconds.
 For details, see Linux manual page for [usleep()](https://man7.org/linux/man-pages/man3/usleep.3.html).

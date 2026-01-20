@@ -1,6 +1,6 @@
 # Minilib.Testing.UnitTest
 
-Defined in minilib-common@0.9.1
+Defined in minilib-common@0.10.0
 
 Unit Test Framework
 
@@ -10,19 +10,19 @@ Unit Test Framework
 
 #### assert_equal
 
-Type: `[a : Std::Eq, a : Std::ToString] Std::String -> a -> a -> Std::IO::IOFail ()`
+Type: `[a : Std::Eq, a : Std::ToString, m : Minilib.Monad.Error::MonadError] Std::String -> a -> a -> m ()`
 
 Verifies that two values are equal. If the values are different, the test will fail with the specified message.
 
 #### assert_not_equal
 
-Type: `[a : Std::Eq, a : Std::ToString] Std::String -> a -> a -> Std::IO::IOFail ()`
+Type: `[a : Std::Eq, a : Std::ToString, m : Minilib.Monad.Error::MonadError] Std::String -> a -> a -> m ()`
 
 Verifies that two values are not equal. If the values are equal, the test will fail with the specified message.
 
 #### assert_true
 
-Type: `Std::String -> Std::Bool -> Std::IO::IOFail ()`
+Type: `[m : Minilib.Monad.Error::MonadError] Std::String -> Std::Bool -> m ()`
 
 Verifies that the boolean value is true. If the boolean value is false, the test will fail with the specified message.
 
@@ -56,7 +56,7 @@ The test case will print the name of the test case and the result (success or fa
 
 #### run_test_driver
 
-Type: `Std::Array Minilib.Testing.UnitTest::TestCase -> Std::IO ()`
+Type: `[m : Minilib.Monad.IO::MonadIO] Std::Array Minilib.Testing.UnitTest::TestCase -> m ()`
 
 Executes all test cases. This function:
 - Sets `stdout` and `stderr` to be unbuffered for immediate output.
@@ -91,7 +91,7 @@ Can be used as a placeholder at the end of an array of test cases.
 
 #### run
 
-Type: `Minilib.Testing.UnitTest::TestSuite -> Std::IO ()`
+Type: `[m : Minilib.Monad.IO::MonadIO] Minilib.Testing.UnitTest::TestSuite -> m ()`
 
 Run a test suite.
 

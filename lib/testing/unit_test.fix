@@ -4,6 +4,8 @@ module Minilib.Testing.UnitTest;
 import Time;
 
 import Minilib.Common.IOEx;
+import Minilib.Monad.IO;
+import Minilib.Monad.Error;
 import Minilib.Trait.Traversable;
 
 // If _TEST_VERBOSE is true, the results of all testcases will be printed.
@@ -43,13 +45,13 @@ namespace TestSuite {
     //
     // # Parameters
     // - `testsuite`: a test suite.
-    run: TestSuite -> IO ();
-    run = |testsuite| (
+    run: [m: MonadIO] TestSuite -> m ();
+    run = |testsuite| lift_io $ do {
         testsuite.to_iter.foreach_m(|(name, io)|
             println("=== " + name + " ===");;
             io
         )
-    );
+    };
 }
 
 // Executes all test cases. This function:
@@ -58,8 +60,8 @@ namespace TestSuite {
 // - Prints a summary of the results, including the number of passed and failed tests.
 // - If any test case fails or an error occurs, prints the error message and aborts the program.
 // - If all test cases passed, returns `pure()`.
-run_test_driver: Array TestCase -> IO ();
-run_test_driver = |tests| (
+run_test_driver: [m: MonadIO] Array TestCase -> m ();
+run_test_driver = |tests| lift_io $ do {
     do {
         // make stdout & stderr unbuffered
         set_unbuffered_mode(IO::stdout).lift;;
@@ -87,7 +89,7 @@ run_test_driver = |tests| (
         // All tests passed
         pure()
     )
-);
+};
 
 // Executes all test cases and treat the results as one test case.
 // It is used to run all test cases in a single test case.
@@ -148,28 +150,28 @@ make_table_test = |test_name, params, body| (
 //-------------------------
 
 // Verifies that the boolean value is true. If the boolean value is false, the test will fail with the specified message.
-assert_true : String -> Bool -> IOFail ();
+assert_true: [m: MonadError] String -> Bool -> m ();
 assert_true = |msg, b| (
     if !b {
-        throw $ "assert_true: " + msg
+        error $ "assert_true: " + msg
     };
     pure()
 );
 
 // Verifies that two values are equal. If the values are different, the test will fail with the specified message.
-assert_equal : [a: Eq, a: ToString] String -> a -> a -> IOFail ();
+assert_equal: [m: MonadError, a: Eq, a: ToString] String -> a -> a -> m ();
 assert_equal = |msg, lhs, rhs| (
     if lhs != rhs {
-        throw $ "assert_equal: " + msg + ": lhs='" + lhs.to_string + "' rhs='" + rhs.to_string + "'"
+        error $ "assert_equal: " + msg + ": lhs='" + lhs.to_string + "' rhs='" + rhs.to_string + "'"
     };
     pure()
 );
 
 // Verifies that two values are not equal. If the values are equal, the test will fail with the specified message.
-assert_not_equal : [a: Eq, a: ToString] String -> a -> a -> IOFail ();
+assert_not_equal : [m: MonadError, a: Eq, a: ToString] String -> a -> a -> m ();
 assert_not_equal = |msg, lhs, rhs| (
     if lhs == rhs {
-        throw $ "assert_not_equal: " + msg + ": lhs='" + lhs.to_string + "' rhs='" + rhs.to_string + "'"
+        error $ "assert_not_equal: " + msg + ": lhs='" + lhs.to_string + "' rhs='" + rhs.to_string + "'"
     };
     pure()
 );

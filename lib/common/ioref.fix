@@ -13,6 +13,8 @@
 // ```
 module Minilib.Common.IORef;
 
+import Minilib.Monad.IO;
+
 // A mutable reference whose value can be changed using the IO monad.
 type IORef a = unbox struct {
     dtor: Destructor Ptr
@@ -23,8 +25,8 @@ namespace IORef {
     //
     // # Parameters
     // - `a`: an initial value
-    make: a -> IO (IORef a);
-    make = |a| (
+    make: [m: MonadIO] a -> m (IORef a);
+    make = |a| lift_io $ do {
         let box_a: Box a = Box::make(a);
         let retained_ptr = *box_a.boxed_to_retained_ptr;    // +1
         let f: Lazy (Box a) = |_| undefined("");
@@ -38,42 +40,42 @@ namespace IORef {
                 pure $ nullptr
             )
         }
-    );
+    };
 
     // Gets the value of a mutable reference.
     //
     // # Parameters
     // - `ioref`: a mutable reference
-    get: IORef a -> IO a;
-    get = |ioref| (
+    get: [m: MonadIO] IORef a -> m a;
+    get = |ioref| lift_io $ do {
         ioref.@dtor.borrow_io(|ior|
             let retained_ptr = *FFI_CALL_IO[Ptr minilib_ioref_get_retained_ptr(Ptr), ior];
             FFI_CALL_IO[() minilib_ioref_retain(Ptr), ior];;    // +1
             let box_a: Box a = *retained_ptr.boxed_from_retained_ptr;    // -1
             pure $ box_a.@value
         )
-    );
+    };
 
     // Sets the value of a mutable reference.
     //
     // # Parameters
     // - `a`: a value
     // - `ioref`: a mutable reference
-    set: a -> IORef a -> IO ();
-    set = |a, ioref| (
+    set: [m: MonadIO] a -> IORef a -> m ();
+    set = |a, ioref| lift_io $ do {
         ioref.mod(|_| a)
-    );
+    };
 
     // `put` is a synonym of `set`.
-    put: a -> IORef a -> IO () = IORef::set;
+    put: [m: MonadIO] a -> IORef a -> m () = IORef::set;
 
     // Modifies the value of a mutable reference.
     //
     // # Parameters
     // - `f`: a function for modifying the value
     // - `ioref`: a mutable reference
-    mod: (a -> a) -> IORef a -> IO ();
-    mod = |f, ioref| (
+    mod: [m: MonadIO] (a -> a) -> IORef a -> m ();
+    mod = |f, ioref| lift_io $ do {
         ioref.@dtor.borrow_io(|ior|
             let retained_ptr = *FFI_CALL_IO[Ptr minilib_ioref_get_retained_ptr(Ptr), ior];
             let box_a: Box a = *retained_ptr.boxed_from_retained_ptr;    // -1
@@ -83,5 +85,5 @@ namespace IORef {
             let retained_ptr = *box_a.boxed_to_retained_ptr;    // +1
             FFI_CALL_IO[() minilib_ioref_set_retained_ptr(Ptr, Ptr), ior, retained_ptr]
         )
-    );
+    };
 }

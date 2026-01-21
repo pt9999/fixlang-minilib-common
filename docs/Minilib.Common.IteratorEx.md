@@ -1,6 +1,6 @@
 # Minilib.Common.IteratorEx
 
-Defined in minilib-common@0.10.0
+Defined in minilib-common@0.10.1
 
 Extensions for `Std::Iterator`.
 

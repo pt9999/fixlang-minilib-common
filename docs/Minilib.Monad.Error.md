@@ -1,12 +1,44 @@
 # Minilib.Monad.Error
 
-Defined in minilib-common@0.10.0
+Defined in minilib-common@0.10.1
 
-Definition of `MonadErrorIF` trait which can report errors.
+This module defines the `MonadError` trait, which can report errors.
+
+Monads that implement `MonadError` can throw errors via the `error` function.
+
+It also provides functions like `catch` and `finally` to help with exception handling.
+
+Example:
+```
+read_file: Path -> IOFail String;
+read_file = |path| (
+    let handle = *open_file(path, "r");
+    do {
+        println("reading file: " + path).lift;;
+        read_string(handle)
+    }
+    .catch(|errmsg| pure("Error: " + errmsg))
+    .finally(close_file(handle).lift)
+);
+```
 
 ## Values
 
 ### namespace Minilib.Monad.Error
+
+#### finally
+
+Type: `[m : Minilib.Monad.Error::MonadError] m () -> m a -> m a`
+
+Returns a monad which performs `body` first, then `cleanup`,
+regardless of whether `body` throws an error.
+
+If `cleanup` throws an error, that error takes precedence over an error thrown by `body`.
+
+##### Parameters
+
+- `cleanup`: a cleanup
+- `body`: a body
 
 #### from_result_t
 

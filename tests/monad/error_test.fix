@@ -48,12 +48,88 @@ test_iofail_error = (
     pure()
 );
 
+test_result_finally: TestCase;
+test_result_finally = (
+    make_table_test("test_result_finally",
+        [
+            (ok(42), ok(), ok(42)),
+            (ok(42), err("cleanup"), err("cleanup")),
+            (err("body"), ok(), err("body")),
+            (err("body"), err("cleanup"), err("cleanup")),
+        ]: Array (Result ErrMsg I64, Result ErrMsg (), Result ErrMsg I64),
+        |(body, cleanup, expected)|
+        let actual = body.finally(cleanup);
+        assert_equal("eq", expected, actual)
+    )
+);
+
+test_iofail_finally: TestCase;
+test_iofail_finally = (
+    make_table_test("test_iofail_finally",
+        [
+            (ok(42), ok(), ok(42)),
+            (ok(42), err("cleanup"), err("cleanup")),
+            (err("body"), ok(), err("body")),
+            (err("body"), err("cleanup"), err("cleanup")),
+        ]: Array (Result ErrMsg I64, Result ErrMsg (), Result ErrMsg I64),
+        |(body, cleanup, expected)|
+        let body: IOFail I64 = body.from_result;
+        let cleanup: IOFail () = cleanup.from_result;
+        let actual = *body.finally(cleanup).to_result.lift;
+        assert_equal("eq", expected, actual)
+    )
+);
+
+test_result_catch_finally: TestCase;
+test_result_catch_finally = (
+    make_table_test("test_result_finally",
+        [
+            (ok(42), ok(100), ok(), ok(42)),
+            (ok(42), err("handler"), ok(), ok(42)),
+            (ok(42), ok(100), err("cleanup"), err("cleanup")),
+            (ok(42), err("handler"), err("cleanup"), err("cleanup")),
+            (err("body"), ok(100), ok(), ok(100)),
+            (err("body"), err("handler"), ok(), err("handler")),
+            (err("body"), ok(100), err("cleanup"), err("cleanup")),
+            (err("body"), err("handler"), err("cleanup"), err("cleanup")),
+        ]: Array (Result ErrMsg I64, Result ErrMsg I64, Result ErrMsg (), Result ErrMsg I64),
+        |(body, handler, cleanup, expected)|
+        let actual = body.catch(|errmsg| handler).finally(cleanup);
+        assert_equal("eq", expected, actual)
+    )
+);
+
+test_iofail_catch_finally: TestCase;
+test_iofail_catch_finally = (
+    make_table_test("test_iofail_catch_finally",
+        [
+            (ok(42), ok(100), ok(), ok(42)),
+            (ok(42), err("handler"), ok(), ok(42)),
+            (ok(42), ok(100), err("cleanup"), err("cleanup")),
+            (ok(42), err("handler"), err("cleanup"), err("cleanup")),
+            (err("body"), ok(100), ok(), ok(100)),
+            (err("body"), err("handler"), ok(), err("handler")),
+            (err("body"), ok(100), err("cleanup"), err("cleanup")),
+            (err("body"), err("handler"), err("cleanup"), err("cleanup")),
+        ]: Array (Result ErrMsg I64, Result ErrMsg I64, Result ErrMsg (), Result ErrMsg I64),
+        |(body, handler, cleanup, expected)|
+        let body: IOFail I64 = body.from_result;
+        let handler: IOFail I64 = handler.from_result;
+        let cleanup: IOFail () = cleanup.from_result;
+        let actual = *body.catch(|errmsg| handler).finally(cleanup).to_result.lift;
+        assert_equal("eq", expected, actual)
+    )
+);
 
 main: IO ();
 main = (
     [
         test_result_error,
         test_iofail_error,
+        test_result_finally,
+        test_iofail_finally,
+        test_result_catch_finally,
+        test_iofail_catch_finally,
     ]
     .run_test_driver
 );

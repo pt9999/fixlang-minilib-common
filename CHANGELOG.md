@@ -1,3 +1,7 @@
+## 0.10.1
+### Added
+- Minilib.Monad.Error: Added `finally`.
+
 ## 0.10.0
 ### Added
 - Moved Minilib.Monad.Error, Minilib.Monad.IO from minilib-monad.

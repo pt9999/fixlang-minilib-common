@@ -13,6 +13,25 @@ trait [m: * -> *] m: MonadErrorIF {
     catch: (ErrMsg -> m a) -> m a -> m a;
 }
 
+// Returns a monad which performs `body` first, then `cleanup`,
+// regardless of whether `body` throws an error.
+//
+// If `cleanup` throws an error, that error takes precedence over an error thrown by `body`.
+//
+// # Parameters
+// - `cleanup`: a cleanup
+// - `body`: a body
+finally: [m: MonadError] m () -> m a -> m a;
+finally = |cleanup, body| (
+    let a = *body.catch(|errmsg|
+        cleanup;;
+        error(errmsg)
+    );
+    cleanup;;
+    pure $ a
+);
+
+
 impl Result ErrMsg: MonadErrorIF {
     error = Result::err;
     catch = |handler, res| (

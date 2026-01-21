@@ -1,4 +1,22 @@
-// Definition of `MonadErrorIF` trait which can report errors.
+// This module defines the `MonadError` trait, which can report errors.
+//
+// Monads that implement `MonadError` can throw errors via the `error` function.
+//
+// It also provides functions like `catch` and `finally` to help with exception handling.
+//
+// Example:
+// ```
+// read_file: Path -> IOFail String;
+// read_file = |path| (
+//     let handle = *open_file(path, "r");
+//     do {
+//         println("reading file: " + path).lift;;
+//         read_string(handle)
+//     }
+//     .catch(|errmsg| pure("Error: " + errmsg))
+//     .finally(close_file(handle).lift)
+// );
+// ```
 module Minilib.Monad.Error;
 
 // A trait for the interface of monads which can report errors.

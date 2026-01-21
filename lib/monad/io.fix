@@ -1,4 +1,4 @@
-// Monadic traits which can lift IO and IOFail monad.
+// This module defines the `MonadIO` and `MonadIOFail` traits, which can lift `IO` and `IOFail` monad.
 module Minilib.Monad.IO;
 
 // A monadic trait which can lift IO monad.

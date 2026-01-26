@@ -1,6 +1,7 @@
 ## 0.11.0
 ### Added
 - Minilib.Common.IORef: Added `from_ptr`, `borrow_ptr_io`, `ref`, `unref`, `act`.
+- Minilib.Common.IteratorEx: Added `get_last`.
 ### Changed
 - Minilib.Common.IORef: Major implementation changes.
 

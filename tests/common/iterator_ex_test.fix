@@ -35,6 +35,20 @@ test_drop_while = (
     )
 );
 
+test_get_last: TestCase;
+test_get_last = (
+    make_table_test("test_get_last",
+        [
+            ([1, 2, 3, 4, 5], some $ 5),
+            ([1], some $ 1),
+            ([], none()),
+        ],
+        |(arr, expected)|
+        let actual = arr.to_iter.get_last;
+        assert_equal("eq", expected, actual)
+    )
+);
+
 test_repeat: TestCase;
 test_repeat = (
     make_test("test_repeat") $ |_|
@@ -105,6 +119,7 @@ main = (
     [
         test_drop,
         test_drop_while,
+        test_get_last,
         test_repeat,
         test_scan,
         test_scan_ex,

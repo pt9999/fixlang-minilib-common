@@ -1,6 +1,6 @@
 # Minilib.Text.StringEx
 
-Defined in minilib-common@0.10.1
+Defined in minilib-common@0.11.0
 
 String utility functions.
 

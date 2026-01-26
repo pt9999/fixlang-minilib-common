@@ -1,6 +1,6 @@
 # Minilib.Common.IOEx
 
-Defined in minilib-common@0.10.1
+Defined in minilib-common@0.11.0
 
 Extensions for `Std::IO`.
 

@@ -20,6 +20,62 @@ test_ioref_simple = (
     pure()
 );
 
+test_ioref_get: TestCase;
+test_ioref_get = (
+    make_test("test_ioref_get") $ |_|
+    let ioref = *IORef::make([1,2,3]);
+    let arr = *ioref.get;
+    // arr is not unique at this point, since ioref retains it too
+    assert_equal("eq", [1, 2, 3], arr);;
+    let arr = *ioref.get;
+    // now ioref is destroyed, so arr is unique
+    let arr = arr.assert_unique(|_| "not unique");
+    assert_equal("eq", [1, 2, 3], arr);;
+    pure()
+);
+
+test_ioref_set: TestCase;
+test_ioref_set = (
+    make_test("test_ioref_set") $ |_|
+    let ioref = *IORef::make([1,2,3]);
+    let arr = *ioref.get;
+    // arr is not unique at this point, since ioref retains it too
+    assert_equal("eq", [1, 2, 3], arr);;
+    ioref.IORef::set([4,5,6]);;
+    let arr = *ioref.get;
+    // now ioref is destroyed, so arr is unique
+    let arr = arr.assert_unique(|_| "not unique");
+    assert_equal("eq", [4, 5, 6], arr);;
+    pure()
+);
+
+test_ioref_mod: TestCase;
+test_ioref_mod = (
+    make_test("test_ioref_mod") $ |_|
+    let ioref = *IORef::make([1,2,3]);
+    ioref.mod(|arr|
+        // arr is unique in the modifier function
+        arr.assert_unique(|_| "not unique")
+        .set(0, 0)
+    );;
+    assert_equal("eq", [0, 2, 3], *ioref.get);;
+    pure()
+);
+
+test_ioref_act: TestCase;
+test_ioref_act = (
+    make_test("test_ioref_act") $ |_|
+    let ioref = *IORef::make([1,2,3]);
+    let str = *ioref.act(|arr|
+        // arr is unique in the action function
+        let str = arr.to_string;
+        let arr = arr.assert_unique(|_| "not unique").set(0, 0);
+        pure $ (str, arr));
+    assert_equal("eq", [0, 2, 3], *ioref.get);;
+    assert_equal("eq", "[1, 2, 3]", str);;
+    pure()
+);
+
 test_ioref_unboxed: TestCase;
 test_ioref_unboxed = (
     make_test("test_ioref_unboxed") $ |_|
@@ -123,6 +179,30 @@ test_ioref_dtor_multi = (
     check_ior_obj(42, 0, ior_obj)
 );
 
+test_ioref_borrow_ptr_io_from_ptr_ref_unref: TestCase;
+test_ioref_borrow_ptr_io_from_ptr_ref_unref = (
+    make_test("test_ioref_borrow_ptr_io_from_ptr_ref_unref") $ |_|
+    let ptr: Ptr = *do {
+        let ior_obj: IORef Obj = *(
+            let ior_i64: IORef I64 = *IORef::make(42);
+            let obj = *Obj::make(ior_i64);
+            IORef::make(obj)
+        );
+        ior_obj.borrow_ptr_io(|ptr|
+            // borrows ioref_t*, increment refcount, then return it
+            ior_obj.ref;;   // +1
+            pure $ ptr
+        )
+    }.lift;
+
+    // restore ior_obj from the pointer
+    let ior_obj: IORef Obj = *IORef::from_ptr(ptr);
+    ior_obj.unref;;     // -1
+
+    let obj2: Obj = *ior_obj.get;
+    assert_equal("eq", 42, *obj2.get)
+);
+
 test_ioref_perf: TestCase;
 test_ioref_perf = (
     make_test("test_ioref_perf") $ |_|
@@ -143,10 +223,15 @@ main : IO ();
 main = (
     [
         test_ioref_simple,
+        test_ioref_get,
+        test_ioref_set,
+        test_ioref_mod,
+        test_ioref_act,
         test_ioref_unboxed,
         test_ioref_boxed,
         test_ioref_dtor,
         test_ioref_dtor_multi,
+        test_ioref_borrow_ptr_io_from_ptr_ref_unref,
         test_ioref_perf,
     ]
     .run_test_driver

@@ -17,6 +17,7 @@ import Minilib.Monad.IO;
 
 // A mutable reference whose value can be changed using the IO monad.
 type IORef a = unbox struct {
+    // A pointer to `ioref_t` (the internal structure).
     dtor: Destructor Ptr
 };
 
@@ -28,18 +29,69 @@ namespace IORef {
     make: [m: MonadIO] a -> m (IORef a);
     make = |a| lift_io $ do {
         let box_a: Box a = Box::make(a);
-        let retained_ptr = *box_a.boxed_to_retained_ptr;    // +1
+        let retained_ptr = *box_a.boxed_to_retained_ptr;    // +1 current_value (will be -1 on cleanup)
         let f: Lazy (Box a) = |_| undefined("");
         let retain = get_funptr_retain(f);
         let release = get_funptr_release(f);
         let ior = *FFI_CALL_IO[Ptr minilib_ioref_init(Ptr, Ptr, Ptr), retained_ptr, retain, release];
+        from_ptr(ior)
+    };
+
+    // Creates a mutable reference from a pointer to `ioref_t` (the internal structure).
+    //
+    // NOTE: `IORef a` must be of the same type, otherwise undefined behavior occurs.
+    //
+    // # Parameters
+    // - `ptr`: a pointer to `ioref_t`
+    from_ptr: [m: MonadIO] Ptr -> m (IORef a);
+    from_ptr = |ior| lift_io $ do {
+        FFI_CALL_IO[() minilib_ioref_ref(Ptr), ior];;       // +1 ioref_t
         pure $ IORef {
             dtor: *Destructor::make(ior, |ior|
                 if ior == nullptr { pure $ nullptr };
-                FFI_CALL_IO[() minilib_ioref_cleanup(Ptr), ior];;   // -1
+                FFI_CALL_IO[() minilib_ioref_unref(Ptr), ior];;   // -1 ioref_t
                 pure $ nullptr
             )
         }
+    };
+
+    // Borrows a pointer to `ioref_t` (the internal structure).
+    //
+    // The borrowed pointer to `ioref_t` can be stored in a structure in a foreign language,
+    // and can be used to restore `IORef a` by calling `IORef::from_ptr`.
+    //
+    // In this situation, you need to manage the reference count of `ioref_t`.
+    // Call `minilib_ioref_ref()` and `minilib_ioref_unref()` from foreign language,
+    // or call `ioref.ref` and `ioref.unref` from Fix language.
+    //
+    // # Parameters
+    // - `f`: a function which receives a pointer and returns an IO monad.
+    // - `ioref`: a mutable reference
+    borrow_ptr_io: (Ptr -> IO b) -> IORef a -> IO b;
+    borrow_ptr_io = |f, ioref| lift_io $ do {
+        ioref.@dtor.borrow_io(f)
+    };
+
+    // Increments the reference count of `ioref_t` (the internal structure).
+    //
+    // # Parameters
+    // - `ioref`: a mutable reference
+    ref: [m: MonadIO] IORef a -> m ();
+    ref = |ioref| lift_io $ do {
+        ioref.borrow_ptr_io(|ior|
+            FFI_CALL_IO[() minilib_ioref_ref(Ptr), ior]       // +1 ioref_t
+        )
+    };
+
+    // Decrements the reference count of `ioref_t` (the internal structure).
+    //
+    // # Parameters
+    // - `ioref`: a mutable reference
+    unref: [m: MonadIO] IORef a -> m ();
+    unref = |ioref| lift_io $ do {
+        ioref.borrow_ptr_io(|ior|
+            FFI_CALL_IO[() minilib_ioref_unref(Ptr), ior]       // -1 ioref_t
+        )
     };
 
     // Gets the value of a mutable reference.
@@ -48,10 +100,9 @@ namespace IORef {
     // - `ioref`: a mutable reference
     get: [m: MonadIO] IORef a -> m a;
     get = |ioref| lift_io $ do {
-        ioref.@dtor.borrow_io(|ior|
-            let retained_ptr = *FFI_CALL_IO[Ptr minilib_ioref_get_retained_ptr(Ptr), ior];
-            FFI_CALL_IO[() minilib_ioref_retain(Ptr), ior];;    // +1
-            let box_a: Box a = *retained_ptr.boxed_from_retained_ptr;    // -1
+        ioref.borrow_ptr_io(|ior|
+            let retained_ptr = *FFI_CALL_IO[Ptr minilib_ioref_get_retained_ptr(Ptr), ior];  // +1 current_value
+            let box_a: Box a = *retained_ptr.boxed_from_retained_ptr;    // -1 current_value
             pure $ box_a.@value
         )
     };
@@ -63,7 +114,12 @@ namespace IORef {
     // - `ioref`: a mutable reference
     set: [m: MonadIO] a -> IORef a -> m ();
     set = |a, ioref| lift_io $ do {
-        ioref.mod(|_| a)
+        //ioref.mod(|_| a)
+        ioref.borrow_ptr_io(|ior|
+            let box_a: Box a = Box::make(a);
+            let retained_ptr = *box_a.boxed_to_retained_ptr;    // +1 new_value
+            FFI_CALL_IO[() minilib_ioref_set_retained_ptr(Ptr, Ptr), ior, retained_ptr] // -1 old_value
+        )
     };
 
     // `put` is a synonym of `set`.
@@ -76,14 +132,35 @@ namespace IORef {
     // - `ioref`: a mutable reference
     mod: [m: MonadIO] (a -> a) -> IORef a -> m ();
     mod = |f, ioref| lift_io $ do {
-        ioref.@dtor.borrow_io(|ior|
-            let retained_ptr = *FFI_CALL_IO[Ptr minilib_ioref_get_retained_ptr(Ptr), ior];
-            let box_a: Box a = *retained_ptr.boxed_from_retained_ptr;    // -1
+        ioref.borrow_ptr_io(|ior|
+            let retained_ptr = *FFI_CALL_IO[Ptr minilib_ioref_get_retained_ptr(Ptr), ior];  // +1 old_value
+            let box_a: Box a = *retained_ptr.boxed_from_retained_ptr;    // -1 old_value
             let a = box_a.@value;
+            FFI_CALL_IO[() minilib_ioref_set_retained_ptr(Ptr, Ptr), ior, nullptr];; // -1 old_value, retained_ptr := null
             let a = f(a);
             let box_a: Box a = Box::make(a);
-            let retained_ptr = *box_a.boxed_to_retained_ptr;    // +1
-            FFI_CALL_IO[() minilib_ioref_set_retained_ptr(Ptr, Ptr), ior, retained_ptr]
+            let retained_ptr = *box_a.boxed_to_retained_ptr;    // +1 new_value
+            FFI_CALL_IO[() minilib_ioref_set_retained_ptr(Ptr, Ptr), ior, retained_ptr] // retained_ptr was null
+        )
+    };
+
+    // Performs an action to a mutable reference.
+    //
+    // # Parameters
+    // - `f`: a function which receives a value and returns an `IO (b, a)`, where `b` is a result and `a` is a new value.
+    // - `ioref`: a mutable reference
+    act: [m: MonadIO] (a -> IO (b, a)) -> IORef a -> m b;
+    act = |f, ioref| lift_io $ do {
+        ioref.borrow_ptr_io(|ior|
+            let retained_ptr = *FFI_CALL_IO[Ptr minilib_ioref_get_retained_ptr(Ptr), ior];  // +1 old_value
+            let box_a: Box a = *retained_ptr.boxed_from_retained_ptr;    // -1 old_value
+            let a = box_a.@value;
+            FFI_CALL_IO[() minilib_ioref_set_retained_ptr(Ptr, Ptr), ior, nullptr];; // -1 old_value, retained_ptr := null
+            let (b, a) = *f(a);
+            let box_a: Box a = Box::make(a);
+            let retained_ptr = *box_a.boxed_to_retained_ptr;    // +1 new_value
+            FFI_CALL_IO[() minilib_ioref_set_retained_ptr(Ptr, Ptr), ior, retained_ptr];;  // retained_ptr was null
+            pure $ b
         )
     };
 }

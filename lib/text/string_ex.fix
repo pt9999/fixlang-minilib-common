@@ -32,6 +32,8 @@ _unsafe_to_string = |bytes| (
 
 // Converts the specified string to lowercase.
 //
+// NOTE: This function is affected by the locale.
+//
 // # Parameters
 // * `str` - a string
 //
@@ -46,6 +48,8 @@ to_lower = |str| (
 );
 
 // Converts the specified string to uppercase.
+//
+// NOTE: This function is affected by the locale.
 //
 // # Parameters
 // * `str` - a string
@@ -72,6 +76,23 @@ to_upper = |str| (
 byte_to_string: U8 -> String;
 byte_to_string = |c| (
     Array::empty(2).push_back(c)._unsafe_to_string
+);
+
+// Creates a string of the specified length, where each byte is equal to the specified byte.
+//
+// # Parameters
+// * `size` - the length of the string
+// * `c` - a byte (a character)
+//
+// Example:
+// ```
+// StringEx::fill(5, 'A')
+// ==> "AAAAA"
+// ```
+fill: I64 -> U8 -> String;
+fill = |size, c| (
+    let size = max(0, size);
+    Array::fill(size, c)._unsafe_to_string
 );
 
 // Searches for the specified byte from the beginning of a string.
@@ -102,6 +123,44 @@ find_byte = |c, str| (
         };
         continue $ i + 1
     )
+);
+
+// Gets the prefix of a string up to a specified length.
+//
+// # Parameters
+// * `size` - the length of the prefix
+// * `str` - a string
+//
+// Example:
+// ```
+// "ABCDE".get_prefix(3)
+// ==> "ABC"
+// "ABCDE".get_prefix(10)
+// ==> "ABCDE"
+// ```
+get_prefix: I64 -> String -> String;
+get_prefix = |size, str| (
+    let size = max(0, size);
+    str.get_sub(0, min(size, str.get_size))
+);
+
+// Gets the suffix of a string up to a specified length.
+//
+// # Parameters
+// * `size` - the length of the suffix
+// * `str` - a string
+//
+// Example:
+// ```
+// "ABCDE".get_suffix(3)
+// ==> "CDE"
+// "ABCDE".get_suffix(10)
+// ==> "ABCDE"
+// ```
+get_suffix: I64 -> String -> String;
+get_suffix = |size, str| (
+    let size = max(0, size);
+    str.get_sub(max(0, str.get_size - size), str.get_size)
 );
 
 // Searches for the specified byte from the end of a string.

@@ -1,3 +1,7 @@
+## 0.11.1
+### Added
+- Minilib.Text.StringEx: Added `fill`, `get_prefix`, `get_suffix`.
+
 ## 0.11.0
 ### Added
 - Minilib.Common.IORef: Added `from_ptr`, `borrow_ptr_io`, `ref`, `unref`, `act`.

@@ -48,6 +48,21 @@ test_byte_to_string = (
     pure()
 );
 
+test_fill: TestCase;
+test_fill = (
+    make_table_test("test_fill",
+        [
+            (-1, 'A', ""),
+            (0, 'A', ""),
+            (3, 'A', "AAA"),
+            (3, 0_U8, ""),
+        ],
+        |(size, c, expected)|
+        let actual = StringEx::fill(size, c);
+        assert_equal("eq", expected, actual)
+    )
+);
+
 test_find_byte_ok: (String, U8, Option I64) -> TestCase;
 test_find_byte_ok = |(str, byte, expected)| (
     let testname = "test_find_byte_ok (" + str + "," + byte.to_string + "," + expected.to_string + ")";
@@ -90,6 +105,42 @@ test_find_last_byte = (
         test_find_last_byte_ok $ ("abab", 'c', none()),
         TestCase::empty
     ].run_tests
+);
+
+test_get_prefix: TestCase;
+test_get_prefix = (
+    make_table_test("test_get_prefix",
+        [
+            (-1, "ABCDE", ""),
+            (0, "", ""),
+            (3, "", ""),
+            (0, "ABCDE", ""),
+            (3, "ABCDE", "ABC"),
+            (5, "ABCDE", "ABCDE"),
+            (6, "ABCDE", "ABCDE"),
+        ],
+        |(size, str, expected)|
+        let actual = str.get_prefix(size);
+        assert_equal("eq", expected, actual)
+    )
+);
+
+test_get_suffix: TestCase;
+test_get_suffix = (
+    make_table_test("test_get_suffix",
+        [
+            (-1, "ABCDE", ""),
+            (0, "", ""),
+            (3, "", ""),
+            (0, "ABCDE", ""),
+            (3, "ABCDE", "CDE"),
+            (5, "ABCDE", "ABCDE"),
+            (6, "ABCDE", "ABCDE"),
+        ],
+        |(size, str, expected)|
+        let actual = str.get_suffix(size);
+        assert_equal("eq", expected, actual)
+    )
 );
 
 test_replace_all_ok: (String, String, String, String) -> TestCase;
@@ -353,8 +404,11 @@ main = (
         test_to_lower,
         test_to_upper,
         test_byte_to_string,
+        test_fill,
         test_find_byte,
         test_find_last_byte,
+        test_get_prefix,
+        test_get_suffix,
         test_replace_all,
         test_replace_suffix,
         test_split_first,

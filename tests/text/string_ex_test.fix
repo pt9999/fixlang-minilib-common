@@ -128,6 +128,40 @@ test_get_suffix = (
     )
 );
 
+test_pad_left: TestCase;
+test_pad_left = (
+    make_table_test("test_pad_left",
+        [
+            (-1, '.', "", ""),
+            (0, '.', "", ""),
+            (3, '.', "", "..."),
+            (0, '0', "123", "123"),
+            (3, '0', "123", "123"),
+            (5, '0', "123", "00123"),
+        ],
+        |(size, c, str, expected)|
+        let actual = str.pad_left(size, c);
+        assert_equal("eq", expected, actual)
+    )
+);
+
+test_pad_right: TestCase;
+test_pad_right = (
+    make_table_test("test_pad_right",
+        [
+            (-1, '.', "", ""),
+            (0, '.', "", ""),
+            (3, '.', "", "..."),
+            (0, ' ', "abc", "abc"),
+            (3, ' ', "abc", "abc"),
+            (6, ' ', "abc", "abc   "),
+        ],
+        |(size, c, str, expected)|
+        let actual = str.pad_right(size, c);
+        assert_equal("eq", expected, actual)
+    )
+);
+
 test_replace_all: TestCase;
 test_replace_all = (
     make_table_test("test_replace_all",
@@ -300,6 +334,8 @@ main = (
         test_find_last_byte,
         test_get_prefix,
         test_get_suffix,
+        test_pad_left,
+        test_pad_right,
         test_replace_all,
         test_replace_suffix,
         test_split_first,

@@ -193,6 +193,48 @@ find_last_byte = |c, str| (
     )
 );
 
+// Pads on the left with the specified byte until it reaches the specified length.
+//
+// # Parameters
+// * `size` - the minimum length of the padded string
+// * `c` - a byte (a character)
+// * `str` - a string
+//
+// Example:
+// ```
+// "123".pad_left(5, '0')
+// ==> "00123"
+// "1234567".pad_left(5, '0')
+// ==> "1234567"
+// ```
+pad_left: I64 -> U8 -> String -> String;
+pad_left = |size, c, str| (
+    let size = max(0, size);
+    if size <= str.get_size { str };
+    StringEx::fill(size - str.get_size, c) + str
+);
+
+// Pads on the right with the specified byte until it reaches the specified length.
+//
+// # Parameters
+// * `size` - the minimum length of the padded string
+// * `c` - a byte (a character)
+// * `str` - a string
+//
+// Example:
+// ```
+// "abc".pad_right(5, ' ')
+// ==> "abc  "
+// "abcdefg".pad_right(5, ' ')
+// ==> "abcdefg"
+// ```
+pad_right: I64 -> U8 -> String -> String;
+pad_right = |size, c, str| (
+    let size = max(0, size);
+    if size <= str.get_size { str };
+    str + StringEx::fill(size - str.get_size, c)
+);
+
 // `input.replace_all(from, to)` replaces all occurrences of `from` in the input string with `to`.
 // If `from` is empty, returns the input string unchanged.
 //

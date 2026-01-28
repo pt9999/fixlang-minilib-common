@@ -1,6 +1,6 @@
 ## 0.11.1
 ### Added
-- Minilib.Text.StringEx: Added `fill`, `get_prefix`, `get_suffix`.
+- Minilib.Text.StringEx: Added `fill`, `get_prefix`, `get_suffix`, `pad_left`, `pad_right`.
 
 ## 0.11.0
 ### Added

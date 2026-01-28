@@ -1,6 +1,6 @@
 # Minilib.Text.StringEx
 
-Defined in minilib-common@0.11.0
+Defined in minilib-common@0.11.1
 
 String utility functions.
 
@@ -25,6 +25,23 @@ Example:
 ```
 0x41_U8.byte_to_string
 ==> "A"
+```
+
+#### fill
+
+Type: `Std::I64 -> Std::U8 -> Std::String`
+
+Creates a string of the specified length, where each byte is equal to the specified byte.
+
+##### Parameters
+
+* `size` - the length of the string
+* `c` - a byte (a character)
+
+Example:
+```
+StringEx::fill(5, 'A')
+==> "AAAAA"
 ```
 
 #### find_byte
@@ -65,6 +82,84 @@ Example:
 ==> some(7)
 "aaa".find_last_byte('/')
 ==> none()
+```
+
+#### get_prefix
+
+Type: `Std::I64 -> Std::String -> Std::String`
+
+Gets the prefix of a string up to a specified length.
+
+##### Parameters
+
+* `size` - the length of the prefix
+* `str` - a string
+
+Example:
+```
+"ABCDE".get_prefix(3)
+==> "ABC"
+"ABCDE".get_prefix(10)
+==> "ABCDE"
+```
+
+#### get_suffix
+
+Type: `Std::I64 -> Std::String -> Std::String`
+
+Gets the suffix of a string up to a specified length.
+
+##### Parameters
+
+* `size` - the length of the suffix
+* `str` - a string
+
+Example:
+```
+"ABCDE".get_suffix(3)
+==> "CDE"
+"ABCDE".get_suffix(10)
+==> "ABCDE"
+```
+
+#### pad_left
+
+Type: `Std::I64 -> Std::U8 -> Std::String -> Std::String`
+
+Pads on the left with the specified byte until it reaches the specified length.
+
+##### Parameters
+
+* `size` - the minimum length of the padded string
+* `c` - a byte (a character)
+* `str` - a string
+
+Example:
+```
+"123".pad_left(5, '0')
+==> "00123"
+"1234567".pad_left(5, '0')
+==> "1234567"
+```
+
+#### pad_right
+
+Type: `Std::I64 -> Std::U8 -> Std::String -> Std::String`
+
+Pads on the right with the specified byte until it reaches the specified length.
+
+##### Parameters
+
+* `size` - the minimum length of the padded string
+* `c` - a byte (a character)
+* `str` - a string
+
+Example:
+```
+"abc".pad_right(5, ' ')
+==> "abc  "
+"abcdefg".pad_right(5, ' ')
+==> "abcdefg"
 ```
 
 #### replace_all
@@ -229,6 +324,8 @@ Type: `Std::String -> Std::String`
 
 Converts the specified string to lowercase.
 
+NOTE: This function is affected by the locale.
+
 ##### Parameters
 
 * `str` - a string
@@ -244,6 +341,8 @@ Example:
 Type: `Std::String -> Std::String`
 
 Converts the specified string to uppercase.
+
+NOTE: This function is affected by the locale.
 
 ##### Parameters
 

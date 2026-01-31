@@ -1,6 +1,6 @@
 # Minilib.Testing.UnitTest
 
-Defined in minilib-common@0.11.2
+Defined in minilib-common@0.11.3
 
 Unit Test Framework
 
@@ -39,7 +39,7 @@ Type: `() -> Std::IO Std::Bool`
 Checks if the results of all testcases should be printed.
 
 If this function returns true, the results of all testcases will be printed.
-If this function returns true, the results of only failed testcases will be printed.
+If this function returns false, the results of only failed testcases will be printed.
 
 If the environment variable `TEST_VERBOSE` is set to non-empty string, this function returns true.
 For example, running the `TEST_VERBOSE=1 fix test` command at a shell prompt will report all testcases.

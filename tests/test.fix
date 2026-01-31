@@ -12,6 +12,7 @@ import TimeExTest;
 import ErrorTest;
 import IoTest;
 import StringExTest;
+import UnitTestTest;
 import TraversableTest;
 
 testsuite: TestSuite;
@@ -26,6 +27,7 @@ testsuite = [
     ("ErrorTest", ErrorTest::main),
     ("IoTest", IoTest::main),
     ("StringExTest", StringExTest::main),
+    ("UnitTestTest", UnitTestTest::main),
     ("TraversableTest", TraversableTest::main),
 ];
 

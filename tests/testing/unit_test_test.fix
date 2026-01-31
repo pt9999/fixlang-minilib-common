@@ -1,0 +1,50 @@
+module UnitTestTest;
+
+import Minilib.Testing.UnitTest;
+
+test_assert_true: TestCase;
+test_assert_true = (
+    make_test("test_assert_true") $ |_|
+    let res: Result ErrMsg () = assert_true("0 == 0", 0 == 0);
+    assert_equal("ok", ok(), res);;
+    let res: Result ErrMsg () = assert_true("0 == 1", 0 == 1);
+    assert_equal("err", err("assert_true: 0 == 1"), res)
+);
+
+test_assert_false: TestCase;
+test_assert_false = (
+    make_test("test_assert_false") $ |_|
+    let res: Result ErrMsg () = assert_false("0 != 0", 0 != 0);
+    assert_equal("ok", ok(), res);;
+    let res: Result ErrMsg () = assert_false("0 != 1", 0 != 1);
+    assert_equal("err", err("assert_false: 0 != 1"), res)
+);
+
+test_assert_equal: TestCase;
+test_assert_equal = (
+    make_test("test_assert_equal") $ |_|
+    let res: Result ErrMsg () = assert_equal("[1] == [1]", [1], [1]);
+    assert_equal("ok", ok(), res);;
+    let res: Result ErrMsg () = assert_equal("[1] == [2]", [1], [2]);
+    assert_equal("err", err("assert_equal: [1] == [2]: lhs='[1]' rhs='[2]'"), res)
+);
+
+test_assert_not_equal: TestCase;
+test_assert_not_equal = (
+    make_test("test_assert_not_equal") $ |_|
+    let res: Result ErrMsg () = assert_not_equal("[1] == [2]", [1], [2]);
+    assert_equal("ok", ok(), res);;
+    let res: Result ErrMsg () = assert_not_equal("[1] == [1]", [1], [1]);
+    assert_equal("err", err("assert_not_equal: [1] == [1]: lhs='[1]' rhs='[1]'"), res)
+);
+
+main: IO ();
+main = (
+    [
+        test_assert_true,
+        test_assert_false,
+        test_assert_equal,
+        test_assert_not_equal,
+    ]
+    .run_test_driver
+);

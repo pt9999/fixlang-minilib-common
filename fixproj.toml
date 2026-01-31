@@ -1,6 +1,6 @@
 [general]
 name = "minilib-common"
-version = "0.11.1"
+version = "0.11.2-alpha"
 fix_version = "1.2.0"
 authors = ["pt9999"]
 license = "MIT"
@@ -36,6 +36,7 @@ files = [
     "tests/monad/error_test.fix",
     "tests/monad/io_test.fix",
     "tests/text/string_ex_test.fix",
+    "tests/testing/unit_test_test.fix",
     "tests/trait/traversable_test.fix",
 ]
 

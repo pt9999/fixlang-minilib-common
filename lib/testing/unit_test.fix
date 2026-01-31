@@ -8,13 +8,20 @@ import Minilib.Monad.IO;
 import Minilib.Monad.Error;
 import Minilib.Trait.Traversable;
 
-// If _TEST_VERBOSE is true, the results of all testcases will be printed.
-// If _TEST_VERBOSE is false, the results of only failed testcases will be printed.
+// Checks if the results of all testcases should be printed.
 //
-// If the environment variable `TEST_VERBOSE` is set to non-empty string, _TEST_VERBOSE becomes true.
+// If this function returns true, the results of all testcases will be printed.
+// If this function returns true, the results of only failed testcases will be printed.
+//
+// If the environment variable `TEST_VERBOSE` is set to non-empty string, this function returns true.
 // For example, running the `TEST_VERBOSE=1 fix test` command at a shell prompt will report all testcases.
-_TEST_VERBOSE: Bool;
-_TEST_VERBOSE = do {
+//
+// If the command line arguments contains "-v" or "--verbose", this function returns true.
+// For example, running the `fix test -- -v` command at a shell prompt will report all testcases.
+//
+// Otherwise, this function returns false.
+is_test_verbose: () -> IO Bool;
+is_test_verbose = |_| (
     let name = "TEST_VERBOSE";
     let p_value = *name.borrow_c_str_io(|p_name|
         FFI_CALL_IO[Ptr getenv(Ptr), p_name]
@@ -23,8 +30,13 @@ _TEST_VERBOSE = do {
     if value != "" {
         pure $ true
     };
+
+    let args = *IO::get_args;
+    if args.find_by(|arg| arg == "-v" || arg == "--verbose").is_some {
+        pure $ true
+    };
     pure $ false
-}.unsafe_perform;
+);
 
 // TestCase is a type that counts the number of successful and failed tests.
 type TestCase = Lazy (IOFail (I64, I64));
@@ -117,10 +129,11 @@ run_tests = |tests, _| (
 // The test case will print the name of the test case and the result (success or failure) to `stderr`.
 make_test: String -> Lazy (IOFail ()) -> TestCase;
 make_test = |test_name, body, _| (
-    when(_TEST_VERBOSE, emprintln("=== " + test_name + " ==="));;
+    let verbose = *is_test_verbose().lift;
+    when(verbose, emprintln("=== " + test_name + " ==="));;
     do {
         body();;
-        when(_TEST_VERBOSE, emprintln("[SUCCESS] " + test_name));;
+        when(verbose, emprintln("[SUCCESS] " + test_name));;
         pure $ (1, 0)
     }.try(|err|
         eprintln("error: " + err);;

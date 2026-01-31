@@ -1,6 +1,8 @@
 ## 0.11.2
 ### Added
 - Minilib.Testing.UnitTest: Added `assert_false`.
+### Changed
+- Minilib.Testing.UnitTest: Renamed `_TEST_VERBOSE` to `is_test_verbose` and changed to an `IO` monad.
 
 ## 0.11.1
 ### Added

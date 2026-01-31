@@ -1,6 +1,6 @@
 # Minilib.Monad.Error
 
-Defined in minilib-common@0.11.1
+Defined in minilib-common@0.11.2
 
 This module defines the `MonadError` trait, which can report errors.
 

@@ -1,6 +1,6 @@
 # Minilib.Common.Common
 
-Defined in minilib-common@0.11.1
+Defined in minilib-common@0.11.2
 
 Common functions such as `id` and `flip`.
 

@@ -1,3 +1,7 @@
+## 0.11.2
+### Added
+- Minilib.Testing.UnitTest: Added `assert_false`.
+
 ## 0.11.1
 ### Added
 - Minilib.Text.StringEx: Added `fill`, `get_prefix`, `get_suffix`, `pad_left`, `pad_right`.

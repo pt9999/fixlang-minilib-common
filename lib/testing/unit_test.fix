@@ -158,6 +158,15 @@ assert_true = |msg, b| (
     pure()
 );
 
+// Verifies that the boolean value is false. If the boolean value is true, the test will fail with the specified message.
+assert_false: [m: MonadError] String -> Bool -> m ();
+assert_false = |msg, b| (
+    if b {
+        error $ "assert_false: " + msg
+    };
+    pure()
+);
+
 // Verifies that two values are equal. If the values are different, the test will fail with the specified message.
 assert_equal: [m: MonadError, a: Eq, a: ToString] String -> a -> a -> m ();
 assert_equal = |msg, lhs, rhs| (

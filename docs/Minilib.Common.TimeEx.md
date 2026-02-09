@@ -1,6 +1,6 @@
 # Minilib.Common.TimeEx
 
-Defined in minilib-common@0.11.3
+Defined in minilib-common@0.11.4
 
 Timing module, such as sleep for a while, and measuring execution time.
 

@@ -1,3 +1,7 @@
+## 0.12.0
+### Changed
+- fixproj.toml: Bumped `fix_version` to 1.3.0.
+
 ## 0.11.4
 ### Changed
 - fixproj.toml: Changed versions of dependencies to be fixed

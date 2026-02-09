@@ -1,3 +1,7 @@
+## 0.11.4
+### Changed
+- fixproj.toml: Changed versions of dependencies to be fixed
+
 ## 0.11.2
 ### Added
 - Minilib.Testing.UnitTest: Added `assert_false`.

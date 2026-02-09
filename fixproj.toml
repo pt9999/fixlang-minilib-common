@@ -42,11 +42,11 @@ files = [
 
 [[dependencies]]
 name = "character"
-version = "*"
+version = "1.0.1"
 git = { url = "https://github.com/tttmmmyyyy/fixlang-character.git" }
 
 
 [[dependencies]]
 name = "time"
-version = "*"
+version = "1.0.2"
 git = { url = "https://github.com/tttmmmyyyy/fixlang-time.git" }

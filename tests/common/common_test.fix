@@ -80,6 +80,32 @@ test_uncurry = (
     pure()
 );
 
+test_ifelse: TestCase;
+test_ifelse = (
+    make_test("test_ifelse") $ |_|
+    assert_equal("eq", "yes", ifelse("a" == "a", "yes", "no"));;
+    assert_equal("eq", "no", ifelse("a" == "b", "yes", "no"));;
+    pure()
+);
+
+test_mod_if: TestCase;
+test_mod_if = (
+    make_test("test_mod_if") $ |_|
+    let a = [1, 2];
+    let a = a.mod_if(a.get_size < 3, push_back(3));
+    let a = a.mod_if(a.get_size < 3, push_back(42));
+    assert_equal("eq", [1, 2, 3], a)
+);
+
+test_mod_unless: TestCase;
+test_mod_unless = (
+    make_test("test_mod_unless") $ |_|
+    let a = [1, 2];
+    let a = a.mod_unless(a.get_size < 3, push_back(3));
+    let a = a.mod_unless(a.get_size < 2, push_back(42));
+    assert_equal("eq", [1, 2, 42], a)
+);
+
 main: IO ();
 main = (
     [
@@ -92,6 +118,9 @@ main = (
         test_pair,
         test_curry,
         test_uncurry,
+        test_ifelse,
+        test_mod_if,
+        test_mod_unless,
     ]
     .run_test_driver
 );

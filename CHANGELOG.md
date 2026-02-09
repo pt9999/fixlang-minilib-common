@@ -1,6 +1,9 @@
 ## 0.12.0
 ### Changed
 - fixproj.toml: Bumped `fix_version` to 1.3.0.
+- Minilib.Common.Common: Updated document comments.
+### Added
+- Minilib.Common.Common: Added `ifelse`, `mod_if`, `mod_unless`.
 
 ## 0.11.4
 ### Changed

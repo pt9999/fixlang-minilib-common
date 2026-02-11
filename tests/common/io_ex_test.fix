@@ -24,6 +24,16 @@ test_fflush = (
     pure()
 );
 
+test_getenv: TestCase;
+test_getenv = (
+    make_test("test_getenv") $ |_|
+    let val = *getenv("HOME");
+    assert_true("HOME", val != "");;        // hopefully
+    let val = *getenv("NO_SUCH_ENVIRONMENT_VARIABLE");
+    assert_true("NO_SUCH_ENVIRONMENT_VARIABLE", val == "");;    // hopefully
+    pure()
+);
+
 test_set_unbuffered_mode: TestCase;
 test_set_unbuffered_mode = (
     make_test("test_set_unbuffered_mode") $ |_|
@@ -43,6 +53,7 @@ main: IO ();
 main = (
     [
         test_fflush,
+        test_getenv,
         test_set_unbuffered_mode,
         TestCase::empty
     ]

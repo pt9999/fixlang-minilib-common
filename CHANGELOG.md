@@ -1,3 +1,7 @@
+## 0.12.1
+### Added
+- Minilib.Common.IOEx: Added `getenv`.
+
 ## 0.12.0
 ### Changed
 - fixproj.toml: Bumped `fix_version` to 1.3.0.

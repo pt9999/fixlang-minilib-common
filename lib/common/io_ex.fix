@@ -18,6 +18,23 @@ fflush = |handle| lift_iofail $ do {
     pure()
 };
 
+// Gets the value of an environment variable.
+// If the specified variable is not found, this function returns an empty string.
+//
+// # Parameters
+// - `name`: a variable name
+getenv: [m: MonadIO] String -> m String;
+getenv = |name| lift_io $ do {
+    let p_value = *name.borrow_c_str_io(|p_name|
+        FFI_CALL_IO[Ptr getenv(Ptr), p_name]
+    );
+    if p_value == nullptr {
+        pure $ ""
+    } else {
+        String::unsafe_from_c_str_ptr_io(p_value)
+    }
+};
+
 // Sets IOHandle to unbuffered mode.
 // For detials, see Linux manual page for [setbuf()](https://man7.org/linux/man-pages/man3/setbuf.3.html).
 //

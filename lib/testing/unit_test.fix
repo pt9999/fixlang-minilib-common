@@ -22,11 +22,7 @@ import Minilib.Trait.Traversable;
 // Otherwise, this function returns false.
 is_test_verbose: () -> IO Bool;
 is_test_verbose = |_| (
-    let name = "TEST_VERBOSE";
-    let p_value = *name.borrow_c_str_io(|p_name|
-        FFI_CALL_IO[Ptr getenv(Ptr), p_name]
-    );
-    let value = if p_value == nullptr { "" } else { String::unsafe_from_c_str_ptr(p_value) };
+    let value = *IOEx::getenv("TEST_VERBOSE");
     if value != "" {
         pure $ true
     };

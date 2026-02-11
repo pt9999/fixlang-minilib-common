@@ -1,6 +1,6 @@
 # Minilib.Common.IOEx
 
-Defined in minilib-common@0.12.0
+Defined in minilib-common@0.12.1
 
 Extensions for `Std::IO`.
 
@@ -16,6 +16,17 @@ Flushes a file stream.
 For details, see Linux manual page for [fflush()](https://man7.org/linux/man-pages/man3/fflush.3.html).
 
 NOTE: `Std::IO::flush` may be a better choice.
+
+#### getenv
+
+Type: `[m : Minilib.Monad.IO::MonadIO] Std::String -> m Std::String`
+
+Gets the value of an environment variable.
+If the specified variable is not found, this function returns an empty string.
+
+##### Parameters
+
+- `name`: a variable name
 
 #### set_unbuffered_mode
 

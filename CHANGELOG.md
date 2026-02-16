@@ -1,3 +1,7 @@
+## 0.12.3
+### Added
+- Minilib.Text.StringEx: Added `from_iter`, `to_iter`.
+
 ## 0.12.2
 ### Added
 - Minilib.Text.StringEx: Added `from_array`, `to_array`, `left`, `right`.

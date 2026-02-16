@@ -23,12 +23,30 @@ test_from_array = (
     assert_equal("eq", expected, actual)
 );
 
+test_from_iter: TestCase;
+test_from_iter = (
+    make_test("test_from_iter") $ |_|
+    let iter = range(0, 10).filter(|i| i % 2 == 0).map(|i| '0' + i.to_U8);
+    let expected = "02468";
+    let actual: String = iter.from_iter;
+    assert_equal("eq", expected, actual)
+);
+
 test_to_array: TestCase;
 test_to_array = (
     make_test("test_to_array") $ |_|
     let str = "abc";
     let expected = [ 'a', 'b', 'c' ];
     let actual = str.to_array;
+    assert_equal("eq", expected, actual)
+);
+
+test_to_iter: TestCase;
+test_to_iter = (
+    make_test("test_to_iter") $ |_|
+    let str = "abc 123 def";
+    let expected = "abcdef";
+    let actual: String = str.to_iter.filter(is_alpha).from_iter;
     assert_equal("eq", expected, actual)
 );
 
@@ -381,7 +399,9 @@ main = (
     [
         test__unsafe_to_string,
         test_from_array,
+        test_from_iter,
         test_to_array,
+        test_to_iter,
         test_to_lower,
         test_to_upper,
         test_byte_to_string,

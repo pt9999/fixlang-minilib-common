@@ -17,7 +17,6 @@ import Character;
 _unsafe_to_string: Array U8 -> String;
 _unsafe_to_string = StringEx::from_array;
 
-
 // Converts a byte array to a string. Specifically, it calls `String::_unsafe_from_c_str()`
 // after appending a null character to the end of the byte array.
 //
@@ -36,6 +35,25 @@ from_array = |bytes| (
     String::_unsafe_from_c_str(bytes.push_back(0_U8))
 );
 
+// Converts an iterator of bytes to a string. 
+//
+// `StringEx::from_iter(iter)` is equal to `StringEx::from_array(iter.to_array)`.
+//
+// # Parameters
+// * `iter` - an iterator of bytes
+//
+// Example:
+// ```
+// [ 'a', 'b', 'c' ].to_iter.StringEx::from_iter
+// ==> "abc"
+// [ 0x41_U8, 0x42_U8, 0x43_U8 ].to_iter.StringEx::from_iter
+// ==> "ABC"
+// ```
+from_iter: [iter: Iterator, Item iter = U8] iter -> String;
+from_iter = |iter| (
+    StringEx::from_array(iter.to_array)
+);
+
 // Converts a string to a byte array. Specifically, it calls `String::get_bytes`
 // and removes a null character at the end of the byte array.
 //
@@ -51,6 +69,24 @@ from_array = |bytes| (
 // ```
 to_array: String -> Array U8;
 to_array = |str| str.get_bytes.pop_back;
+
+// Converts a string to an iterator of bytes.
+//
+// `str.to_iter` is equal to `str.to_array.to_iter`.
+//
+// # Parameters
+// * `str` - a string
+//
+// Example:
+// ```
+// "abc".to_iter.to_array
+// ==> [ 'a', 'b', 'c' ]
+// "ABC".to_iter.to_array
+// ==> [ 'A', 'B', 'C' ]
+// ```
+to_iter: String -> ArrayIterator U8;
+to_iter = |str| str.to_array.to_iter;
+
 
 // Converts the specified string to lowercase.
 //

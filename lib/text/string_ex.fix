@@ -12,7 +12,13 @@ import Character;
 // String utility functions
 //---------------------------------
 
-// Converts a byte array to a string. Specifically, it calls `String::_unsafe_to_string()`
+// Deprecated: use `StringEx::from_array`.
+//
+_unsafe_to_string: Array U8 -> String;
+_unsafe_to_string = StringEx::from_array;
+
+
+// Converts a byte array to a string. Specifically, it calls `String::_unsafe_from_c_str()`
 // after appending a null character to the end of the byte array.
 //
 // # Parameters
@@ -20,15 +26,31 @@ import Character;
 //
 // Example:
 // ```
-// [ 'a', 'b', 'c' ]._unsafe_to_string
+// [ 'a', 'b', 'c' ].StringEx::from_array
 // ==> "abc"
-// [ 0x41_U8, 0x42_U8, 0x43_U8 ]._unsafe_to_string
+// [ 0x41_U8, 0x42_U8, 0x43_U8 ].StringEx::from_array
 // ==> "ABC"
 // ```
-_unsafe_to_string: Array U8 -> String;
-_unsafe_to_string = |bytes| (
-    String::_unsafe_from_c_str (bytes.push_back(0_U8))
+from_array: Array U8 -> String;
+from_array = |bytes| (
+    String::_unsafe_from_c_str(bytes.push_back(0_U8))
 );
+
+// Converts a string to a byte array. Specifically, it calls `String::get_bytes`
+// and removes a null character at the end of the byte array.
+//
+// # Parameters
+// * `str` - a string
+//
+// Example:
+// ```
+// "abc".to_array
+// ==> [ 'a', 'b', 'c' ]
+// "ABC".to_array
+// ==> [ 'A', 'B', 'C' ]
+// ```
+to_array: String -> Array U8;
+to_array = |str| str.get_bytes.pop_back;
 
 // Converts the specified string to lowercase.
 //
@@ -144,6 +166,10 @@ get_prefix = |size, str| (
     str.get_sub(0, min(size, str.get_size))
 );
 
+// `left` is a synonym of `get_prefix`.
+left: I64 -> String -> String;
+left = get_prefix;
+
 // Gets the suffix of a string up to a specified length.
 //
 // # Parameters
@@ -162,6 +188,10 @@ get_suffix = |size, str| (
     let size = max(0, size);
     str.get_sub(max(0, str.get_size - size), str.get_size)
 );
+
+// `right` is a synonym of `get_suffix`.
+right: I64 -> String -> String;
+right = get_suffix;
 
 // Searches for the specified byte from the end of a string.
 // If found, returns the index of that byte.

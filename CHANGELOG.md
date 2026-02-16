@@ -1,3 +1,9 @@
+## 0.12.2
+### Added
+- Minilib.Text.StringEx: Added `from_array`, `to_array`, `left`, `right`.
+### Changed
+- Minilib.Text.StringEx: `_unsafe_to_string` is now deprecated.
+
 ## 0.12.1
 ### Added
 - Minilib.Common.IOEx: Added `getenv`.

@@ -14,6 +14,24 @@ test__unsafe_to_string = (
     assert_equal("eq", expected, actual)
 );
 
+test_from_array: TestCase;
+test_from_array = (
+    make_test("test_from_array") $ |_|
+    let array = [ 'a', 'b', 'c' ];
+    let expected = "abc";
+    let actual: String = array.from_array;
+    assert_equal("eq", expected, actual)
+);
+
+test_to_array: TestCase;
+test_to_array = (
+    make_test("test_to_array") $ |_|
+    let str = "abc";
+    let expected = [ 'a', 'b', 'c' ];
+    let actual = str.to_array;
+    assert_equal("eq", expected, actual)
+);
+
 test_to_lower: TestCase;
 test_to_lower = (
     make_test("test_to_lower") $ |_|
@@ -110,6 +128,24 @@ test_get_prefix = (
     )
 );
 
+test_left: TestCase;
+test_left = (
+    make_table_test("test_left",
+        [
+            (-1, "ABCDE", ""),
+            (0, "", ""),
+            (3, "", ""),
+            (0, "ABCDE", ""),
+            (3, "ABCDE", "ABC"),
+            (5, "ABCDE", "ABCDE"),
+            (6, "ABCDE", "ABCDE"),
+        ],
+        |(size, str, expected)|
+        let actual = str.left(size);
+        assert_equal("eq", expected, actual)
+    )
+);
+
 test_get_suffix: TestCase;
 test_get_suffix = (
     make_table_test("test_get_suffix",
@@ -124,6 +160,24 @@ test_get_suffix = (
         ],
         |(size, str, expected)|
         let actual = str.get_suffix(size);
+        assert_equal("eq", expected, actual)
+    )
+);
+
+test_right: TestCase;
+test_right = (
+    make_table_test("test_right",
+        [
+            (-1, "ABCDE", ""),
+            (0, "", ""),
+            (3, "", ""),
+            (0, "ABCDE", ""),
+            (3, "ABCDE", "CDE"),
+            (5, "ABCDE", "ABCDE"),
+            (6, "ABCDE", "ABCDE"),
+        ],
+        |(size, str, expected)|
+        let actual = str.right(size);
         assert_equal("eq", expected, actual)
     )
 );
@@ -326,6 +380,8 @@ main: IO ();
 main = (
     [
         test__unsafe_to_string,
+        test_from_array,
+        test_to_array,
         test_to_lower,
         test_to_upper,
         test_byte_to_string,
@@ -333,7 +389,9 @@ main = (
         test_find_byte,
         test_find_last_byte,
         test_get_prefix,
+        test_left,
         test_get_suffix,
+        test_right,
         test_pad_left,
         test_pad_right,
         test_replace_all,

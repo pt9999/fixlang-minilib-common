@@ -1,6 +1,6 @@
 # Minilib.Text.StringEx
 
-Defined in minilib-common@0.12.1
+Defined in minilib-common@0.12.2
 
 String utility functions.
 
@@ -84,6 +84,25 @@ Example:
 ==> none()
 ```
 
+#### from_array
+
+Type: `Std::Array Std::U8 -> Std::String`
+
+Converts a byte array to a string. Specifically, it calls `String::_unsafe_from_c_str()`
+after appending a null character to the end of the byte array.
+
+##### Parameters
+
+* `bytes` - a byte array
+
+Example:
+```
+[ 'a', 'b', 'c' ].StringEx::from_array
+==> "abc"
+[ 0x41_U8, 0x42_U8, 0x43_U8 ].StringEx::from_array
+==> "ABC"
+```
+
 #### get_prefix
 
 Type: `Std::I64 -> Std::String -> Std::String`
@@ -121,6 +140,12 @@ Example:
 "ABCDE".get_suffix(10)
 ==> "ABCDE"
 ```
+
+#### left
+
+Type: `Std::I64 -> Std::String -> Std::String`
+
+`left` is a synonym of `get_prefix`.
 
 #### pad_left
 
@@ -214,6 +239,12 @@ Example:
 "test.jpg".replace_suffix(".txt", ".tmp")
  ==> err("suffix does not match: test.jpg")
 ```
+
+#### right
+
+Type: `Std::I64 -> Std::String -> Std::String`
+
+`right` is a synonym of `get_suffix`.
 
 #### split_by
 
@@ -316,6 +347,25 @@ Example:
 ==> "abcdef"
 "abcdef".substring(-1, 7)
 ==> "abcdef"
+```
+
+#### to_array
+
+Type: `Std::String -> Std::Array Std::U8`
+
+Converts a string to a byte array. Specifically, it calls `String::get_bytes`
+and removes a null character at the end of the byte array.
+
+##### Parameters
+
+* `str` - a string
+
+Example:
+```
+"abc".to_array
+==> [ 'a', 'b', 'c' ]
+"ABC".to_array
+==> [ 'A', 'B', 'C' ]
 ```
 
 #### to_lower

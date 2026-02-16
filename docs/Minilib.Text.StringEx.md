@@ -1,6 +1,6 @@
 # Minilib.Text.StringEx
 
-Defined in minilib-common@0.12.2
+Defined in minilib-common@0.12.3
 
 String utility functions.
 
@@ -100,6 +100,26 @@ Example:
 [ 'a', 'b', 'c' ].StringEx::from_array
 ==> "abc"
 [ 0x41_U8, 0x42_U8, 0x43_U8 ].StringEx::from_array
+==> "ABC"
+```
+
+#### from_iter
+
+Type: `[iter : Std::Iterator, Std::Iterator::Item iter = Std::U8] iter -> Std::String`
+
+Converts an iterator of bytes to a string.
+
+`StringEx::from_iter(iter)` is equal to `StringEx::from_array(iter.to_array)`.
+
+##### Parameters
+
+* `iter` - an iterator of bytes
+
+Example:
+```
+[ 'a', 'b', 'c' ].to_iter.StringEx::from_iter
+==> "abc"
+[ 0x41_U8, 0x42_U8, 0x43_U8 ].to_iter.StringEx::from_iter
 ==> "ABC"
 ```
 
@@ -365,6 +385,26 @@ Example:
 "abc".to_array
 ==> [ 'a', 'b', 'c' ]
 "ABC".to_array
+==> [ 'A', 'B', 'C' ]
+```
+
+#### to_iter
+
+Type: `Std::String -> Std::Iterator::ArrayIterator Std::U8`
+
+Converts a string to an iterator of bytes.
+
+`str.to_iter` is equal to `str.to_array.to_iter`.
+
+##### Parameters
+
+* `str` - a string
+
+Example:
+```
+"abc".to_iter.to_array
+==> [ 'a', 'b', 'c' ]
+"ABC".to_iter.to_array
 ==> [ 'A', 'B', 'C' ]
 ```
 

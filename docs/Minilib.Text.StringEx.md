@@ -1,6 +1,6 @@
 # Minilib.Text.StringEx
 
-Defined in minilib-common@0.12.3
+Defined in minilib-common@0.12.4
 
 String utility functions.
 
@@ -449,6 +449,8 @@ Example:
 #### format
 
 Type: `[a : Minilib.Text.StringEx::Format] Std::String -> a -> Std::String`
+
+Trait member of `Minilib.Text.StringEx::Format`
 
 ## Types and aliases
 

@@ -1,6 +1,6 @@
 # Minilib.Common.IteratorEx
 
-Defined in minilib-common@0.12.3
+Defined in minilib-common@0.12.4
 
 Extensions for `Std::Iterator`.
 
@@ -29,20 +29,6 @@ Drop elements from an iterator while a predicate holds.
 
 * `predicate` - The predicate function to be applied to each element of the iterator.
 * `iter` - The iterator to be taken from.
-
-#### get_last
-
-Type: `[iter : Std::Iterator] iter -> Std::Option (Std::Iterator::Item iter)`
-
-Get the last element of an iterator.
-
-If the iterator is empty, this function returns `none`.
-
-Time complexity: `O(n)`
-
-##### Parameters
-
-* `iter` - The iterator.
 
 #### repeat
 

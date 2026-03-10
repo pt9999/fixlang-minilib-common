@@ -1,6 +1,6 @@
 # Minilib.Trait.Traversable
 
-Defined in minilib-common@0.12.3
+Defined in minilib-common@0.12.4
 
 ## Values
 
@@ -47,6 +47,8 @@ Type: `[m : Std::Monad, t : Minilib.Trait.Traversable::Traversable, t : Std::Fun
 #### sequence
 
 Type: `[m : Std::Monad, t : Minilib.Trait.Traversable::Traversable] t (m a) -> m (t a)`
+
+Trait member of `Minilib.Trait.Traversable::Traversable`
 
 `ta.sequence` performs all elements sequentially and collects the results.
 Similar to Haskell's `sequence` function.

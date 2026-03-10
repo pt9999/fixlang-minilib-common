@@ -1,6 +1,6 @@
 # Minilib.Monad.Error
 
-Defined in minilib-common@0.12.3
+Defined in minilib-common@0.12.4
 
 This module defines the `MonadError` trait, which can report errors.
 
@@ -64,11 +64,15 @@ Converts to an operation result.
 
 Type: `[m : Minilib.Monad.Error::MonadErrorIF] (Std::ErrMsg -> m a) -> m a -> m a`
 
+Trait member of `Minilib.Monad.Error::MonadErrorIF`
+
 `ma.catch(handler)` catches any error that is thrown during the computation of `ma`.
 
 #### error
 
 Type: `[m : Minilib.Monad.Error::MonadErrorIF] Std::ErrMsg -> m a`
+
+Trait member of `Minilib.Monad.Error::MonadErrorIF`
 
 `error(e)` throws an error.
 

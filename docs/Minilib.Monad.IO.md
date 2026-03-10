@@ -1,6 +1,6 @@
 # Minilib.Monad.IO
 
-Defined in minilib-common@0.12.3
+Defined in minilib-common@0.12.4
 
 This module defines the `MonadIO` and `MonadIOFail` traits, which can lift `IO` and `IOFail` monad.
 
@@ -26,11 +26,15 @@ Same as `println`, except that it can be automatically lifted into monads that i
 
 Type: `[m : Minilib.Monad.IO::MonadIOFailIF] Std::IO::IOFail a -> m a`
 
+Trait member of `Minilib.Monad.IO::MonadIOFailIF`
+
 ### namespace Minilib.Monad.IO::MonadIOIF
 
 #### lift_io
 
 Type: `[m : Minilib.Monad.IO::MonadIOIF] Std::IO a -> m a`
+
+Trait member of `Minilib.Monad.IO::MonadIOIF`
 
 ## Types and aliases
 

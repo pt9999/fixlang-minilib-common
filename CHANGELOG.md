@@ -1,3 +1,7 @@
+## 0.12.4
+### Removed
+- Minilib.Common.IteratorEx: `get_last` is now obsolete: Please use `Std::Iterator::get_last` instead.
+
 ## 0.12.3
 ### Added
 - Minilib.Text.StringEx: Added `from_iter`, `to_iter`.

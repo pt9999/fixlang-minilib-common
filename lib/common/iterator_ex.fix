@@ -33,22 +33,7 @@ drop_while = |pred, iter| (
     }
 );
 
-// Get the last element of an iterator.
-//
-// If the iterator is empty, this function returns `none`.
-//
-// Time complexity: `O(n)`
-//
-// # Parameters
-//
-// * `iter` - The iterator.
-get_last: [iter : Std::Iterator] iter -> Std::Option (Std::Iterator::Item iter);
-get_last = |iter| (
-    iter.loop_iter(
-        none(), |x, opt|
-        continue $ some(x)
-    )
-);
+// `get_last` is now obsolete: Please use `Std::Iterator::get_last` instead.
 
 // Create an iterator that generates the same element infinitely.
 //

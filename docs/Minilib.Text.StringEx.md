@@ -1,6 +1,6 @@
 # Minilib.Text.StringEx
 
-Defined in minilib-common@0.12.4
+Defined in minilib-common@0.13.0
 
 String utility functions.
 
@@ -12,20 +12,6 @@ Features:
 ## Values
 
 ### namespace Minilib.Text.StringEx
-
-#### byte_to_string
-
-Type: `Std::U8 -> Std::String`
-
-Deprecated: Please use `Std::String::from_U8`.
-
-Converts a byte (a character) to a string of length 1.
-
-Example:
-```
-0x41_U8.byte_to_string
-==> "A"
-```
 
 #### fill
 
@@ -268,7 +254,7 @@ Type: `Std::I64 -> Std::String -> Std::String`
 
 #### split_by
 
-Type: `(Std::U8 -> Std::Bool) -> Std::String -> Std::Iterator::DynIterator Std::String`
+Type: `[?o : Std::Iterator, Std::Iterator::Item ?o = Std::String] (Std::U8 -> Std::Bool) -> Std::String -> ?o`
 
 Splits a string by a function that checks whether a character is a delimiter or not.
 The result will not contain any empty string.
@@ -284,22 +270,6 @@ Example:
 ```
 "  aa bb  12 ".split_by(Character::is_space).to_array
 ==>  ["aa", "bb", "12"]
-```
-
-#### split_ex
-
-Type: `Std::String -> Std::String -> Std::Iterator::DynIterator Std::String`
-
-Deprecated: Please use `Std::String::split`.
-
-Same as Std::String::split, except that `"foo".split_ex(",")` returns a singleton iterator of "foo".
-
-Example:
-```
-"foo,bar,baz".split_ex(",").to_array
-==> ["foo", "bar", "baz"]
-"foo".split_ex(",").to_array
-==> ["foo"]
 ```
 
 #### split_first
@@ -331,44 +301,6 @@ Example:
 ==> ("aaa/bbb/ccc", "")
 ```
 
-#### subarray
-
-Type: `Std::I64 -> Std::I64 -> Std::Array a -> Std::Array a`
-
-Deprecated: Please use `Std::Array::get_sub`.
-
-Returns a subarray extracted from a specified range from an array.
-If the specified range exceeds the array, it will be truncated to fit within the array.
-
-Example:
-```
-[10, 11, 12, 13, 14].subarray(1, 2)
-==> [11, 12]
-[10, 11, 12, 13, 14].subarray(0, 5)
-==> [10, 11, 12, 13, 14]
-[10, 11, 12, 13, 14].subarray(-1, 6)
-==> [10, 11, 12, 13, 14]
-```
-
-#### substring
-
-Type: `Std::I64 -> Std::I64 -> Std::String -> Std::String`
-
-Deprecated: Please use `Std::String::get_sub`.
-
-Returns a substring extracted from a specified range from a string.
-If the specified range exceeds the string, it will be truncated to fit within the string.
-
-Example:
-```
-"abcdef".substring(2, 3)
-==> "cde"
-"abcdef".substring(0, 6)
-==> "abcdef"
-"abcdef".substring(-1, 7)
-==> "abcdef"
-```
-
 #### to_array
 
 Type: `Std::String -> Std::Array Std::U8`
@@ -390,7 +322,7 @@ Example:
 
 #### to_iter
 
-Type: `Std::String -> Std::Iterator::ArrayIterator Std::U8`
+Type: `[?o : Std::Iterator, Std::Iterator::Item ?o = Std::U8] Std::String -> ?o`
 
 Converts a string to an iterator of bytes.
 

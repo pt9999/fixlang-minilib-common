@@ -1,6 +1,6 @@
 # Minilib.Common.IteratorEx
 
-Defined in minilib-common@0.12.4
+Defined in minilib-common@0.13.0
 
 Extensions for `Std::Iterator`.
 
@@ -32,7 +32,7 @@ Drop elements from an iterator while a predicate holds.
 
 #### repeat
 
-Type: `a -> Std::Iterator::MapIterator Std::Iterator::CountUpIterator Std::I64 a`
+Type: `[?o : Std::Iterator, Std::Iterator::Item ?o = a] a -> ?o`
 
 Create an iterator that generates the same element infinitely.
 
@@ -42,7 +42,7 @@ Create an iterator that generates the same element infinitely.
 
 #### scan
 
-Type: `[i : Std::Iterator, Std::Iterator::Item i = a] s -> (a -> s -> s) -> i -> Minilib.Common.IteratorEx::ScanIterator i s a`
+Type: `[?o : Std::Iterator, i : Std::Iterator, Std::Iterator::Item ?o = s, Std::Iterator::Item i = a] s -> (a -> s -> s) -> i -> ?o`
 
 Create an iterator that generates the inclusive scan of an iterator.
 
@@ -57,7 +57,7 @@ Conceptually, `[a0, a1, a2, ...].to_iter.scan(s, op) = [s1, s2, ...].to_iter` su
 
 #### scan_ex
 
-Type: `[i : Std::Iterator, Std::Iterator::Item i = a] s -> (a -> s -> s) -> i -> Std::Iterator::ConsIterator (Minilib.Common.IteratorEx::ScanIterator i s a) s`
+Type: `[?o : Std::Iterator, i : Std::Iterator, Std::Iterator::Item ?o = s, Std::Iterator::Item i = a] s -> (a -> s -> s) -> i -> ?o`
 
 Create an iterator that generates the exclusive scan of an iterator.
 
@@ -72,7 +72,7 @@ Conceptually, `[a0, a1, a2, ...].to_iter.scan_ex(s, op) = [s0, s1, s2, ...].to_i
 
 #### tails
 
-Type: `[i : Std::Iterator] i -> Minilib.Common.IteratorEx::TailsIterator i`
+Type: `[?o : Std::Iterator, i : Std::Iterator, Std::Iterator::Item ?o = i] i -> ?o`
 
 Creates an iterator that yields a tail starting from each element.
 
@@ -85,7 +85,7 @@ Conceptually, `[a1, a2, ..., an].to_iter.tails = [t1, t2, ..., tn, nil].to_iter`
 
 #### transpose
 
-Type: `[i : Std::Iterator, i2 : Std::Iterator, Std::Iterator::Item i2 = i] i2 -> Minilib.Common.IteratorEx::TransposeIterator i`
+Type: `[?o : Std::Iterator, ?o2 : Std::Iterator, i : Std::Iterator, i2 : Std::Iterator, Std::Iterator::Item ?o = a, Std::Iterator::Item ?o2 = ?o, Std::Iterator::Item i = a, Std::Iterator::Item i2 = i] i2 -> ?o2`
 
 Transposes an iterator of iterators.
 

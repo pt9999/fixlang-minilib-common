@@ -70,15 +70,6 @@ test_to_upper = (
     pure()
 );
 
-test_byte_to_string: TestCase;
-test_byte_to_string = (
-    make_test("test_byte_to_string") $ |_|
-    assert_equal("from U8 literal", "A", 0x41_U8.byte_to_string);;
-    assert_equal("from char literal", "B", 'B'.byte_to_string);;
-    assert_equal("from NUL", "", 0x00_U8.byte_to_string);;
-    pure()
-);
-
 test_fill: TestCase;
 test_fill = (
     make_table_test("test_fill",
@@ -305,27 +296,6 @@ test_split_first = (
     )
 );
 
-test_split_ex: TestCase;
-test_split_ex = (
-    make_table_test("test_split_ex",
-        [
-            ("", "", [""]),
-            ("", "a", [""]),
-            ("a", "", ["a"]),
-            ("a", "b", ["a"]),
-            ("a", "a", ["", ""]),
-            ("ababa", "a", ["", "b", "b", ""]),
-            ("ababa", "b", ["a", "a", "a"]),
-            ("ababa", "aba", ["", "ba"]),
-            ("ababa", "ababa", ["", ""]),
-            ("ababa", "abcba", ["ababa"]),
-        ],
-        |(str, delim, expected)|
-        let actual = str.split_ex(delim).to_array;
-        assert_equal("eq", expected, actual)
-    )
-);
-
 test_split_by: TestCase;
 test_split_by = (
     make_table_test("test_split_by",
@@ -347,28 +317,6 @@ test_split_by = (
             else { undefined("invalid is_delim") }
         );
         let actual = str.split_by(is_delim).to_array;
-        assert_equal("eq", expected, actual)
-    )
-);
-
-test_substring: TestCase;
-test_substring = (
-    make_table_test("test_substring",
-        [
-            ("", 0, 0, ""),
-            ("", -1, 1, ""),
-            ("abc", 0, 3, "abc"),
-            ("abc", 0, 0, ""),
-            ("abc", 0, 1, "a"),
-            ("abc", 1, 2, "b"),
-            ("abc", 2, 1, ""),
-            ("abc", 3, 3, ""),
-            ("abc", -1, 1, "a"),
-            ("abc", 2, 4, "c"),
-            ("abc", 5, 6, ""),
-        ],
-        |(str, s, e, expected)|
-        let actual = str.substring(s,e);
         assert_equal("eq", expected, actual)
     )
 );
@@ -404,7 +352,6 @@ main = (
         test_to_iter,
         test_to_lower,
         test_to_upper,
-        test_byte_to_string,
         test_fill,
         test_find_byte,
         test_find_last_byte,
@@ -417,9 +364,7 @@ main = (
         test_replace_all,
         test_replace_suffix,
         test_split_first,
-        test_split_ex,
         test_split_by,
-        test_substring,
         test_format,
     ]
     .run_test_driver

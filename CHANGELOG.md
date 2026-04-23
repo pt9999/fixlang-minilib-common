@@ -6,6 +6,18 @@
   - `IteratorEx::scan_ex`
   - `IteratorEx::tails`
   - `IteratorEx::transpose`
+  - `StringEx::to_iter`
+  - `StringEx::split_by`
+- These deprecated functions are now removed.
+  - `StringEx::byte_to_string`
+  - `StringEx::split_ex`
+  - `StringEx::substring`
+  - `StringEx::subarray`
+- These obsolete functions are now removed from the source code.
+  - `IteratorEx::get_last`
+  - `StringEx::starts_with`
+  - `StringEx::ends_with`
+  - `StringEx::formatv`
 
 ## 0.12.4
 ### Removed

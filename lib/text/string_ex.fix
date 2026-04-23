@@ -84,7 +84,7 @@ to_array = |str| str.get_bytes.pop_back;
 // "ABC".to_iter.to_array
 // ==> [ 'A', 'B', 'C' ]
 // ```
-to_iter: String -> ArrayIterator U8;
+to_iter: [?o: Iterator, Item ?o = U8] String -> ?o;
 to_iter = |str| str.to_array.to_iter;
 
 
@@ -120,20 +120,6 @@ to_lower = |str| (
 to_upper: String -> String;
 to_upper = |str| (
     str.get_bytes.pop_back.map(Character::to_upper)._unsafe_to_string
-);
-
-// Deprecated: Please use `Std::String::from_U8`.
-//
-// Converts a byte (a character) to a string of length 1.
-//
-// Example:
-// ```
-// 0x41_U8.byte_to_string
-// ==> "A"
-// ```
-byte_to_string: U8 -> String;
-byte_to_string = |c| (
-    Array::empty(2).push_back(c)._unsafe_to_string
 );
 
 // Creates a string of the specified length, where each byte is equal to the specified byte.
@@ -378,7 +364,7 @@ replace_suffix = |from, to, str| (
     if !str.ends_with(from) {
         err $ "suffix does not match: " + str
     };
-    let str = str.substring(0, str.get_size - from.get_size);
+    let str = str.get_sub(0, str.get_size - from.get_size);
     ok $ str + to
 );
 
@@ -412,30 +398,7 @@ split_first = |delim, str| (
         (str, "")
     };
     let pos = pos.as_some;
-    (str.substring(0, pos), str.substring(pos + delim.get_size, str.get_size))
-);
-
-// Deprecated: Please use `Std::String::split`.
-//
-// Same as Std::String::split, except that `"foo".split_ex(",")` returns a singleton iterator of "foo".
-//
-// Example:
-// ```
-// "foo,bar,baz".split_ex(",").to_array
-// ==> ["foo", "bar", "baz"]
-// "foo".split_ex(",").to_array
-// ==> ["foo"]
-// ```
-split_ex: String -> String -> DynIterator String;
-split_ex = |delim, str| (
-    if delim == "" {
-        Iterator::empty.push_front(str).to_dyn
-    };
-    let pos = str.find(delim, 0);
-    if pos.is_none {
-        Iterator::empty.push_front(str).to_dyn
-    };
-    str.split(delim).to_dyn
+    (str.get_sub(0, pos), str.get_sub(pos + delim.get_size, str.get_size))
 );
 
 // Splits a string by a function that checks whether a character is a delimiter or not.
@@ -452,124 +415,28 @@ split_ex = |delim, str| (
 // "  aa bb  12 ".split_by(Character::is_space).to_array
 // ==>  ["aa", "bb", "12"]
 // ```
-split_by: (U8 -> Bool) -> String -> DynIterator String;
+split_by: [?o: Iterator, Item ?o = String] (U8 -> Bool) -> String -> ?o;
 split_by = |is_delim, str| (
     let output = Array::empty(str.get_size);
     let output = loop(
         (output, 0, 0), |(output, start, i)|
         if i >= str.get_size {
-            let output = if start < i { output.push_back(str.substring(start, i)) } else { output };
+            let output = if start < i { output.push_back(str.get_sub(start, i)) } else { output };
             break $ output
         };
         let c = str.get_bytes.@(i);
         if !is_delim(c) {
             continue $ (output, start, i + 1)
         };
-        let output = if start < i { output.push_back(str.substring(start, i)) } else { output };
+        let output = if start < i { output.push_back(str.get_sub(start, i)) } else { output };
         continue $ (output, i + 1, i + 1)
     );
-    output.to_iter.to_dyn
+    output.to_iter
 );
-
-// Deprecated: Please use `Std::String::get_sub`.
-//
-// Returns a substring extracted from a specified range from a string.
-// If the specified range exceeds the string, it will be truncated to fit within the string.
-//
-// Example:
-// ```
-// "abcdef".substring(2, 3)
-// ==> "cde"
-// "abcdef".substring(0, 6)
-// ==> "abcdef"
-// "abcdef".substring(-1, 7)
-// ==> "abcdef"
-// ```
-substring: I64 -> I64 -> String -> String;
-substring = |s, e, str| (
-    let size = str.get_size;
-    let s = max(0, min(size, s));
-    let e = max(s, min(size, e));
-    if s == 0 && e == size { str };
-    str.get_sub(s, e)
-);
-
-// Deprecated: Please use `Std::Array::get_sub`.
-//
-// Returns a subarray extracted from a specified range from an array.
-// If the specified range exceeds the array, it will be truncated to fit within the array.
-//
-// Example:
-// ```
-// [10, 11, 12, 13, 14].subarray(1, 2)
-// ==> [11, 12]
-// [10, 11, 12, 13, 14].subarray(0, 5)
-// ==> [10, 11, 12, 13, 14]
-// [10, 11, 12, 13, 14].subarray(-1, 6)
-// ==> [10, 11, 12, 13, 14]
-// ```
-subarray: I64 -> I64 -> Array a -> Array a;
-subarray = |s, e, arr| (
-    let size = arr.get_size;
-    let s = max(0, min(size, s));
-    let e = max(s, min(size, e));
-    if s == 0 && e == size { arr };
-    arr.get_sub(s, e)
-);
-
-/*
-// Obsolete: Use Std::String::starts_with, Std::String::ends_with.
-
-// Checks if a string starts with the specified prefix.
-//
-// # Parameters
-// * `prefix` - a string to be searched
-// * `str` - a string to be checked
-//
-// Returns `true` if `str` starts with `prefix`, otherwise returns `false`.
-// If `prefix` is empty, returns `true`.
-//
-// Example:
-// ```
-// "/foo/bar.txt".starts_with("/")
-// ==> true
-// "foo/bar.txt".starts_with("/")
-// ==> false
-// ```
-starts_with: String -> String -> Bool;
-starts_with = |prefix, str| (
-    str.substring(0, prefix.get_size) == prefix
-);
-
-// Checks if a string ends with the specified suffix.
-//
-// # Parameters
-// * `suffix` - a string to be searched
-// * `str` - a string to be checked
-//
-// Returns `true` if `str` ends with `suffix`, otherwise returns `false`.
-// If `suffix` is empty, returns `true`.
-//
-// Example:
-// ```
-// "/foo/bar.txt".ends_with(".txt")
-// ==> true
-// "foo/bar.txt".ends_with(".bin")
-// ==> false
-// ```
-ends_with: String -> String -> Bool;
-ends_with = |suffix, str| (
-    str.substring(str.get_size - suffix.get_size, str.get_size) == suffix
-);
-*/
 
 //---------------------------------
 // Format
 //---------------------------------
-
-// Obsolete: please use `format`.
-//formatv: String -> Array String -> String;
-//formatv = format;
 
 // `args.format(str)` replaces each occurence of `{}` in the format string `str`
 // with each element of `args`.
@@ -615,14 +482,14 @@ impl [a: ToString] Array a: Format {
             };
             let pos = pos.as_some;
             let output = output
-                .push_back(str.substring(find_start, pos))
+                .push_back(str.get_sub(find_start, pos))
                 .push_back(arg.to_string)
             ;
             let find_start = pos + from.get_size;
             continue $ (output, find_start)
         );
         let output = output
-            .push_back(str.substring(tail, str.get_size));
+            .push_back(str.get_sub(tail, str.get_size));
         output.to_iter.concat_iter
     );
 }

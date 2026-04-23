@@ -33,8 +33,6 @@ drop_while = |pred, iter| (
     }
 );
 
-// `get_last` is now obsolete: Please use `Std::Iterator::get_last` instead.
-
 // Create an iterator that generates the same element infinitely.
 //
 // # Parameters

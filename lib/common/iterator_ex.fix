@@ -39,7 +39,7 @@ drop_while = |pred, iter| (
 //
 // # Parameters
 // * `a` - A value of type `a`.
-repeat: a -> MapIterator CountUpIterator I64 a;
+repeat: [?o: Iterator, Item ?o = a] a -> ?o;
 repeat = |a| count_up(0).map(|_| a);
 
 type ScanIterator i s a = unbox struct { state: s, op: a -> s -> s, iter: i };
@@ -67,7 +67,7 @@ impl [i : Iterator, Item i = a] ScanIterator i s a : Iterator {
 // * `state` - The initial state.
 // * `op` - The function to be called on the pair of an element and the current state.
 // * `iter` - The iterator to be scaned.
-scan : [i : Iterator, Item i = a] s -> (a -> s -> s) -> i -> ScanIterator i s a;
+scan : [i : Iterator, Item i = a, ?o: Iterator, Item ?o = s] s -> (a -> s -> s) -> i -> ?o;
 scan = |state, op, iter| ScanIterator { state: state, op: op, iter: iter };
 
 // Create an iterator that generates the exclusive scan of an iterator.
@@ -80,7 +80,7 @@ scan = |state, op, iter| ScanIterator { state: state, op: op, iter: iter };
 // * `state` - The initial state.
 // * `op` - The function to be called on the pair of an element and the current state.
 // * `iter` - The iterator to be scaned.
-scan_ex : [i : Iterator, Item i = a] s -> (a -> s -> s) -> i -> ConsIterator (ScanIterator i s a) s;
+scan_ex : [i : Iterator, Item i = a, ?o: Iterator, Item ?o = s] s -> (a -> s -> s) -> i -> ?o;
 scan_ex = |state, op, iter| iter.scan(state, op).push_front(state);
 
 type TailsIterator i = unbox struct { opt_iter: Option i };
@@ -106,7 +106,7 @@ impl [i: Iterator] TailsIterator i : Iterator {
 // # Parameters
 //
 // * `iter` - An iterator.
-tails: [i: Iterator] i -> TailsIterator i;
+tails: [i: Iterator, ?o: Iterator, Item ?o = i] i -> ?o;
 tails = |i| TailsIterator { opt_iter: some(i) };
 
 type TransposeIterator i = unbox struct { iters : Array i };
@@ -132,5 +132,7 @@ impl [i : Iterator] TransposeIterator i : Iterator {
 // # Parameters
 //
 // * `iter_iter` - An iterator of iterators. It must be a finite iterator.
-transpose : [i2 : Iterator, i : Iterator, Item i2 = i] i2 -> TransposeIterator i;
+transpose : [i2: Iterator,  i: Iterator, Item i2 = i,   Item i = a,
+            ?o2: Iterator, ?o: Iterator, Item ?o2 = ?o, Item ?o = a]
+            i2 -> ?o2;
 transpose = |iter_iter| TransposeIterator { iters: iter_iter.to_array };

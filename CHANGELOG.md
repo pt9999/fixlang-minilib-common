@@ -1,3 +1,12 @@
+## 0.13.0
+### ** BREAKING CHANGES **
+- The following functions now return an Iterator of opaque types.
+  - `IteratorEx::repeat`
+  - `IteratorEx::scan`
+  - `IteratorEx::scan_ex`
+  - `IteratorEx::tails`
+  - `IteratorEx::transpose`
+
 ## 0.12.4
 ### Removed
 - Minilib.Common.IteratorEx: `get_last` is now obsolete: Please use `Std::Iterator::get_last` instead.

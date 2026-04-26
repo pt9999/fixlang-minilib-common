@@ -1,6 +1,6 @@
 # Minilib.Trait.Traversable
 
-Defined in minilib-common@0.13.0
+Defined in minilib-common@0.13.1
 
 ## Values
 
@@ -77,8 +77,6 @@ Similar to Haskell's `sequence` function.
 ### impl `Std::Const a : Minilib.Trait.Traversable::Traversable`
 
 ### impl `Std::Identity : Minilib.Trait.Traversable::Traversable`
-
-### impl `Std::Iterator::ArrayIterator : Minilib.Trait.Traversable::Traversable`
 
 ### impl `Std::Iterator::DynIterator : Minilib.Trait.Traversable::Traversable`
 

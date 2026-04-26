@@ -1,3 +1,8 @@
+## 0.13.1
+### ** BREAKING CHANGES **
+- Minilib.Common.IteratorEx: `TransposeIterator` now use `DynIterator` as `Item`.
+- Minilib.Trait.Traversable: `impl ArrayIterator: Traversable` is now obsolete.
+
 ## 0.13.0
 ### ** BREAKING CHANGES **
 - The following functions now return an Iterator of opaque types.

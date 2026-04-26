@@ -112,6 +112,7 @@ test_iterator_foreach_m = (
     assert_equal("eq", expected, actual)
 );
 
+/*
 test_array_iterator_sequence: TestCase;
 test_array_iterator_sequence = (
     make_test("test_array_iterator_sequence") $ |_|
@@ -129,6 +130,7 @@ test_array_iterator_sequence = (
     assert_equal("eq", err("err"), res.map(to_array));;
     pure()
 );
+*/
 
 // NOTE: ArrayIterator is not a Functor, so `map_m` cannot be used. 
 
@@ -254,7 +256,7 @@ main = (
         test_dyn_iterator_sequence,
         test_dyn_iterator_map_m,
         test_iterator_foreach_m,
-        test_array_iterator_sequence,
+        //test_array_iterator_sequence,
         test_option_sequence,
         test_option_map_m,
         test_result_sequence,

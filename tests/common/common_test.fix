@@ -92,8 +92,8 @@ test_mod_if: TestCase;
 test_mod_if = (
     make_test("test_mod_if") $ |_|
     let a = [1, 2];
-    let a = a.mod_if(a.get_size < 3, push_back(3));
-    let a = a.mod_if(a.get_size < 3, push_back(42));
+    let a = a.mod_if(a.@size < 3, push_back(3));
+    let a = a.mod_if(a.@size < 3, push_back(42));
     assert_equal("eq", [1, 2, 3], a)
 );
 
@@ -101,8 +101,8 @@ test_mod_unless: TestCase;
 test_mod_unless = (
     make_test("test_mod_unless") $ |_|
     let a = [1, 2];
-    let a = a.mod_unless(a.get_size < 3, push_back(3));
-    let a = a.mod_unless(a.get_size < 2, push_back(42));
+    let a = a.mod_unless(a.@size < 3, push_back(3));
+    let a = a.mod_unless(a.@size < 2, push_back(42));
     assert_equal("eq", [1, 2, 42], a)
 );
 

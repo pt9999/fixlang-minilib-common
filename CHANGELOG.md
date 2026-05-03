@@ -1,6 +1,7 @@
 ## 0.13.2
 ### Changed
 - Added a `DEPRECATED` pragma to `StringEx::_unsafe_to_string`.
+- Modified some code to remove the deprecation warnings.
 
 ## 0.13.1
 ### ** BREAKING CHANGES **

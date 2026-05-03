@@ -101,7 +101,7 @@ to_iter = |str| str.to_array.to_iter;
 // ```
 to_lower: String -> String;
 to_lower = |str| (
-    str.get_bytes.pop_back.map(Character::to_lower)._unsafe_to_string
+    str.get_bytes.pop_back.map(Character::to_lower).from_array
 );
 
 // Converts the specified string to uppercase.
@@ -118,7 +118,7 @@ to_lower = |str| (
 // ```
 to_upper: String -> String;
 to_upper = |str| (
-    str.get_bytes.pop_back.map(Character::to_upper)._unsafe_to_string
+    str.get_bytes.pop_back.map(Character::to_upper).from_array
 );
 
 // Creates a string of the specified length, where each byte is equal to the specified byte.
@@ -135,7 +135,7 @@ to_upper = |str| (
 fill: I64 -> U8 -> String;
 fill = |size, c| (
     let size = max(0, size);
-    Array::fill(size, c)._unsafe_to_string
+    Array::fill(size, c).from_array
 );
 
 // Searches for the specified byte from the beginning of a string.
@@ -155,7 +155,7 @@ fill = |size, c| (
 find_byte: U8 -> String -> Option I64;
 find_byte = |c, str| (
     let array = str.get_bytes;
-    let n = str.get_size;
+    let n = str.@size;
     loop(
         0, |i|
         if i >= n {
@@ -184,7 +184,7 @@ find_byte = |c, str| (
 get_prefix: I64 -> String -> String;
 get_prefix = |size, str| (
     let size = max(0, size);
-    str.get_sub(0, min(size, str.get_size))
+    str.get_sub(0, min(size, str.@size))
 );
 
 // `left` is a synonym of `get_prefix`.
@@ -207,7 +207,7 @@ left = get_prefix;
 get_suffix: I64 -> String -> String;
 get_suffix = |size, str| (
     let size = max(0, size);
-    str.get_sub(max(0, str.get_size - size), str.get_size)
+    str.get_sub(max(0, str.@size - size), str.@size)
 );
 
 // `right` is a synonym of `get_suffix`.
@@ -231,7 +231,7 @@ right = get_suffix;
 find_last_byte: U8 -> String -> Option I64;
 find_last_byte = |c, str| (
     let array = str.get_bytes;
-    let n = str.get_size;
+    let n = str.@size;
     loop(
         n - 1, |i|
         if i < 0 {
@@ -261,8 +261,8 @@ find_last_byte = |c, str| (
 pad_left: I64 -> U8 -> String -> String;
 pad_left = |size, c, str| (
     let size = max(0, size);
-    if size <= str.get_size { str };
-    StringEx::fill(size - str.get_size, c) + str
+    if size <= str.@size { str };
+    StringEx::fill(size - str.@size, c) + str
 );
 
 // Pads on the right with the specified byte until it reaches the specified length.
@@ -282,8 +282,8 @@ pad_left = |size, c, str| (
 pad_right: I64 -> U8 -> String -> String;
 pad_right = |size, c, str| (
     let size = max(0, size);
-    if size <= str.get_size { str };
-    str + StringEx::fill(size - str.get_size, c)
+    if size <= str.@size { str };
+    str + StringEx::fill(size - str.@size, c)
 );
 
 // `input.replace_all(from, to)` replaces all occurrences of `from` in the input string with `to`.
@@ -311,23 +311,23 @@ pad_right = |size, c, str| (
 // ```
 replace_all: String -> String -> String -> String;
 replace_all = |rep_from, rep_to, input| (
-    if rep_from.get_size <= 0 {
+    if rep_from.@size <= 0 {
         input
     };
-    let output = Array::empty(input.get_size);
+    let output = Array::empty(input.@size);
     let begin = 0;
-    let end = input.get_size;
+    let end = input.@size;
     loop(
         (output, begin), |(output, begin)|
         let pos = input.find(rep_from, begin);
         if pos.is_none {
             let output = output._append_range(input.get_bytes, begin, end);
-            break $ output._unsafe_to_string
+            break $ output.from_array
         };
         let pos = pos.as_some;
         let output = output._append_range(input.get_bytes, begin, pos);
-        let output = output._append_range(rep_to.get_bytes, 0, rep_to.get_size);
-        let begin = pos + rep_from.get_size;
+        let output = output._append_range(rep_to.get_bytes, 0, rep_to.@size);
+        let begin = pos + rep_from.@size;
         continue $ (output, begin)
     )
 );
@@ -363,7 +363,7 @@ replace_suffix = |from, to, str| (
     if !str.ends_with(from) {
         err $ "suffix does not match: " + str
     };
-    let str = str.get_sub(0, str.get_size - from.get_size);
+    let str = str.get_sub(0, str.@size - from.@size);
     ok $ str + to
 );
 
@@ -397,7 +397,7 @@ split_first = |delim, str| (
         (str, "")
     };
     let pos = pos.as_some;
-    (str.get_sub(0, pos), str.get_sub(pos + delim.get_size, str.get_size))
+    (str.get_sub(0, pos), str.get_sub(pos + delim.@size, str.@size))
 );
 
 // Splits a string by a function that checks whether a character is a delimiter or not.
@@ -416,10 +416,10 @@ split_first = |delim, str| (
 // ```
 split_by: [?o: Iterator, Item ?o = String] (U8 -> Bool) -> String -> ?o;
 split_by = |is_delim, str| (
-    let output = Array::empty(str.get_size);
+    let output = Array::empty(str.@size);
     let output = loop(
         (output, 0, 0), |(output, start, i)|
-        if i >= str.get_size {
+        if i >= str.@size {
             let output = if start < i { output.push_back(str.get_sub(start, i)) } else { output };
             break $ output
         };
@@ -472,7 +472,7 @@ trait a: Format {
 impl [a: ToString] Array a: Format {
     format = |str, args| (
         let from = "{}";
-        let output = Array::empty(args.get_size * 2);
+        let output = Array::empty(args.@size * 2);
         let (output, tail) = args.to_iter.loop_iter(
             (output, 0), |arg, (output, find_start)|
             let pos = str.find(from, find_start);
@@ -484,11 +484,11 @@ impl [a: ToString] Array a: Format {
                 .push_back(str.get_sub(find_start, pos))
                 .push_back(arg.to_string)
             ;
-            let find_start = pos + from.get_size;
+            let find_start = pos + from.@size;
             continue $ (output, find_start)
         );
         let output = output
-            .push_back(str.get_sub(tail, str.get_size));
+            .push_back(str.get_sub(tail, str.@size));
         output.to_iter.concat_iter
     );
 }

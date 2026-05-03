@@ -46,7 +46,7 @@ namespace TestCase {
 
 // A test suite is an array of test cases. Each test case is a tuple of a name and an IO action.
 
-type TestSuite = Array (String, IO ()); 
+type TestSuite = Array (String, IO ());
 
 namespace TestSuite {
     // Run a test suite.
@@ -80,8 +80,7 @@ run_test_driver = |tests| lift_io $ do {
         let test: TestCase = tests.run_tests;
         let (success, fail) = *test();
         let end = *Time::get_now.lift;
-        let time = (end.@sec.to_F64 - start.@sec.to_F64) +
-                   (end.@nanosec.to_F64 * 1.0e-9 - start.@nanosec.to_F64 * 1.0e-9);
+        let time = end.to_F64 - start.to_F64;
         emprintln("SUCCESS: " + success.to_string + " FAIL: " + fail.to_string +
                   " TIME: " + time.to_string_precision(3_U8) + " sec");;
         pure $ if fail == 0 { 0 } else { 1 }
@@ -91,7 +90,7 @@ run_test_driver = |tests| lift_io $ do {
     )
     .bind(|exitcode|
         // Aborts the program when exitcode != 0
-        if exitcode != 0 { 
+        if exitcode != 0 {
             undefined("exitcode = " + exitcode.to_string)
         };
         // All tests passed

@@ -153,10 +153,10 @@ test_option_map_m: TestCase;
 test_option_map_m = (
     make_test("test_option_map_m") $ |_|
     let opt: Option I64 = some $ 1;
-    let wm: StringWriter (Option U64) = opt.map_m(|i| write(i.to_string);; pure $ i.to_U64);
+    let wm: StringWriter (Option U64) = opt.map_m(|i| write(i.to_string);; pure $ i.u64);
     assert_equal("eq", ("1", some $ 1_U64), wm.@data);;
     let opt: Option I64 = none();
-    let wm: StringWriter (Option U64) = opt.map_m(|i| write(i.to_string);; pure $ i.to_U64);
+    let wm: StringWriter (Option U64) = opt.map_m(|i| write(i.to_string);; pure $ i.u64);
     assert_equal("eq", ("", none()), wm.@data);;
     pure()
 );
@@ -180,13 +180,13 @@ test_result_map_m: TestCase;
 test_result_map_m = (
     make_test("test_result_map_m") $ |_|
     let res: Result ErrMsg I64 = ok $ 1;
-    let opt: Option (Result ErrMsg U64) = res.map_m(|i| if i % 2 == 0 { none() } else { some $ i.to_U64 });
+    let opt: Option (Result ErrMsg U64) = res.map_m(|i| if i % 2 == 0 { none() } else { some $ i.u64 });
     assert_equal("eq", some $ ok $ 1_U64, opt);;
     let res: Result ErrMsg I64 = ok $ 2;
-    let opt: Option (Result ErrMsg U64) = res.map_m(|i| if i % 2 == 0 { none() } else { some $ i.to_U64 });
+    let opt: Option (Result ErrMsg U64) = res.map_m(|i| if i % 2 == 0 { none() } else { some $ i.u64 });
     assert_equal("eq", none(), opt);;
     let res: Result ErrMsg I64 = err $ "err";
-    let opt: Option (Result ErrMsg U64) = res.map_m(|i| if i % 2 == 0 { none() } else { some $ i.to_U64 });
+    let opt: Option (Result ErrMsg U64) = res.map_m(|i| if i % 2 == 0 { none() } else { some $ i.u64 });
     assert_equal("eq", some $ err $ "err", opt);;
     pure()
 );
@@ -243,7 +243,7 @@ test_const_map_m: TestCase;
 test_const_map_m = (
     make_test("test_const_map_m") $ |_|
     let c: Const String I64 = Const { data: "a" };
-    let opt: Option (Const String U64) = c.map_m(I64::to_U64 >> some);
+    let opt: Option (Const String U64) = c.map_m(u64 >> some);
     assert_equal("eq", some("a"), opt.map(@data))
 );
 

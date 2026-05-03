@@ -5,15 +5,6 @@ import Character;
 import Minilib.Text.StringEx;
 import Minilib.Testing.UnitTest;
 
-test__unsafe_to_string: TestCase;
-test__unsafe_to_string = (
-    make_test("test__unsafe_to_string") $ |_|
-    let array = [ 'a', 'b', 'c' ];
-    let expected = "abc";
-    let actual = array._unsafe_to_string;
-    assert_equal("eq", expected, actual)
-);
-
 test_from_array: TestCase;
 test_from_array = (
     make_test("test_from_array") $ |_|
@@ -26,7 +17,7 @@ test_from_array = (
 test_from_iter: TestCase;
 test_from_iter = (
     make_test("test_from_iter") $ |_|
-    let iter = range(0, 10).filter(|i| i % 2 == 0).map(|i| '0' + i.to_U8);
+    let iter = range(0, 10).filter(|i| i % 2 == 0).map(|i| '0' + i.u8);
     let expected = "02468";
     let actual: String = iter.from_iter;
     assert_equal("eq", expected, actual)
@@ -345,7 +336,6 @@ test_format = (
 main: IO ();
 main = (
     [
-        test__unsafe_to_string,
         test_from_array,
         test_from_iter,
         test_to_array,

@@ -42,7 +42,7 @@ foreach_m = |f, iter| (
 impl Array: Traversable {
     sequence = |array| (
         array.to_iter.fold_m(
-            Array::empty(array.get_size), |ma, output|
+            Array::empty(array.@size), |ma, output|
             pure $ output.push_back(*ma)
         )
     );

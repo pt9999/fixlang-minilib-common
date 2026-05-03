@@ -26,16 +26,16 @@ usleep = |usec| lift_iofail $ do {
 sleep: [m: MonadIOFail] F64 -> m ();
 sleep = |seconds| lift_iofail $ do {
     // TODO: use nanosleep()
-    let seconds = max(0.0, min(U32::maximum.to_F64, seconds));
-    let seconds_u32 = seconds.to_U32;
+    let seconds = max(0.0, min(U32::maximum.f64, seconds));
+    let seconds_u32 = seconds.u32;
     loop_m(
         seconds_u32, |remaining|
         if remaining == 0_U32 { break_m $ () };
         let remaining = *FFI_CALL_IO[U32 sleep(U32), remaining].lift;
         continue_m $ remaining
     );;
-    let usec = (seconds - seconds_u32.to_F64) * 1.0e6;
-    let usec = usec.to_U32;
+    let usec = (seconds - seconds_u32.f64) * 1.0e6;
+    let usec = usec.u32;
     usleep(usec)
 };
 
@@ -148,7 +148,7 @@ measure_time_io = |time_limit, io_a| lift_io $ do {
         let total_count = total_count + count;
         continue_m $ (result, total_time, total_count, count * 2)
     );
-    let time = total_time / total_count.to_F64;
+    let time = total_time / total_count.f64;
     pure $ (result, time)
 };
 

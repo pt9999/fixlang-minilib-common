@@ -1,3 +1,7 @@
+## 0.13.2
+### Changed
+- Added a `DEPRECATED` pragma to `StringEx::_unsafe_to_string`.
+
 ## 0.13.1
 ### ** BREAKING CHANGES **
 - Minilib.Common.IteratorEx: `TransposeIterator` now use `DynIterator` as `Item`.

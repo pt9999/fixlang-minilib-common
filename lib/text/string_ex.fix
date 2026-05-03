@@ -12,8 +12,7 @@ import Character;
 // String utility functions
 //---------------------------------
 
-// Deprecated: use `StringEx::from_array`.
-//
+DEPRECATED[_unsafe_to_string, "Use `StringEx::from_array` instead."];
 _unsafe_to_string: Array U8 -> String;
 _unsafe_to_string = StringEx::from_array;
 

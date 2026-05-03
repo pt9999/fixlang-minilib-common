@@ -1,6 +1,6 @@
 # Minilib.Trait.Traversable
 
-Defined in minilib-common@0.13.1
+Defined in minilib-common@0.13.2
 
 ## Values
 

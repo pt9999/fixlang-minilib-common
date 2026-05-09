@@ -1,6 +1,6 @@
 # Minilib.Monad.IO
 
-Defined in minilib-common@0.13.2
+Defined in minilib-common@0.13.3
 
 This module defines the `MonadIO` and `MonadIOFail` traits, which can lift `IO` and `IOFail` monad.
 

@@ -6,7 +6,15 @@
 // - Format
 module Minilib.Text.StringEx;
 
-import Character;
+import Character::{to_lower, to_upper};
+import Std::{
+    loop, Array, Bool, ErrMsg, I64, Iterator, Option, Result, String, ToString, U8,
+    Array::{empty, fill, pop_back, push_back, to_iter, @, @size}, Functor::map,
+    Iterator::{loop_iter, to_array, Item}, LessThan::{max, min}, LoopState::{break, continue},
+    Option::{as_some, is_none, none, some}, Result::{err, ok},
+    String::{concat_iter, ends_with, find, get_bytes, get_sub, @size, _unsafe_from_c_str},
+    ToString::to_string
+};
 
 //---------------------------------
 // String utility functions
@@ -34,7 +42,7 @@ from_array = |bytes| (
     String::_unsafe_from_c_str(bytes.push_back(0_U8))
 );
 
-// Converts an iterator of bytes to a string. 
+// Converts an iterator of bytes to a string.
 //
 // `StringEx::from_iter(iter)` is equal to `StringEx::from_array(iter.to_array)`.
 //

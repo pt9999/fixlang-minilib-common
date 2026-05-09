@@ -1,8 +1,14 @@
 
 module TraversableTest;
 
-import Minilib.Trait.Traversable;
-import Minilib.Testing.UnitTest;
+import Minilib.Testing.UnitTest::{assert_equal, make_test, run_test_driver, TestCase};
+import Minilib.Trait.Traversable::{foreach_m, map_m, traverse, Traversable::sequence};
+import Std::{
+    Array, Const, ErrMsg, Functor, I64, IO, Identity, Monad, Option, Result, String, U64, Array::to_iter,
+    Const::@data, Functor::map, IO::{IOFail, IOFail::{lift, throw, to_result}}, Identity::@data,
+    Iterator::{filter, range, to_array, to_dyn, DynIterator}, Monad::pure, Option::{none, some},
+    Result::{err, ok}, ToString::to_string, ToU64::u64, Tuple2::@0
+};
 
 // --------------------------------------------------------
 // StringWriter
@@ -132,7 +138,7 @@ test_array_iterator_sequence = (
 );
 */
 
-// NOTE: ArrayIterator is not a Functor, so `map_m` cannot be used. 
+// NOTE: ArrayIterator is not a Functor, so `map_m` cannot be used.
 
 test_option_sequence: TestCase;
 test_option_sequence = (

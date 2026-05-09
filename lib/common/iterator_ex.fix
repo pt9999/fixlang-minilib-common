@@ -1,6 +1,12 @@
 // Extensions for `Std::Iterator`.
 module Minilib.Common.IteratorEx;
 
+import Std::{
+    Array, Bool, I64, Iterator, Option, Array::{is_empty, to_iter}, Functor::map,
+    Iterator::{advance, check_any, count_up, map, push_front, to_array, to_dyn, DynIterator, Item},
+    Option::{as_some, is_none, none, some}, Tuple2::{@0, @1}
+};
+
 // Drop the first `n` elements of an iterator.
 //
 // # Parameters

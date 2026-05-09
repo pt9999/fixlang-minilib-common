@@ -1,9 +1,16 @@
 module StringExTest;
 
-import Character;
-
-import Minilib.Text.StringEx;
-import Minilib.Testing.UnitTest;
+import Character::{is_alpha, is_space};
+import Minilib.Testing.UnitTest::{assert_equal, make_table_test, make_test, run_test_driver, TestCase};
+import Minilib.Text.StringEx::{
+    fill, find_byte, find_last_byte, from_array, from_iter, get_prefix, get_suffix, left, pad_left,
+    pad_right, replace_all, replace_suffix, right, split_by, split_first, to_array, to_iter, to_lower,
+    to_upper, Format::format
+};
+import Std::{
+    undefined, Array, F32, F64, I64, IO, Option, String, Iterator::{filter, map, range, to_array},
+    Monad::pure, Option::{none, some}, Result::{err, ok}, ToU8::u8
+};
 
 test_from_array: TestCase;
 test_from_array = (

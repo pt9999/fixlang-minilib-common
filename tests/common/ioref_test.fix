@@ -1,9 +1,14 @@
 module IORefTest;
 
-import Minilib.Common.IORef;
-import Minilib.Common.TimeEx;
-import Minilib.Monad.IO;
-import Minilib.Testing.UnitTest;
+import Minilib.Common.IORef::{IORef, IORef::{act, borrow_ptr_io, from_ptr, get, make, mod, put, ref, set, unref}};
+import Minilib.Common.TimeEx::timeit_io;
+import Minilib.Monad.IO::{MonadIO, MonadIOIF::lift_io};
+import Minilib.Testing.UnitTest::{assert_equal, make_test, run_test_driver, TestCase};
+import Std::{
+    ErrMsg, I64, IO, Ptr, Result, Add::add, Array::{push_back, set}, Debug::assert_unique,
+    FFI::{Destructor, Destructor::{borrow_io, make}}, IO::{IOFail, IOFail::lift},
+    Iterator::{fold_m, range}, Monad::pure, Result::{err, mod_err, ok}, ToString::to_string
+};
 
 test_ioref_simple: TestCase;
 test_ioref_simple = (

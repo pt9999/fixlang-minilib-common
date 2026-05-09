@@ -1,8 +1,13 @@
 module ErrorTest;
 
+import Minilib.Monad.Error::{finally, MonadErrorIF::{catch, error}};
+import Minilib.Testing.UnitTest::{assert_equal, make_table_test, make_test, run_test_driver, TestCase};
+import Std::{
+    Array, ErrMsg, I64, IO, Result, String, Functor::map,
+    IO::{IOFail, IOFail::{from_result, lift, to_result}}, Monad::pure, Result::{err, ok},
+    ToString::to_string
+};
 
-import Minilib.Monad.Error;
-import Minilib.Testing.UnitTest;
 
 test_result_error: TestCase;
 test_result_error = (

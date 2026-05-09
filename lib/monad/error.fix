@@ -19,6 +19,11 @@
 // ```
 module Minilib.Monad.Error;
 
+import Std::{
+    ErrMsg, Monad, Result, IO::{IOFail, IOFail::{from_result, lift, throw, to_result}},
+    Monad::{bind, pure}, Result::{as_err, as_ok, err, is_err, ok}
+};
+
 // A trait for the interface of monads which can report errors.
 trait MonadError = Monad + MonadErrorIF;
 

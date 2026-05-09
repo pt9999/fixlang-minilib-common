@@ -13,7 +13,15 @@
 // ```
 module Minilib.Common.IORef;
 
-import Minilib.Monad.IO;
+import Minilib.Monad.IO::{MonadIO, MonadIOIF::lift_io};
+import Std::{
+    undefined, Box, IO, Lazy, Ptr, Box::{make, @value},
+    FFI::{
+        boxed_from_retained_ptr, boxed_to_retained_ptr, get_funptr_release, get_funptr_retain, Destructor,
+        Destructor::{borrow_io, make}
+    },
+    Monad::pure
+};
 
 // A mutable reference whose value can be changed using the IO monad.
 type IORef a = unbox struct {

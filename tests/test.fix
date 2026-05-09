@@ -1,19 +1,18 @@
 module Test;
 
-import Minilib.Testing.UnitTest;
-
-import CommonTest;
-import AssertTest;
-import IteratorExTest;
-import IOExTest;
-import IORefTest;
-import IteratorExTest;
-import TimeExTest;
-import ErrorTest;
-import IoTest;
-import StringExTest;
-import UnitTestTest;
-import TraversableTest;
+import AssertTest::main;
+import CommonTest::main;
+import ErrorTest::main;
+import IOExTest::main;
+import IORefTest::main;
+import IoTest::main;
+import IteratorExTest::main;
+import Minilib.Testing.UnitTest::{TestSuite, TestSuite::run};
+import Std::IO;
+import StringExTest::main;
+import TimeExTest::main;
+import TraversableTest::main;
+import UnitTestTest::main;
 
 testsuite: TestSuite;
 testsuite = [

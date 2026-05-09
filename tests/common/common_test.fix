@@ -1,7 +1,8 @@
 module CommonTest;
 
-import Minilib.Common.Common;
-import Minilib.Testing.UnitTest;
+import Minilib.Common.Common::{apply, compose2, const, curry, flip, id, ifelse, mod_if, mod_unless, pair, swap, uncurry};
+import Minilib.Testing.UnitTest::{assert_equal, make_test, run_test_driver, TestCase};
+import Std::{IO, Add::add, Array::{push_back, @size}, Monad::pure, ToString::to_string};
 
 test_id: TestCase;
 test_id = (

@@ -1,7 +1,8 @@
 module IteratorExTest;
 
-import Minilib.Common.IteratorEx;
-import Minilib.Testing.UnitTest;
+import Minilib.Common.IteratorEx::{drop, drop_while, repeat, scan, scan_ex, tails, transpose};
+import Minilib.Testing.UnitTest::{assert_equal, make_table_test, make_test, run_test_driver, TestCase};
+import Std::{IO, Add::add, Array::to_iter, Iterator::{count_up, map, range, take, to_array}};
 
 test_drop: TestCase;
 test_drop = (

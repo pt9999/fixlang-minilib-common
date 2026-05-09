@@ -1,9 +1,8 @@
 module IOExTest;
 
-import Time;
-
-import Minilib.Common.IOEx;
-import Minilib.Testing.UnitTest;
+import Minilib.Common.IOEx::{fflush, getenv, set_unbuffered_mode};
+import Minilib.Testing.UnitTest::{assert_equal, assert_true, make_test, run_test_driver, TestCase, TestCase::empty};
+import Std::{IO, IO::{read_string, with_file, write_string}, Monad::pure};
 
 test_fflush: TestCase;
 test_fflush = (

@@ -1,9 +1,15 @@
 module TimeExTest;
 
-import Time;
-
-import Minilib.Common.TimeEx;
-import Minilib.Testing.UnitTest;
+import Minilib.Common.TimeEx::{
+    consumed_realtime_while_io, measure_time, measure_time_io, notimeit, sleep, timeit, timeit_io,
+    usleep
+};
+import Minilib.Testing.UnitTest::{assert_equal, assert_true, make_test, run_test_driver, TestCase};
+import Std::{
+    F64, IO, Add::add, IO::IOFail::{lift, to_result}, Iterator::{fold, range}, Monad::pure,
+    Result::is_ok, ToF64::f64, ToString::to_string
+};
+import Time::get_now;
 
 test_usleep: TestCase;
 test_usleep = (

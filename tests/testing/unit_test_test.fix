@@ -1,6 +1,7 @@
 module UnitTestTest;
 
-import Minilib.Testing.UnitTest;
+import Minilib.Testing.UnitTest::{assert_equal, assert_false, assert_not_equal, assert_true, make_test, run_test_driver, TestCase};
+import Std::{ErrMsg, IO, Result, Result::{err, ok}};
 
 test_assert_true: TestCase;
 test_assert_true = (

@@ -1,8 +1,13 @@
 // Timing module, such as sleep for a while, and measuring execution time.
 module Minilib.Common.TimeEx;
 
-import Time;
-import Minilib.Monad.IO;
+import Minilib.Monad.IO::{MonadIO, MonadIOFail, MonadIOFailIF::lift_iofail, MonadIOIF::lift_io};
+import Std::{
+    loop_m, F64, I64, IO, String, ToString, U32, F64::to_string_precision,
+    IO::{eprintln, IOFail::{lift, throw}}, LessThan::{max, min}, LoopState::{break_m, continue_m},
+    Monad::pure, ToF64::f64, ToString::to_string, ToU32::u32, U32::maximum
+};
+import Time::get_now;
 
 // Sleeps for specified micro-seconds.
 // For details, see Linux manual page for [usleep()](https://man7.org/linux/man-pages/man3/usleep.3.html).

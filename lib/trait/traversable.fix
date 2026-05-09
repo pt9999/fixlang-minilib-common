@@ -1,5 +1,11 @@
 module Minilib.Trait.Traversable;
 
+import Std::{
+    Array, Const, Functor, Identity, Iterator, Monad, Option, Result, Tuple2,
+    Array::{empty, push_back, to_iter, @size}, Const::@data, Functor::map, Identity::@data,
+    Iterator::{fold_m, to_dyn, DynIterator, Item}, Monad::pure, Option::{none, some}, Result::{err, ok}
+};
+
 // A trait for types which can traverse all elements with `Monad`.
 trait [t: * -> *] t: Traversable {
     // `ta.sequence` performs all elements sequentially and collects the results.

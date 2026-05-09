@@ -1,7 +1,8 @@
 module AssertTest;
 
-import Minilib.Common.Assert;
-import Minilib.Testing.UnitTest;
+import Minilib.Common.Assert::{assert_eq_lazy, assert_lazy};
+import Minilib.Testing.UnitTest::{make_test, run_test_driver, TestCase};
+import Std::{IO, Monad::pure};
 
 test_assert_lazy: TestCase;
 test_assert_lazy = (

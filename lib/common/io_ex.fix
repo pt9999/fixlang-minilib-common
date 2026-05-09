@@ -1,7 +1,11 @@
 // Extensions for `Std::IO`.
 module Minilib.Common.IOEx;
 
-import Minilib.Monad.IO;
+import Minilib.Monad.IO::{MonadIO, MonadIOFail, MonadIOFailIF::lift_iofail, MonadIOIF::lift_io};
+import Std::{
+    String, FFI::{clear_errno, get_errno}, IO::{IOHandle, IOFail::{lift, throw}, IOHandle::get_file_ptr},
+    Monad::pure, String::{borrow_c_str_io, unsafe_from_c_str_ptr_io}, ToString::to_string
+};
 
 // Flushes a file stream.
 // For details, see Linux manual page for [fflush()](https://man7.org/linux/man-pages/man3/fflush.3.html).

@@ -1,8 +1,9 @@
 module IoTest;
 
+import Minilib.Monad.IO::{emprintln, mprintln, MonadIOFailIF::lift_iofail, MonadIOIF::lift_io};
+import Minilib.Testing.UnitTest::{assert_equal, make_test, run_test_driver, TestCase};
+import Std::{I64, IO, String, IO::{IOFail, IOFail::lift}, Monad::pure, ToString::to_string};
 
-import Minilib.Monad.IO;
-import Minilib.Testing.UnitTest;
 
 test_io: TestCase;
 test_io = (

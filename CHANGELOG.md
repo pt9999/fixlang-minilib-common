@@ -2,6 +2,8 @@
 ### Changed
 - Upgraded to time@1.1.0.
 - Minilib.Common.TimeEx, Minilib.Testing.UnitTest: Changed `Time::to_F64` to `ToF64::f64`.
+- Run `fix edit explicit-import`.
+- Delete trailing spaces.
 
 ## 0.13.2
 ### Changed

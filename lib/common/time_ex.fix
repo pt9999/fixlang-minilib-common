@@ -165,6 +165,6 @@ consumed_realtime_while_io = |io_a| lift_io $ do {
     let start = *Time::get_now;
     let result = *io_a;
     let end = *Time::get_now;
-    let time = end.to_F64 - start.to_F64;
+    let time = end.f64 - start.f64;
     pure $ (result, time)
 };

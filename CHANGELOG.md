@@ -1,3 +1,8 @@
+## 0.13.3
+### Changed
+- Upgraded to time@1.1.0.
+- Minilib.Common.TimeEx, Minilib.Testing.UnitTest: Changed `Time::to_F64` to `ToF64::f64`.
+
 ## 0.13.2
 ### Changed
 - Added a `DEPRECATED` pragma to `StringEx::_unsafe_to_string`.

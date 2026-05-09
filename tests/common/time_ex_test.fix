@@ -12,7 +12,7 @@ test_usleep = (
     let start = *Time::get_now.lift;
     usleep(usec);;
     let end = *Time::get_now.lift;
-    let time = end.to_F64 - start.to_F64;
+    let time = end.f64 - start.f64;
     assert_true("time", time >= usec.f64 * 1.0e-6)
 );
 
@@ -23,7 +23,7 @@ test_sleep = (
     let start = *Time::get_now.lift;
     sleep(sec);;
     let end = *Time::get_now.lift;
-    let time = end.to_F64 - start.to_F64;
+    let time = end.f64 - start.f64;
     assert_true("time", time >= sec)
 );
 

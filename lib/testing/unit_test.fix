@@ -80,7 +80,7 @@ run_test_driver = |tests| lift_io $ do {
         let test: TestCase = tests.run_tests;
         let (success, fail) = *test();
         let end = *Time::get_now.lift;
-        let time = end.to_F64 - start.to_F64;
+        let time = end.f64 - start.f64;
         emprintln("SUCCESS: " + success.to_string + " FAIL: " + fail.to_string +
                   " TIME: " + time.to_string_precision(3_U8) + " sec");;
         pure $ if fail == 0 { 0 } else { 1 }

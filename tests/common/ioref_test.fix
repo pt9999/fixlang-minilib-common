@@ -5,7 +5,7 @@ import Minilib.Common.TimeEx::timeit_io;
 import Minilib.Monad.IO::{MonadIO, MonadIOIF::lift_io};
 import Minilib.Testing.UnitTest::{assert_equal, make_test, run_test_driver, TestCase};
 import Std::{
-    ErrMsg, I64, IO, Ptr, Result, Add::add, Array::{push_back, set}, Debug::assert_unique,
+    ErrMsg, I64, IO, Ptr, Result, Add::add, Array::{push_back, set}, Debug::assert_unique_array,
     FFI::{Destructor, Destructor::{borrow_io, make}}, IO::{IOFail, IOFail::lift},
     Iterator::{fold_m, range}, Monad::pure, Result::{err, mod_err, ok}, ToString::to_string
 };
@@ -34,7 +34,7 @@ test_ioref_get = (
     assert_equal("eq", [1, 2, 3], arr);;
     let arr = *ioref.get;
     // now ioref is destroyed, so arr is unique
-    let arr = arr.assert_unique(|_| "not unique");
+    let arr = arr.assert_unique_array(|_| "not unique");
     assert_equal("eq", [1, 2, 3], arr);;
     pure()
 );
@@ -49,7 +49,7 @@ test_ioref_set = (
     ioref.IORef::set([4,5,6]);;
     let arr = *ioref.get;
     // now ioref is destroyed, so arr is unique
-    let arr = arr.assert_unique(|_| "not unique");
+    let arr = arr.assert_unique_array(|_| "not unique");
     assert_equal("eq", [4, 5, 6], arr);;
     pure()
 );
@@ -60,7 +60,7 @@ test_ioref_mod = (
     let ioref = *IORef::make([1,2,3]);
     ioref.mod(|arr|
         // arr is unique in the modifier function
-        arr.assert_unique(|_| "not unique")
+        arr.assert_unique_array(|_| "not unique")
         .set(0, 0)
     );;
     assert_equal("eq", [0, 2, 3], *ioref.get);;
@@ -74,7 +74,7 @@ test_ioref_act = (
     let str = *ioref.act(|arr|
         // arr is unique in the action function
         let str = arr.to_string;
-        let arr = arr.assert_unique(|_| "not unique").set(0, 0);
+        let arr = arr.assert_unique_array(|_| "not unique").set(0, 0);
         pure $ (str, arr));
     assert_equal("eq", [0, 2, 3], *ioref.get);;
     assert_equal("eq", "[1, 2, 3]", str);;

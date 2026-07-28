@@ -1,3 +1,10 @@
+## 0.14.0
+### Changed
+- Merged PR#3 (thanks to tttmmmyyyy san).
+  - Migrate to the unboxed-Array standard library.
+  - fixproj.toml: Bumped `fix_version` to 1.5.0.
+  - Upgraded to time@2.0.0.
+
 ## 0.13.3
 ### Changed
 - Upgraded to time@1.1.0.

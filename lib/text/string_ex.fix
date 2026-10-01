@@ -507,7 +507,7 @@ impl [a: ToString] Array a: Format {
 // Example:
 // ```
 // (12.345, ).format("float={}")
-// ==> "float=12.345000"
+// ==> "float=12.345"
 // ([1, 2, 3], ).format("arr={}")
 // ==> "arr=[1, 2, 3]"
 // ```
@@ -533,7 +533,7 @@ impl [a: ToString, b: ToString] (a,b): Format {
 // Example:
 // ```
 // (12, 345.678, "abc").format("int={} float={} str={}")
-// ==> "int=12 float=345.678000 str=abc"
+// ==> "int=12 float=345.678 str=abc"
 // ```
 impl [a: ToString, b: ToString, c:ToString] (a,b,c): Format {
     format = |str, (a,b,c)| [a.to_string, b.to_string, c.to_string].format(str);
@@ -545,7 +545,7 @@ impl [a: ToString, b: ToString, c:ToString] (a,b,c): Format {
 // Example:
 // ```
 // (12, 345.678, "abc", some(1)).format("int={} float={} str={} option={}")
-// ==> "int=12 float=345.678000 str=abc option=some(1)"
+// ==> "int=12 float=345.678 str=abc option=some(1)"
 // ```
 impl [a: ToString, b: ToString, c:ToString, d:ToString] (a,b,c,d): Format {
     format = |str, (a,b,c,d)| [a.to_string, b.to_string, c.to_string, d.to_string].format(str);
@@ -557,7 +557,7 @@ impl [a: ToString, b: ToString, c:ToString, d:ToString] (a,b,c,d): Format {
 // Example:
 // ```
 // (12, 345.678, "abc", some(1), [1, 2, 3]).format("int={} float={} str={} option={} array={}")
-// ==> "int=12 float=345.678000 str=abc option=some(1) array=[1, 2, 3]"
+// ==> "int=12 float=345.678 str=abc option=some(1) array=[1, 2, 3]"
 // ```
 impl [a: ToString, b: ToString, c:ToString, d:ToString, e:ToString] (a,b,c,d,e): Format {
     format = |str, (a,b,c,d,e)| [a.to_string, b.to_string, c.to_string, d.to_string, e.to_string].format(str);

@@ -1,3 +1,7 @@
+## 0.14.2
+### Updated
+- Updated documentation of `StringEx::Format`.
+
 ## 0.14.1
 ### Updated
 - Updated string_ex_test.fix to reflect the specification changes in Fix v1.5.0.

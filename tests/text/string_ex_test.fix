@@ -329,13 +329,14 @@ test_format = (
     assert_equal("two args",["abc", "def"].format("{}{}"), "abcdef");;
     assert_equal("too many args", ["abc", "def", "ghi"].format("{}{}"), "abcdef");;
     assert_equal("too few args", ["abc"].format("{}{}"), "abc{}");;
-    assert_equal("tuple1", (2.1_F32,).format("num={}"), "num=2.100000");;
-    assert_equal("tuple2", (2.1, "hello").format("num={} str={}"), "num=2.100000 str=hello");;
+    // `2.1_F32.to_string` was changed from "2.100000" to "2.1". see https://github.com/tttmmmyyyy/fixlang/pull/670
+    assert_equal("tuple1", (2.1_F32,).format("num={}"), "num=2.1");;
+    assert_equal("tuple2", (2.1, "hello").format("num={} str={}"), "num=2.1 str=hello");;
     assert_equal("tuple3", (some(1_U16), [2,3,4], ()).format("option={} array={} unit={}"), "option=some(1) array=[2, 3, 4] unit=()");;
     assert_equal("tuple4", ('A', ['B', 'C'], [[1, 2]], ('D', "E")).format("u8={} array_u8={} array_array_i64={} tuple2={}"),
                                     "u8=65 array_u8=[66, 67] array_array_i64=[[1, 2]] tuple2=(68, E)");;
     assert_equal("tuple5", (1, 2.2, none(): Option I64, []: Array I64, (4,)).format("i64={} f64={} option={} array={} tuple1={}"),
-                                    "i64=1 f64=2.200000 option=none() array=[] tuple1=(4,)");;
+                                    "i64=1 f64=2.2 option=none() array=[] tuple1=(4,)");;
     assert_equal("cannot inject placeholder", ["dummy={}", "abc"].format("{}={}"), "dummy={}=abc");;
     pure()
 );

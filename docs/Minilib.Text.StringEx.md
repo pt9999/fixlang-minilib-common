@@ -1,6 +1,6 @@
 # Minilib.Text.StringEx
 
-Defined in minilib-common@0.14.1
+Defined in minilib-common@0.14.2
 
 String utility functions.
 
@@ -436,7 +436,7 @@ with `a`, `b`, `c`.
 Example:
 ```
 (12, 345.678, "abc").format("int={} float={} str={}")
-==> "int=12 float=345.678000 str=abc"
+==> "int=12 float=345.678 str=abc"
 ```
 
 ### impl `[a : Std::ToString, b : Std::ToString, c : Std::ToString, d : Std::ToString] (a, b, c, d) : Minilib.Text.StringEx::Format`
@@ -447,7 +447,7 @@ with `a`, `b`, `c`, `d`.
 Example:
 ```
 (12, 345.678, "abc", some(1)).format("int={} float={} str={} option={}")
-==> "int=12 float=345.678000 str=abc option=some(1)"
+==> "int=12 float=345.678 str=abc option=some(1)"
 ```
 
 ### impl `[a : Std::ToString, b : Std::ToString, c : Std::ToString, d : Std::ToString, e : Std::ToString] (a, b, c, d, e) : Minilib.Text.StringEx::Format`
@@ -458,7 +458,7 @@ with `a`, `b`, `c`, `d`, `e`.
 Example:
 ```
 (12, 345.678, "abc", some(1), [1, 2, 3]).format("int={} float={} str={} option={} array={}")
-==> "int=12 float=345.678000 str=abc option=some(1) array=[1, 2, 3]"
+==> "int=12 float=345.678 str=abc option=some(1) array=[1, 2, 3]"
 ```
 
 ### impl `[a : Std::ToString] (a,) : Minilib.Text.StringEx::Format`
@@ -469,7 +469,7 @@ with `a`.
 Example:
 ```
 (12.345, ).format("float={}")
-==> "float=12.345000"
+==> "float=12.345"
 ([1, 2, 3], ).format("arr={}")
 ==> "arr=[1, 2, 3]"
 ```

@@ -5,7 +5,7 @@ import Minilib.Common.TimeEx::timeit_io;
 import Minilib.Monad.IO::{MonadIO, MonadIOIF::lift_io};
 import Minilib.Testing.UnitTest::{assert_equal, make_test, run_test_driver, TestCase};
 import Std::{
-    ErrMsg, I64, IO, Ptr, Result, Add::add, Array::{push_back, set}, Debug::assert_unique_array,
+    ErrMsg, I64, IO, Ptr, Result, Array, Add::add, Array::{push_back, set}, Debug::assert_unique_array,
     FFI::{Destructor, Destructor::{borrow_io, make}}, IO::{IOFail, IOFail::lift},
     Iterator::{fold_m, range}, Monad::pure, Result::{err, mod_err, ok}, ToString::to_string
 };
@@ -25,10 +25,14 @@ test_ioref_simple = (
     pure()
 );
 
+// Forces an array to be unique
+array_force_unique: Array a -> Array a;
+array_force_unique = |arr| [] + arr;
+
 test_ioref_get: TestCase;
 test_ioref_get = (
     make_test("test_ioref_get") $ |_|
-    let ioref = *IORef::make([1,2,3]);
+    let ioref = *IORef::make([1,2,3].array_force_unique);
     let arr = *ioref.get;
     // arr is not unique at this point, since ioref retains it too
     assert_equal("eq", [1, 2, 3], arr);;
@@ -42,11 +46,11 @@ test_ioref_get = (
 test_ioref_set: TestCase;
 test_ioref_set = (
     make_test("test_ioref_set") $ |_|
-    let ioref = *IORef::make([1,2,3]);
+    let ioref = *IORef::make([1,2,3].array_force_unique);
     let arr = *ioref.get;
     // arr is not unique at this point, since ioref retains it too
     assert_equal("eq", [1, 2, 3], arr);;
-    ioref.IORef::set([4,5,6]);;
+    ioref.IORef::set([4,5,6].array_force_unique);;
     let arr = *ioref.get;
     // now ioref is destroyed, so arr is unique
     let arr = arr.assert_unique_array(|_| "not unique");
@@ -57,7 +61,7 @@ test_ioref_set = (
 test_ioref_mod: TestCase;
 test_ioref_mod = (
     make_test("test_ioref_mod") $ |_|
-    let ioref = *IORef::make([1,2,3]);
+    let ioref = *IORef::make([1,2,3].array_force_unique);
     ioref.mod(|arr|
         // arr is unique in the modifier function
         arr.assert_unique_array(|_| "not unique")
@@ -70,7 +74,7 @@ test_ioref_mod = (
 test_ioref_act: TestCase;
 test_ioref_act = (
     make_test("test_ioref_act") $ |_|
-    let ioref = *IORef::make([1,2,3]);
+    let ioref = *IORef::make([1,2,3].array_force_unique);
     let str = *ioref.act(|arr|
         // arr is unique in the action function
         let str = arr.to_string;

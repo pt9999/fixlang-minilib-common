@@ -3,6 +3,7 @@
 - fixproj.toml: Bumped `fix_version` to 1.6.0.
 - Updated ioref_test.fix to reflect the specification changes in Fix v1.6.0.
   - A constant array in a function is now not necessarily unique.
+- Minilib.Text.StringEx: Changed `StringEx::to_array` so that it won't use a private API (_unsafe_from_c_str).
 
 ## 0.14.2
 ### Changed

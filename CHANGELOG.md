@@ -1,9 +1,13 @@
+## 0.15.0
+### Changed
+- fixproj.toml: Bumped `fix_version` to 1.6.0.
+
 ## 0.14.2
-### Updated
+### Changed
 - Updated documentation of `StringEx::Format`.
 
 ## 0.14.1
-### Updated
+### Changed
 - Updated string_ex_test.fix to reflect the specification changes in Fix v1.5.0.
   - The result of `2.1_F32.to_string` is now "2.1" instead of "2.100000".  See https://github.com/tttmmmyyyy/fixlang/pull/670
 

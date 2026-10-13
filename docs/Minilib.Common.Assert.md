@@ -1,6 +1,6 @@
 # Minilib.Common.Assert
 
-Defined in minilib-common@0.14.2
+Defined in minilib-common@0.15.0
 
 Assert functions.
 

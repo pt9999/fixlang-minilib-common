@@ -1,6 +1,6 @@
 # Minilib.Text.StringEx
 
-Defined in minilib-common@0.14.2
+Defined in minilib-common@0.15.0
 
 String utility functions.
 
@@ -74,8 +74,9 @@ Example:
 
 Type: `Std::Array Std::U8 -> Std::String`
 
-Converts a byte array to a string. Specifically, it calls `String::_unsafe_from_c_str()`
-after appending a null character to the end of the byte array.
+Converts a byte array to a string. Specifically, `bytes.StringEx::from_array`
+is equal to `bytes.push_back(0_U8).from_bytes.as_ok`, where `bytes` is
+a byte array.
 
 ##### Parameters
 

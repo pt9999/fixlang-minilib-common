@@ -1,6 +1,7 @@
 ## 0.15.2
 ### Changed
 - Minilib.Testing.UnitTest: Changed `println` to `eprintln` to avoid misarrangement of the test output.
+- Upgraded to time@2.0.1.
 
 ## 0.15.1
 ### Changed

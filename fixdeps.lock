@@ -11,9 +11,9 @@ rev = "fd75a6634ec0c919f2d1703112d25da9a3c2346e"
 
 [[dependencies]]
 name = "time"
-version = "2.0.0"
-path = ".fixlang/deps/time_2.0.0"
+version = "2.0.1"
+path = ".fixlang/deps/time_2.0.1"
 
 [dependencies.git]
 repo = "https://github.com/tttmmmyyyy/fixlang-time.git"
-rev = "bcf93dd61eb167e3ffe64ca9ca83ac2aea06587e"
+rev = "4c41b0d9b0913c6434346cadc82c5257b80c726d"

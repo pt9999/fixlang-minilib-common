@@ -1,3 +1,8 @@
+## 0.15.1
+### Changed
+- Merged PR#4 (thanks to tttmmmyyyy san).
+  - Added `-s` option to the `make` command that builds `lib.o`.
+
 ## 0.15.0
 ### Changed
 - fixproj.toml: Bumped `fix_version` to 1.6.0.

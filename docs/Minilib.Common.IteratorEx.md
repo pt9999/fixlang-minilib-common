@@ -1,6 +1,6 @@
 # Minilib.Common.IteratorEx
 
-Defined in minilib-common@0.15.0
+Defined in minilib-common@0.15.1
 
 Extensions for `Std::Iterator`.
 
@@ -137,7 +137,7 @@ Type: `Std::Array i`
 
 ## Trait implementations
 
-### impl `[i : Std::Iterator] Minilib.Common.IteratorEx::ScanIterator i s a : Std::Iterator`
+### impl `[i : Std::Iterator, Std::Iterator::Item i = a] Minilib.Common.IteratorEx::ScanIterator i s a : Std::Iterator`
 
 ### impl `[i : Std::Iterator] Minilib.Common.IteratorEx::TailsIterator i : Std::Iterator`
 

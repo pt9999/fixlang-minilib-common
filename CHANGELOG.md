@@ -1,3 +1,7 @@
+## 0.15.2
+### Changed
+- Minilib.Testing.UnitTest: Changed `println` to `eprintln` to avoid misarrangement of the test output.
+
 ## 0.15.1
 ### Changed
 - Merged PR#4 (thanks to tttmmmyyyy san).

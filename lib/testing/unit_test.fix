@@ -8,7 +8,7 @@ import Minilib.Trait.Traversable::foreach_m;
 import Std::{
     undefined, Array, Bool, Eq, I64, IO, Lazy, String, ToString, Array::{find_by, to_iter},
     F64::to_string_precision, Functor::map,
-    IO::{eprintln, get_args, println, stderr, stdout, IOFail, IOFail::{lift, try}}, Iterator::fold_m,
+    IO::{eprintln, get_args, stderr, stdout, IOFail, IOFail::{lift, try}}, Iterator::fold_m,
     Monad::{bind, pure, when}, Option::is_some, ToF64::f64, ToString::to_string
 };
 import Time::get_now;
@@ -61,7 +61,7 @@ namespace TestSuite {
     run: [m: MonadIO] TestSuite -> m ();
     run = |testsuite| lift_io $ do {
         testsuite.to_iter.foreach_m(|(name, io)|
-            println("=== " + name + " ===");;
+            eprintln("=== " + name + " ===");;
             io
         )
     };
